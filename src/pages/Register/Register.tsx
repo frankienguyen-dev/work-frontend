@@ -1,10 +1,55 @@
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useMutation } from '@tanstack/react-query';
+import { omit } from 'lodash';
+import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
+import { registerAccount } from 'src/apis/auth.api';
+import Input from 'src/components/Input';
+import { ResponseApi } from 'src/types/utils.type';
+import { Schema, schema } from 'src/utils/rules';
+import { isAxiosConflictError } from 'src/utils/utils';
+
+type FormData = Schema;
+type FormError = {
+  message: string;
+};
 
 export default function Register() {
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors }
+  } = useForm<FormData>({
+    resolver: yupResolver(schema)
+  });
+
+  const registerAccountMutation = useMutation({
+    mutationFn: (body: Omit<FormData, 'confirm_password' | 'read_agree'>) => registerAccount(body)
+  });
+
+  const onSubmit = handleSubmit((data) => {
+    const body = omit(data, ['confirm_password', 'read_agree']);
+    registerAccountMutation.mutate(body, {
+      onSuccess: (data) => console.log(data),
+      onError: (error) => {
+        if (isAxiosConflictError<ResponseApi<FormError>>(error)) {
+          const formError = error.response?.data.data;
+          if (formError) {
+            setError('email', {
+              message: formError.message
+            });
+          }
+          console.log('error:', error);
+        }
+      }
+    });
+  });
+
   return (
     <div>
       <div className='grid grid-cols-1 xl:grid-cols-2 w-full h-[100vh]'>
-        <div className='col-span-1 xl:ml-[100px] 2xl:ml-[180px]'>
+        <div className='col-span-1 xl:ml-[100px] 2xl:ml-[210px]'>
           <Link to={'/'}>
             <div
               className=' hidden xl:flex items-center sm:ml-[200px] my-[30px] xs:ml-[50px] 
@@ -60,7 +105,8 @@ export default function Register() {
           </Link>
           <div className='xl:mt-[138px] mt-[50px] md:mt-[100px]'>
             <form
-              className='max-w-xs md:max-w-lg lg:max-w-3xl mx-auto xl:mx-0 xl:max-w-none 
+              onSubmit={onSubmit}
+              className='max-w-xs md:max-w-lg lg:max-w-3xl mx-auto xl:mx-0 xl:max-w-[536px]
               xl:mr-[86px]'
               noValidate
             >
@@ -78,72 +124,64 @@ export default function Register() {
                   <div>
                     <select
                       id='role'
-                      className='bg-gray-50 border border-gray-300 text-gray-900 text-md 
-                      rounded-[5px] focus:ring-blue-500 focus:border-blue-500 block 2xl:w-[200px] 
+                      className='border border-gray-300 text-gray-900 text-md 
+                      rounded-[5px] focus:ring-blue-500 focus:border-blue-500 block 2xl:w-[150px] 
                       p-3.5 h-[48px] w-full mt-5 2xl:mt-0'
+                      {...register('role')}
                     >
-                      <option selected value='Candidate'>
-                        Candidate
-                      </option>
-                      <option value='Human Resources'>Human Resources</option>
+                      <option value='ROLE_USER'>USER</option>
+                      <option value='ROLE_HR'>HR</option>
                     </select>
                   </div>
                 </div>
               </div>
 
-              <div className='mt-5 2xl:mt-8'>
-                <input
-                  type='text'
-                  id='text'
-                  className='bg-gray-50 border border-gray-300 text-gray-900 text-md rounded-[5px]
-                   focus:ring-blue-500 focus:border-blue-500 block w-full h-[48px] p-3.5 '
-                  placeholder='Full Name'
-                />
-              </div>
-              <div className='mt-5'>
-                <input
-                  type='email'
-                  id='email'
-                  className='bg-gray-50 border border-gray-300 text-gray-900 text-md rounded-[5px]
-                   focus:ring-blue-500 focus:border-blue-500 block h-[48px] w-full p-3.5 '
-                  placeholder='Email address'
-                />
-              </div>
+              <Input
+                className='mt-5 2xl:mt-8'
+                type='text'
+                placeholder='Full Name'
+                name='fullName'
+                errorMessage={errors.fullName?.message}
+                register={register}
+              />
 
-              <div className='mt-5'>
-                <input
-                  type='password'
-                  id='password'
-                  className='bg-gray-50 border border-gray-300 text-gray-900 text-md rounded-[5px]
-                   focus:ring-blue-500 focus:border-blue-500 block h-[48px] w-full p-3.5 '
-                  placeholder='Password'
-                />
-              </div>
-              <div className='mt-5'>
-                <input
-                  type='password'
-                  id='confirm_password'
-                  className='bg-gray-50 border border-gray-300 text-gray-900 text-md rounded-[5px]
-                   focus:ring-blue-500 focus:border-blue-500 block h-[48px] w-full p-3.5 '
-                  placeholder='Confirm Password'
-                />
-              </div>
-              <div className='flex items-start mt-5'>
-                <div className='flex items-center h-5'>
-                  <input
-                    id='remember'
-                    type='checkbox'
-                    className='w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3
-                     focus:ring-blue-300 '
-                  />
-                </div>
-                <span className='text-gray-500 ml-[10px]'>
-                  I have read and agree with your{' '}
-                  <Link className='text-blue-500' to={'/'}>
-                    Terms of Services
-                  </Link>
-                </span>
-              </div>
+              <Input
+                className='mt-2'
+                type='email'
+                placeholder='Email address'
+                name='email'
+                errorMessage={errors.email?.message}
+                register={register}
+              />
+
+              <Input
+                className='mt-2'
+                type='password'
+                placeholder='Password'
+                name='password'
+                errorMessage={errors.password?.message}
+                register={register}
+                autoComplete='on'
+              />
+
+              <Input
+                className='mt-2'
+                type='password'
+                placeholder='Confirm Password'
+                name='confirm_password'
+                errorMessage={errors.confirm_password?.message}
+                register={register}
+                autoComplete='on'
+              />
+
+              <Input
+                className='mt-5'
+                type='checkbox'
+                name='read_agree'
+                errorMessage={errors.read_agree?.message}
+                register={register}
+                isCheckbox={true}
+              />
               <button
                 type='submit'
                 className='text-white mt-8 bg-[#0b65cc] hover:bg-blue-800 focus:ring-4 
