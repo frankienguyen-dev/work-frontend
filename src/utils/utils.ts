@@ -9,3 +9,9 @@ export function isAxiosError<T>(error: unknown): error is AxiosError<T> {
 export function isAxiosConflictError<FormError>(error: unknown): error is AxiosError<FormError> {
   return isAxiosError(error) && error.response?.status === HttpStatusCode.Conflict;
 }
+
+export function isAxiosUnauthorizedError<FormError>(
+  error: unknown
+): error is AxiosError<FormError> {
+  return isAxiosError(error) && error.response?.status === HttpStatusCode.Unauthorized;
+}

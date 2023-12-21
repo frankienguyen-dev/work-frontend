@@ -116,7 +116,7 @@ export default function Register() {
                   <h3 className='text-gray-600 mt-[16px]'>
                     Already have an account?{' '}
                     <Link className='text-blue-600' to={'/login'}>
-                      Login
+                      Sign in
                     </Link>{' '}
                   </h3>
                 </div>
@@ -124,7 +124,7 @@ export default function Register() {
                   <div>
                     <select
                       id='role'
-                      className='border border-gray-300 text-gray-900 text-md 
+                      className='border outline-none border-gray-300 text-gray-900 text-md 
                       rounded-[5px] focus:ring-blue-500 focus:border-blue-500 block 2xl:w-[150px] 
                       p-3.5 h-[48px] w-full mt-5 2xl:mt-0'
                       {...register('role')}
