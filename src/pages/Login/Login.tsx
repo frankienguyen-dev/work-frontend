@@ -1,6 +1,59 @@
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useMutation } from '@tanstack/react-query';
+import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
+import { loginAccount } from 'src/apis/auth.api';
+import Input from 'src/components/Input';
+import { ResponseApi } from 'src/types/utils.type';
+import { Schema, schema } from 'src/utils/rules';
+import { isAxiosUnauthorizedError } from 'src/utils/utils';
+
+type FormData = Pick<Schema, 'email' | 'password'>;
+
+const loginSchema = schema.pick(['email', 'password']);
+type FormError = {
+  message: string;
+};
 
 export default function Login() {
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+    setError
+  } = useForm<FormData>({
+    resolver: yupResolver(loginSchema)
+  });
+
+  const loginAccountMutation = useMutation({
+    mutationFn: (body: FormData) => loginAccount(body)
+  });
+
+  const onSubmit = handleSubmit(
+    (data) => {
+      loginAccountMutation.mutate(data, {
+        onSuccess: (data) => console.log('data success: ', data),
+        onError: (error) => {
+          if (isAxiosUnauthorizedError<ResponseApi<FormError>>(error)) {
+            const formError = error.response?.data.data
+            if (formError) {
+              setError('email', {
+                message: formError.message
+              });
+              setError('password', {
+                message: formError.message
+              });
+            }
+            console.log('check error: ', error);
+          }
+        }
+      });
+    },
+    (error) => {
+      console.log('error login: ', error);
+    }
+  );
+
   return (
     <div>
       <div className='grid grid-cols-1 xl:grid-cols-2 w-full h-[100vh]'>
@@ -63,6 +116,7 @@ export default function Login() {
               className=' max-w-xs sm:max-w-xl md:max-w-2xl lg:max-w-3xl mx-auto xl:mx-0 xl:max-w-[536px]
               xl:mr-[86px]'
               noValidate
+              onSubmit={onSubmit}
             >
               <div className='2xl:flex 2xl:items-center 2xl:justify-between'>
                 <div>
@@ -76,25 +130,24 @@ export default function Login() {
                 </div>
               </div>
 
-              <div className='mt-5 2xl:mt-8'>
-                <input
-                  type='email'
-                  id='email'
-                  className=' border border-gray-300 text-gray-900 text-md rounded-[5px]
-                   focus:ring-blue-500 focus:border-blue-500 block h-[48px] w-full p-3.5 '
-                  placeholder='Email address'
-                />
-              </div>
+              <Input
+                className='mt-5 2xl:mt-8'
+                type='email'
+                placeholder='Email address'
+                register={register}
+                name='email'
+                errorMessage={errors.email?.message}
+              />
 
-              <div className='mt-5'>
-                <input
-                  type='password'
-                  id='password'
-                  className=' border border-gray-300 text-gray-900 text-md rounded-[5px]
-                   focus:ring-blue-500 focus:border-blue-500 block h-[48px] w-full p-3.5 '
-                  placeholder='Password'
-                />
-              </div>
+              <Input
+                className='mt-5'
+                type='password'
+                placeholder='Password'
+                register={register}
+                autoComplete='on'
+                name='password'
+                errorMessage={errors?.password?.message}
+              />
 
               <button
                 type='submit'
