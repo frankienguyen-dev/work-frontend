@@ -52,20 +52,20 @@ export default function Register() {
         <div className='col-span-1 xl:ml-[100px] 2xl:ml-[210px]'>
           <Link to={'/'}>
             <div
-              className=' hidden xl:flex items-center sm:ml-[200px] my-[30px] xs:ml-[50px] 
+              className=' hidden xl:flex items-center sm:ml-[200px] my-[30px] xs:ml-[50px]
               ml-[30px] md:ml-[128px] xl:ml-0'
             >
               <div className='mr-2'>
                 <svg
-                  width={50}
-                  height={50}
+                  width='50'
+                  height='50'
                   viewBox='0 0 40 40'
                   fill='none'
                   xmlns='http://www.w3.org/2000/svg'
                 >
-                  <g clipPath='url(#clip0_17_505)'>
+                  <g clipPath='url(#clip0_100_11637)'>
                     <path
-                      d='M33.751 11.25H6.25098C5.56062 11.25 5.00098 11.8097 5.00098 12.5V32.5C5.00098 33.1904 5.56062 33.75 6.25098 33.75H33.751C34.4413 33.75 35.001 33.1904 35.001 32.5V12.5C35.001 11.8097 34.4413 11.25 33.751 11.25Z'
+                      d='M33.7512 11.25H6.25122C5.56086 11.25 5.00122 11.8097 5.00122 12.5V32.5C5.00122 33.1904 5.56086 33.75 6.25122 33.75H33.7512C34.4416 33.75 35.0012 33.1904 35.0012 32.5V12.5C35.0012 11.8097 34.4416 11.25 33.7512 11.25Z'
                       stroke='#0A65CC'
                       strokeWidth='2.5'
                       strokeLinecap='round'
@@ -79,7 +79,7 @@ export default function Register() {
                       strokeLinejoin='round'
                     />
                     <path
-                      d='M35.0012 19.7358C30.4423 22.3734 25.2669 23.7583 20 23.75C14.7339 23.7583 9.55935 22.3739 5.00098 19.7371'
+                      d='M35.0013 19.7358C30.4424 22.3734 25.2669 23.7583 20 23.75C14.734 23.7583 9.55941 22.3739 5.00104 19.7371'
                       stroke='#0A65CC'
                       strokeWidth='2.5'
                       strokeLinecap='round'
@@ -94,8 +94,8 @@ export default function Register() {
                     />
                   </g>
                   <defs>
-                    <clipPath id='clip0_17_505'>
-                      <rect width={40} height={40} fill='white' />
+                    <clipPath id='clip0_100_11637'>
+                      <rect width='40' height='40' fill='white' />
                     </clipPath>
                   </defs>
                 </svg>
@@ -115,7 +115,7 @@ export default function Register() {
                   <h1 className='text-3xl'>Create account.</h1>
                   <h3 className='text-gray-600 mt-[16px]'>
                     Already have an account?{' '}
-                    <Link className='text-blue-600' to={'/login'}>
+                    <Link className='text-blue-600' to={'/signin'}>
                       Sign in
                     </Link>{' '}
                   </h3>
@@ -124,7 +124,7 @@ export default function Register() {
                   <div>
                     <select
                       id='role'
-                      className='border outline-none border-gray-300 text-gray-900 text-md 
+                      className='border outline-none border-gray-300 text-gray-900 text-md
                       rounded-[5px] focus:ring-blue-500 focus:border-blue-500 block 2xl:w-[150px] 
                       p-3.5 h-[48px] w-full mt-5 2xl:mt-0'
                       {...register('role')}
@@ -184,7 +184,7 @@ export default function Register() {
               />
               <button
                 type='submit'
-                className='text-white mt-8 bg-[#0b65cc] hover:bg-blue-800 focus:ring-4 
+                className='text-white mt-8 bg-[#0b65cc] hover:bg-blue-800 focus:ring-4
                 focus:outline-none focus:ring-blue-300 font-medium rounded-[5px] text-md 
                 w-full md:w-[100%] h-[56px] xs:w-auto sm:w-full px-5 py-2.5 text-center 
                 flex justify-center items-center mb-10 xl:mb-0'
