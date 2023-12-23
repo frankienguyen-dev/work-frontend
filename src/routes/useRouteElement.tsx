@@ -1,14 +1,19 @@
 import { useRoutes } from 'react-router-dom';
+import MainLayout from 'src/layouts/MainLayout';
 import RegisterLayout from 'src/layouts/RegisterLayout';
 import HomePage from 'src/pages/HomePage';
-import Login from 'src/pages/Login';
+import SignIn from 'src/pages/SignIn';
 import Register from 'src/pages/Register';
 
 export default function useRouteElement() {
   const routeElement = useRoutes([
     {
       path: '/',
-      element: <HomePage />
+      element: (
+        <MainLayout>
+          <HomePage />
+        </MainLayout>
+      )
     },
 
     {
@@ -21,10 +26,10 @@ export default function useRouteElement() {
     },
 
     {
-      path: '/login',
+      path: '/signin',
       element: (
         <RegisterLayout>
-          <Login />{' '}
+          <SignIn />{' '}
         </RegisterLayout>
       )
     }

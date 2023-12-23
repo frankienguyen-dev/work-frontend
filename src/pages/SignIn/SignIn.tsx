@@ -15,7 +15,7 @@ type FormError = {
   message: string;
 };
 
-export default function Login() {
+export default function SignIn() {
   const {
     handleSubmit,
     register,
@@ -35,7 +35,7 @@ export default function Login() {
         onSuccess: (data) => console.log('data success: ', data),
         onError: (error) => {
           if (isAxiosUnauthorizedError<ResponseApi<FormError>>(error)) {
-            const formError = error.response?.data.data
+            const formError = error.response?.data.data;
             if (formError) {
               setError('email', {
                 message: formError.message
@@ -65,15 +65,15 @@ export default function Login() {
             >
               <div className='mr-2'>
                 <svg
-                  width={50}
-                  height={50}
+                  width='50'
+                  height='50'
                   viewBox='0 0 40 40'
                   fill='none'
                   xmlns='http://www.w3.org/2000/svg'
                 >
-                  <g clipPath='url(#clip0_17_505)'>
+                  <g clipPath='url(#clip0_100_11637)'>
                     <path
-                      d='M33.751 11.25H6.25098C5.56062 11.25 5.00098 11.8097 5.00098 12.5V32.5C5.00098 33.1904 5.56062 33.75 6.25098 33.75H33.751C34.4413 33.75 35.001 33.1904 35.001 32.5V12.5C35.001 11.8097 34.4413 11.25 33.751 11.25Z'
+                      d='M33.7512 11.25H6.25122C5.56086 11.25 5.00122 11.8097 5.00122 12.5V32.5C5.00122 33.1904 5.56086 33.75 6.25122 33.75H33.7512C34.4416 33.75 35.0012 33.1904 35.0012 32.5V12.5C35.0012 11.8097 34.4416 11.25 33.7512 11.25Z'
                       stroke='#0A65CC'
                       strokeWidth='2.5'
                       strokeLinecap='round'
@@ -87,7 +87,7 @@ export default function Login() {
                       strokeLinejoin='round'
                     />
                     <path
-                      d='M35.0012 19.7358C30.4423 22.3734 25.2669 23.7583 20 23.75C14.7339 23.7583 9.55935 22.3739 5.00098 19.7371'
+                      d='M35.0013 19.7358C30.4424 22.3734 25.2669 23.7583 20 23.75C14.734 23.7583 9.55941 22.3739 5.00104 19.7371'
                       stroke='#0A65CC'
                       strokeWidth='2.5'
                       strokeLinecap='round'
@@ -102,8 +102,8 @@ export default function Login() {
                     />
                   </g>
                   <defs>
-                    <clipPath id='clip0_17_505'>
-                      <rect width={40} height={40} fill='white' />
+                    <clipPath id='clip0_100_11637'>
+                      <rect width='40' height='40' fill='white' />
                     </clipPath>
                   </defs>
                 </svg>
