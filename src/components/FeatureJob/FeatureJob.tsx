@@ -5,7 +5,7 @@ export default function FeatureJob() {
     <div className='bg-white my-[100px]'>
       <div className='container'>
         <div className='flex items-center justify-between'>
-          <div className='text-[40px] leading-[48px] font-medium text-[#191F33]'>Featured Job</div>
+          <h1 className='text-[40px] leading-[48px] font-medium text-[#191F33]'>Featured Job</h1>
           <Link
             className='hover:underline gap-[12px] flex items-center text-[#0A65CC] text-[16px]
             leading-6 font-semibold'
@@ -42,7 +42,7 @@ export default function FeatureJob() {
           <Link to='/'>
             <div
               className='flex justify-between items-center p-[32px] border border-[#EDEFF5]
-             rounded-[12px] hover:shadow-lg hover:transition hover:ease-in-out hover:duration-[0.25s]'
+             rounded-[12px] hover:shadow-2xl hover:transition hover:ease-in-out hover:duration-[0.25s]'
             >
               <div className='flex items-center gap-[20px]'>
                 <img
@@ -208,7 +208,7 @@ export default function FeatureJob() {
           <Link to='/'>
             <div
               className='mt-[24px] flex justify-between items-center p-[32px] border border-[#EDEFF5]
-             rounded-[12px] hover:shadow-lg hover:transition hover:ease-in-out hover:duration-[0.25s]'
+             rounded-[12px] hover:shadow-2xl hover:transition hover:ease-in-out hover:duration-[0.25s]'
             >
               <div className='flex items-center gap-[20px]'>
                 <img
@@ -374,7 +374,7 @@ export default function FeatureJob() {
           <Link to='/'>
             <div
               className=' mt-[24px] flex justify-between items-center p-[32px] border border-[#EDEFF5]
-             rounded-[12px] hover:shadow-lg hover:transition hover:ease-in-out hover:duration-[0.25s]'
+             rounded-[12px] hover:shadow-2xl hover:transition hover:ease-in-out hover:duration-[0.25s]'
             >
               <div className='flex items-center gap-[20px]'>
                 <img
@@ -540,7 +540,7 @@ export default function FeatureJob() {
           <Link to='/'>
             <div
               className='mt-[24px] flex justify-between items-center p-[32px] border border-[#EDEFF5]
-             rounded-[12px] hover:shadow-lg hover:transition hover:ease-in-out hover:duration-[0.25s]'
+             rounded-[12px] hover:shadow-2xl hover:transition hover:ease-in-out hover:duration-[0.25s]'
             >
               <div className='flex items-center gap-[20px]'>
                 <img
@@ -706,7 +706,7 @@ export default function FeatureJob() {
           <Link to='/'>
             <div
               className='mt-[24px] flex justify-between items-center p-[32px] border border-[#EDEFF5]
-             rounded-[12px] hover:shadow-lg hover:transition hover:ease-in-out hover:duration-[0.25s]'
+             rounded-[12px] hover:shadow-2xl hover:transition hover:ease-in-out hover:duration-[0.25s]'
             >
               <div className='flex items-center gap-[20px]'>
                 <img
@@ -872,7 +872,7 @@ export default function FeatureJob() {
           <Link to='/'>
             <div
               className='mt-[24px] flex justify-between items-center p-[32px] border border-[#EDEFF5]
-             rounded-[12px] hover:shadow-lg hover:transition hover:ease-in-out hover:duration-[0.25s]'
+             rounded-[12px] hover:shadow-2xl hover:transition hover:ease-in-out hover:duration-[0.25s]'
             >
               <div className='flex items-center gap-[20px]'>
                 <img
