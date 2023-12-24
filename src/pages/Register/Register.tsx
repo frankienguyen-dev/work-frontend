@@ -8,6 +8,8 @@ import Input from 'src/components/Input';
 import { ResponseApi } from 'src/types/utils.type';
 import { Schema, schema } from 'src/utils/rules';
 import { isAxiosConflictError } from 'src/utils/utils';
+import ModalRegister from './ModalRegister';
+import { useState } from 'react';
 
 type FormData = Schema;
 type FormError = {
@@ -15,6 +17,8 @@ type FormError = {
 };
 
 export default function Register() {
+  const [isOpenModal, setIsOpenModal] = useState(false);
+
   const {
     register,
     handleSubmit,
@@ -31,7 +35,10 @@ export default function Register() {
   const onSubmit = handleSubmit((data) => {
     const body = omit(data, ['confirm_password', 'read_agree']);
     registerAccountMutation.mutate(body, {
-      onSuccess: (data) => console.log(data),
+      onSuccess: (data) => {
+        setIsOpenModal(true);
+        console.log('data: ', data);
+      },
       onError: (error) => {
         if (isAxiosConflictError<ResponseApi<FormError>>(error)) {
           const formError = error.response?.data.data;
@@ -202,6 +209,7 @@ export default function Register() {
           />
         </div>
       </div>
+      {isOpenModal && <ModalRegister closeModal={() => setIsOpenModal(false)} />}
     </div>
   );
 }
