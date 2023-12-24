@@ -1086,7 +1086,10 @@ export default function SearchHomePage() {
           </div>
 
           <div className='grid grid-cols-4 w-full py-[100px] gap-[24px]'>
-            <div className='bg-white rounded-[8px] p-5'>
+            <div
+              className='bg-white rounded-[8px] p-5 hover:cursor-pointer hover:shadow-2xl
+            hover:transition hover:ease-in-out hover:duration-[0.25s]'
+            >
               <div className='flex gap-[20px]'>
                 <div
                   className='bg-[#E7F0FA] rounded-[8px] w-[72px] h-[72px]
@@ -1148,9 +1151,12 @@ export default function SearchHomePage() {
               </div>
             </div>
 
-            <div className='bg-white rounded-[8px] p-5'>
+            <div
+              className='bg-white rounded-[8px] p-5 hover:cursor-pointer hover:shadow-2xl
+            hover:transition hover:ease-in-out hover:duration-[0.25s]'
+            >
               <div className='flex gap-[20px]'>
-                <div className='bg-[#0A65CC] rounded-[8px] w-[72px] h-[72px] flex items-center justify-center'>
+                <div className='bg-[#E7F0FA] rounded-[8px] w-[72px] h-[72px] flex items-center justify-center'>
                   <svg
                     width='40'
                     height='40'
@@ -1166,56 +1172,56 @@ export default function SearchHomePage() {
                       />
                       <path
                         d='M2.5 33.7474H37.5'
-                        stroke='white'
+                        stroke='#0A65CC'
                         strokeWidth='2'
                         strokeLinecap='round'
                         strokeLinejoin='round'
                       />
                       <path
                         d='M22.499 33.7473V6.24731C22.499 5.91579 22.3673 5.59785 22.1328 5.36343C21.8984 5.12901 21.5805 4.99731 21.249 4.99731H6.24896C5.91744 4.99731 5.5995 5.12901 5.36508 5.36343C5.13066 5.59785 4.99896 5.91579 4.99896 6.24731V33.7473'
-                        stroke='white'
+                        stroke='#0A65CC'
                         strokeWidth='2'
                         strokeLinecap='round'
                         strokeLinejoin='round'
                       />
                       <path
                         d='M34.999 33.7473V16.2473C34.999 15.9158 34.8673 15.5979 34.6329 15.3634C34.3984 15.129 34.0805 14.9973 33.749 14.9973H22.499'
-                        stroke='white'
+                        stroke='#0A65CC'
                         strokeWidth='2'
                         strokeLinecap='round'
                         strokeLinejoin='round'
                       />
                       <path
                         d='M9.99896 11.2473H14.999'
-                        stroke='white'
+                        stroke='#0A65CC'
                         strokeWidth='2'
                         strokeLinecap='round'
                         strokeLinejoin='round'
                       />
                       <path
                         d='M12.499 21.2474H17.499'
-                        stroke='white'
+                        stroke='#0A65CC'
                         strokeWidth='2'
                         strokeLinecap='round'
                         strokeLinejoin='round'
                       />
                       <path
                         d='M9.99896 27.4974H14.999'
-                        stroke='white'
+                        stroke='#0A65CC'
                         strokeWidth='2'
                         strokeLinecap='round'
                         strokeLinejoin='round'
                       />
                       <path
                         d='M27.499 27.4974H29.999'
-                        stroke='white'
+                        stroke='#0A65CC'
                         strokeWidth='2'
                         strokeLinecap='round'
                         strokeLinejoin='round'
                       />
                       <path
                         d='M27.499 21.2474H29.999'
-                        stroke='white'
+                        stroke='#0A65CC'
                         strokeWidth='2'
                         strokeLinecap='round'
                         strokeLinejoin='round'
@@ -1223,7 +1229,7 @@ export default function SearchHomePage() {
                     </g>
                     <defs>
                       <clipPath id='clip0_100_14090'>
-                        <rect width='40' height='40' fill='white' />
+                        <rect width='40' height='40' fill='#0A65CC' />
                       </clipPath>
                     </defs>
                   </svg>
@@ -1235,7 +1241,10 @@ export default function SearchHomePage() {
               </div>
             </div>
 
-            <div className='bg-white rounded-[8px] p-5'>
+            <div
+              className='bg-white rounded-[8px] p-5 hover:cursor-pointer hover:shadow-2xl
+            hover:transition hover:ease-in-out hover:duration-[0.25s]'
+            >
               <div className='flex gap-[20px]'>
                 <div className='bg-[#E7F0FA] rounded-[8px] h-[72px] w-[72px] flex items-center justify-center'>
                   <svg
@@ -1293,7 +1302,10 @@ export default function SearchHomePage() {
               </div>
             </div>
 
-            <div className='bg-white rounded-[8px] p-5'>
+            <div
+              className='bg-white rounded-[8px] p-5 hover:cursor-pointer hover:shadow-2xl
+            hover:transition hover:ease-in-out hover:duration-[0.25s]'
+            >
               <div className='flex gap-[20px]'>
                 <div
                   className='bg-[#E7F0FA] rounded-[8px] h-[72px] w-[72px]

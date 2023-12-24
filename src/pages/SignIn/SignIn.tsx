@@ -1,7 +1,7 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { loginAccount } from 'src/apis/auth.api';
 import Input from 'src/components/Input';
 import { ResponseApi } from 'src/types/utils.type';
@@ -25,34 +25,33 @@ export default function SignIn() {
     resolver: yupResolver(loginSchema)
   });
 
+  const navigate = useNavigate();
+
   const loginAccountMutation = useMutation({
     mutationFn: (body: FormData) => loginAccount(body)
   });
 
-  const onSubmit = handleSubmit(
-    (data) => {
-      loginAccountMutation.mutate(data, {
-        onSuccess: (data) => console.log('data success: ', data),
-        onError: (error) => {
-          if (isAxiosUnauthorizedError<ResponseApi<FormError>>(error)) {
-            const formError = error.response?.data.data;
-            if (formError) {
-              setError('email', {
-                message: formError.message
-              });
-              setError('password', {
-                message: formError.message
-              });
-            }
-            console.log('check error: ', error);
+  const onSubmit = handleSubmit((data) => {
+    loginAccountMutation.mutate(data, {
+      onSuccess: (data) => {
+        navigate('/');
+      },
+      onError: (error) => {
+        if (isAxiosUnauthorizedError<ResponseApi<FormError>>(error)) {
+          const formError = error.response?.data.data;
+          if (formError) {
+            setError('email', {
+              message: formError.message
+            });
+            setError('password', {
+              message: formError.message
+            });
           }
+          console.log('check error: ', error);
         }
-      });
-    },
-    (error) => {
-      console.log('error login: ', error);
-    }
-  );
+      }
+    });
+  });
 
   return (
     <div>
