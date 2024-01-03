@@ -4,9 +4,11 @@ import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import { loginAccount } from 'src/apis/auth.api';
 import Input from 'src/components/Input';
-import { ResponseApi } from 'src/types/utils.type';
+import { ErrorResponse } from 'src/types/utils.type';
 import { Schema, schema } from 'src/utils/rules';
 import { isAxiosUnauthorizedError } from 'src/utils/utils';
+import { useContext } from 'react';
+import { AppContext } from '../../contexts/app.context.tsx';
 
 type FormData = Pick<Schema, 'email' | 'password'>;
 
@@ -16,6 +18,8 @@ type FormError = {
 };
 
 export default function SignIn() {
+  const { setIsAuthenticated } = useContext(AppContext);
+  const navigate = useNavigate();
   const {
     handleSubmit,
     register,
@@ -25,19 +29,18 @@ export default function SignIn() {
     resolver: yupResolver(loginSchema)
   });
 
-  const navigate = useNavigate();
-
   const loginAccountMutation = useMutation({
     mutationFn: (body: FormData) => loginAccount(body)
   });
 
   const onSubmit = handleSubmit((data) => {
     loginAccountMutation.mutate(data, {
-      onSuccess: (data) => {
+      onSuccess: () => {
+        setIsAuthenticated(true);
         navigate('/');
       },
       onError: (error) => {
-        if (isAxiosUnauthorizedError<ResponseApi<FormError>>(error)) {
+        if (isAxiosUnauthorizedError<ErrorResponse<FormError>>(error)) {
           const formError = error.response?.data.data;
           if (formError) {
             setError('email', {
@@ -47,7 +50,6 @@ export default function SignIn() {
               message: formError.message
             });
           }
-          console.log('check error: ', error);
         }
       }
     });
@@ -59,7 +61,7 @@ export default function SignIn() {
         <div className='col-span-1 xl:ml-[100px] 2xl:ml-[210px]'>
           <Link to={'/'}>
             <div
-              className=' hidden xl:flex items-center sm:ml-[200px] my-[30px] xs:ml-[50px] 
+              className=' hidden xl:flex items-center sm:ml-[200px] my-[30px] xs:ml-[50px]
               ml-[30px] md:ml-[128px] xl:ml-0'
             >
               <div className='mr-2'>
@@ -150,7 +152,7 @@ export default function SignIn() {
 
               <button
                 type='submit'
-                className='text-white mt-8 bg-[#0b65cc] hover:bg-blue-800 focus:ring-4 
+                className='text-white mt-8 bg-[#0b65cc] hover:bg-blue-800 focus:ring-4
                 focus:outline-none focus:ring-blue-300 font-medium rounded-[5px] text-md 
                 w-full md:w-[100%] h-[56px] xs:w-auto sm:w-full px-5 py-2.5 text-center 
                 flex justify-center items-center mb-10 xl:mb-0'

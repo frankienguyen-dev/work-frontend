@@ -6,7 +6,9 @@ export const registerAccount = (body: {
   email: string;
   password: string;
   role: string;
-}) => http.post<AuthResponse>('/api/v1/auth/register', body);
+}) => http.post<AuthResponse>('/auth/register', body);
 
 export const loginAccount = (body: { email: string; password: string }) =>
-  http.post<AuthResponse>('api/v1/auth/login', body);
+  http.post<AuthResponse>('/auth/login', body);
+
+export const logoutAccount = () => http.post('/auth/logout');

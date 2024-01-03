@@ -9,8 +9,8 @@ export default function SearchHomePage() {
                 Find a job that suits your interest & skills.
               </h1>
               <p className='mt-6 text-[18px] leading-7 text-[#5E6670] max-w-[536px]'>
-                Aliquam vitae turpis in diam convallis finibus in at risus. Nullam in scelerisque
-                leo, eget sollicitudin velit bestibulum.
+                Best tools for your application journey. Make your profile stand out with useful
+                tools and knowledge from Workdev.
               </p>
               <form className='mt-[32px]' noValidate>
                 <div className='relative'>
