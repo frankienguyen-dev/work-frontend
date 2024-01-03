@@ -11,8 +11,9 @@ export default function PopularCategory() {
             </h1>
             <div className='flex gap-[16px] items-center'>
               <button
-                className='w-[48px] h-[48px] bg-[#E7F0FA] items-center
-              justify-center flex rounded-[5px]'
+                className='w-[48px] h-[48px] bg-[#E7F0FA] items-center text-[#0A65CC]
+              justify-center flex rounded-[5px] hover:bg-[#0A65CC] hover:text-white duration-[0.25s]
+              ease-in'
               >
                 <svg
                   width='24'
@@ -23,14 +24,14 @@ export default function PopularCategory() {
                 >
                   <path
                     d='M19 12H5'
-                    stroke='#0A65CC'
+                    stroke='currentColor'
                     strokeWidth='1.5'
                     strokeLinecap='round'
                     strokeLinejoin='round'
                   />
                   <path
                     d='M12 5L5 12L12 19'
-                    stroke='#0A65CC'
+                    stroke='currentColor'
                     strokeWidth='1.5'
                     strokeLinecap='round'
                     strokeLinejoin='round'
@@ -39,7 +40,8 @@ export default function PopularCategory() {
               </button>
               <button
                 className='w-[48px] h-[48px] bg-[#E7F0FA] items-center
-              justify-center flex rounded-[5px]'
+              justify-center flex rounded-[5px] text-[#0A65CC] hover:bg-[#0A65CC] hover:text-white
+              duration-[0.25s] ease-in'
               >
                 <svg
                   width='24'
@@ -50,14 +52,14 @@ export default function PopularCategory() {
                 >
                   <path
                     d='M5 12H19'
-                    stroke='#0A65CC'
+                    stroke='currentColor'
                     strokeWidth='1.5'
                     strokeLinecap='round'
                     strokeLinejoin='round'
                   />
                   <path
                     d='M12 5L19 12L12 19'
-                    stroke='#0A65CC'
+                    stroke='currentColor'
                     strokeWidth='1.5'
                     strokeLinecap='round'
                     strokeLinejoin='round'

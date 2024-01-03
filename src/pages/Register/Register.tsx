@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import { registerAccount } from 'src/apis/auth.api';
 import Input from 'src/components/Input';
-import { ResponseApi } from 'src/types/utils.type';
+import { ErrorResponse } from 'src/types/utils.type';
 import { Schema, schema } from 'src/utils/rules';
 import { isAxiosConflictError } from 'src/utils/utils';
 import ModalRegister from './ModalRegister';
@@ -40,7 +40,7 @@ export default function Register() {
         console.log('data: ', data);
       },
       onError: (error) => {
-        if (isAxiosConflictError<ResponseApi<FormError>>(error)) {
+        if (isAxiosConflictError<ErrorResponse<FormError>>(error)) {
           const formError = error.response?.data.data;
           if (formError) {
             setError('email', {
@@ -209,7 +209,40 @@ export default function Register() {
           />
         </div>
       </div>
-      {isOpenModal && <ModalRegister closeModal={() => setIsOpenModal(false)} />}
+      {isOpenModal && (
+        <ModalRegister
+          closeModal={() => setIsOpenModal(false)}
+          heading='Registration successful. Do you want to proceed to the signin page'
+          textButtonNo='Yes, please'
+          textButtonYes='No, cancel'
+          redirectToYes='/signin'
+          redirectToNo=''
+          icon={
+            <svg
+              width='50'
+              height='50'
+              viewBox='0 0 24 24'
+              fill='none'
+              xmlns='http://www.w3.org/2000/svg'
+            >
+              <path
+                d='M5.10571 18.8943C4.24283 18.0314 4.81514 16.2198 4.37595 15.1584C3.92066 14.058 2.25 13.1723 2.25 12C2.25 10.8276 3.92067 9.942 4.37595 8.84164C4.81515 7.78015 4.24283 5.96858 5.10571 5.10571C5.96858 4.24283 7.78016 4.81514 8.84165 4.37595C9.94203 3.92066 10.8277 2.25 12 2.25C13.1724 2.25 14.058 3.92067 15.1584 4.37595C16.2199 4.81515 18.0314 4.24283 18.8943 5.10571C19.7572 5.96858 19.1849 7.78016 19.6241 8.84165C20.0793 9.94203 21.75 10.8277 21.75 12C21.75 13.1724 20.0793 14.058 19.624 15.1584C19.1848 16.2199 19.7572 18.0314 18.8943 18.8943C18.0314 19.7572 16.2198 19.1849 15.1584 19.6241C14.058 20.0793 13.1723 21.75 12 21.75C10.8276 21.75 9.942 20.0793 8.84164 19.624C7.78015 19.1848 5.96858 19.7572 5.10571 18.8943Z'
+                stroke='#0d7490'
+                strokeWidth='1.5'
+                strokeLinecap='round'
+                strokeLinejoin='round'
+              />
+              <path
+                d='M16.125 9.75L10.625 15L7.875 12.375'
+                stroke='#0d7490'
+                strokeWidth='1.5'
+                strokeLinecap='round'
+                strokeLinejoin='round'
+              />
+            </svg>
+          }
+        />
+      )}
     </div>
   );
 }

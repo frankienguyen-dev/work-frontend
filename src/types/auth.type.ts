@@ -1,6 +1,7 @@
-import { ResponseApi } from './utils.type';
+import { SuccessResponse } from './utils.type';
 
-export type AuthResponse = ResponseApi<{
+export type AuthResponse = SuccessResponse<{
+  accessToken: string;
   id: string;
   email: string;
   fullName: string;
