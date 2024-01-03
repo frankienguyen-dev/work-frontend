@@ -22,7 +22,7 @@ export default function ModalRegister({
   redirectToYes
 }: Props) {
   return (
-    <>
+    <div className='flex items-center justify-center'>
       <Modal show={true} size='3xl' onClose={closeModal} popup>
         <Modal.Header />
         <Modal.Body>
@@ -78,6 +78,6 @@ export default function ModalRegister({
           </div>
         </Modal.Body>
       </Modal>
-    </>
+    </div>
   );
 }

@@ -7,6 +7,7 @@ import {
   getAccessTokenFromLocalStorage,
   saveAccessTokenFromLocalStorage
 } from './auth.ts';
+import { isAccessTokenExpired } from './utils.ts';
 
 class Http {
   instance: AxiosInstance;
@@ -22,7 +23,7 @@ class Http {
 
     this.instance.interceptors.request.use(
       (config) => {
-        if (this.accessToken && config.headers) {
+        if (this.accessToken && config.headers && !isAccessTokenExpired()) {
           config.headers.authorization = `Bearer ${this.accessToken}`;
 
           return config;

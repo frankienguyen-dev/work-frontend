@@ -7,7 +7,7 @@ import Input from 'src/components/Input';
 import { ErrorResponse } from 'src/types/utils.type';
 import { Schema, schema } from 'src/utils/rules';
 import { isAxiosUnauthorizedError } from 'src/utils/utils';
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { AppContext } from '../../contexts/app.context.tsx';
 
 type FormData = Pick<Schema, 'email' | 'password'>;
@@ -19,6 +19,7 @@ type FormError = {
 
 export default function SignIn() {
   const { setIsAuthenticated } = useContext(AppContext);
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const navigate = useNavigate();
   const {
     handleSubmit,
@@ -33,7 +34,15 @@ export default function SignIn() {
     mutationFn: (body: FormData) => loginAccount(body)
   });
 
+  useEffect(() => {
+    console.log('check effect sign in');
+    if (loginAccountMutation.isError) {
+      setIsButtonDisabled(false);
+    }
+  }, [loginAccountMutation.isError]);
+
   const onSubmit = handleSubmit((data) => {
+    setIsButtonDisabled(true);
     loginAccountMutation.mutate(data, {
       onSuccess: () => {
         setIsAuthenticated(true);
@@ -156,6 +165,7 @@ export default function SignIn() {
                 focus:outline-none focus:ring-blue-300 font-medium rounded-[5px] text-md 
                 w-full md:w-[100%] h-[56px] xs:w-auto sm:w-full px-5 py-2.5 text-center 
                 flex justify-center items-center mb-10 xl:mb-0'
+                disabled={isButtonDisabled}
               >
                 Sign in
               </button>
