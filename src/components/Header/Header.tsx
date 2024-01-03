@@ -20,14 +20,28 @@ export default function Header() {
     }
   });
 
+  console.log('check authenticated before: ', isAuthenticated);
   useEffect(() => {
     if (isAccessTokenExpired() && isAuthenticated) {
-      console.log('check authen: ', isAuthenticated);
       setIsOpenModal(true);
       clearAccessTokenFromLocalStorage();
       setIsAuthenticated(false);
+      console.log('check authenticated after: ', isAuthenticated);
     }
   }, [setIsAuthenticated, setIsOpenModal, isAuthenticated]);
+  console.log('check authenticated finish use effect: ', isAuthenticated);
+  // useEffect(() => {
+  //   const handleLogoutEffect = async () => {
+  //     if (isAccessTokenExpired() && isAuthenticated) {
+  //       setIsOpenModal(true);
+  //       clearAccessTokenFromLocalStorage();
+  //       // setIsAuthenticated(false); // Không cần thiết ở đây
+  //       console.log('check effect');
+  //     }
+  //   };
+  //
+  //   handleLogoutEffect();
+  // }, [setIsOpenModal, isAuthenticated]);
 
   const handleLogout = () => {
     logoutMutation.mutate();
@@ -160,7 +174,7 @@ export default function Header() {
         <ModalRegister
           closeModal={() => setIsOpenModal(false)}
           heading='The session has expired, please sign in again.'
-          textButtonNo='Cencel'
+          textButtonNo='Cancel'
           textButtonYes='Yes'
           redirectToYes='/signin'
           redirectToNo=''
