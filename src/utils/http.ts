@@ -4,6 +4,7 @@ import { HttpStatusCode } from 'src/constants/httpStatusCode.enum';
 import { AuthResponse, RefreshTokenResponse } from '../types/auth.type.ts';
 import {
   clearAccessTokenFromLocalStorage,
+  clearRoleToLocalStorage,
   getAccessTokenFromLocalStorage,
   isAccessTokenExpired,
   saveAccessTokenFromLocalStorage
@@ -41,11 +42,13 @@ class Http {
     this.instance.interceptors.response.use(
       async (response) => {
         const url = response.config.url;
+        console.log('response: ', response);
         if (url === URL_LOGIN) {
           this.accessToken = (response.data as AuthResponse).data.accessToken;
           saveAccessTokenFromLocalStorage(this.accessToken);
         } else if (url === URL_LOGOUT) {
           this.accessToken = '';
+          clearRoleToLocalStorage();
           clearAccessTokenFromLocalStorage();
         }
         return response;
