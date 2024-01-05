@@ -35,7 +35,6 @@ export default function SignIn() {
   });
 
   useEffect(() => {
-    console.log('check effect sign in');
     if (loginAccountMutation.isError) {
       setIsButtonDisabled(false);
     }
@@ -162,8 +161,8 @@ export default function SignIn() {
               <button
                 type='submit'
                 className='text-white mt-8 bg-[#0b65cc] hover:bg-blue-800 focus:ring-4
-                focus:outline-none focus:ring-blue-300 font-medium rounded-[5px] text-md 
-                w-full md:w-[100%] h-[56px] xs:w-auto sm:w-full px-5 py-2.5 text-center 
+                focus:outline-none focus:ring-blue-300 font-medium rounded-[5px] text-md
+                w-full md:w-[100%] h-[56px] xs:w-auto sm:w-full px-5 py-2.5 text-center
                 flex justify-center items-center mb-10 xl:mb-0'
                 disabled={isButtonDisabled}
               >

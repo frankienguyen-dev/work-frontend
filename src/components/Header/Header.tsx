@@ -5,8 +5,7 @@ import { useContext, useEffect, useState } from 'react';
 import { AppContext } from '../../contexts/app.context.tsx';
 import { useMutation } from '@tanstack/react-query';
 import { logoutAccount } from '../../apis/auth.api.ts';
-import { isAccessTokenExpired } from '../../utils/utils.ts';
-import { clearAccessTokenFromLocalStorage } from '../../utils/auth.ts';
+import { isAccessTokenExpired, clearAccessTokenFromLocalStorage } from '../../utils/auth.ts';
 import ModalRegister from '../../pages/Register/ModalRegister';
 
 export default function Header() {
@@ -20,28 +19,13 @@ export default function Header() {
     }
   });
 
-  console.log('check authenticated before: ', isAuthenticated);
   useEffect(() => {
     if (isAccessTokenExpired() && isAuthenticated) {
       setIsOpenModal(true);
       clearAccessTokenFromLocalStorage();
       setIsAuthenticated(false);
-      console.log('check authenticated after: ', isAuthenticated);
     }
   }, [setIsAuthenticated, setIsOpenModal, isAuthenticated]);
-  console.log('check authenticated finish use effect: ', isAuthenticated);
-  // useEffect(() => {
-  //   const handleLogoutEffect = async () => {
-  //     if (isAccessTokenExpired() && isAuthenticated) {
-  //       setIsOpenModal(true);
-  //       clearAccessTokenFromLocalStorage();
-  //       // setIsAuthenticated(false); // Không cần thiết ở đây
-  //       console.log('check effect');
-  //     }
-  //   };
-  //
-  //   handleLogoutEffect();
-  // }, [setIsOpenModal, isAuthenticated]);
 
   const handleLogout = () => {
     logoutMutation.mutate();
@@ -142,24 +126,31 @@ export default function Header() {
                       <span className='block text-sm font-medium'>Frankie Nguyen</span>
                       <span className='block truncate text-sm font-medium'>admin@gmail.com</span>
                     </Dropdown.Header>
-                    <Dropdown.Item className='py-[14px]'>
-                      <Link to='/profile' className='font-medium'>
+                    <Dropdown.Item>
+                      <Link to='/profile' className='font-medium py-[10px] block w-full text-left'>
                         Profile
                       </Link>
                     </Dropdown.Item>
-                    <Dropdown.Item className='py-[14px]'>
-                      <Link to='/' className='font-medium'>
+                    <Dropdown.Item>
+                      <Link
+                        to='/dashboard'
+                        className='font-medium py-[10px] block w-full text-left'
+                      >
                         Dashboard
                       </Link>
                     </Dropdown.Item>
-                    <Dropdown.Item className='py-[14px]'>
-                      <Link to='/' className='font-medium'>
-                        Dashboard
+                    <Dropdown.Item>
+                      <Link to='/profile' className='font-medium py-[10px] block w-full text-left'>
+                        Profile
                       </Link>
                     </Dropdown.Item>
                     <Dropdown.Divider className='my-0' />
-                    <Dropdown.Item onClick={handleLogout} className='py-[14px]'>
-                      <Link to='' className='font-medium'>
+                    <Dropdown.Item>
+                      <Link
+                        to=''
+                        onClick={handleLogout}
+                        className='font-medium py-[10px] block w-full text-left'
+                      >
                         Logout
                       </Link>
                     </Dropdown.Item>

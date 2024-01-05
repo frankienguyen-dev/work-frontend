@@ -1,17 +1,21 @@
 import axios, { AxiosError, AxiosInstance } from 'axios';
 import { toast } from 'react-toastify';
 import { HttpStatusCode } from 'src/constants/httpStatusCode.enum';
-import { AuthResponse } from '../types/auth.type.ts';
+import { AuthResponse, RefreshTokenResponse } from '../types/auth.type.ts';
 import {
   clearAccessTokenFromLocalStorage,
   getAccessTokenFromLocalStorage,
+  isAccessTokenExpired,
   saveAccessTokenFromLocalStorage
 } from './auth.ts';
-import { isAccessTokenExpired } from './utils.ts';
+import { URL_LOGIN, URL_LOGOUT, URL_REFRESH_TOKEN } from '../apis/auth.api.ts';
+import { isAxiosExpiredTokenError, isAxiosUnauthorizedError } from './utils.ts';
 
 class Http {
   instance: AxiosInstance;
   private accessToken: string;
+  // private refreshToken: string;
+  // private refreshTokenRequest: Promise<string> | null;
 
   constructor() {
     this.accessToken = getAccessTokenFromLocalStorage();
@@ -22,10 +26,9 @@ class Http {
     });
 
     this.instance.interceptors.request.use(
-      (config) => {
+      async (config) => {
         if (this.accessToken && config.headers && !isAccessTokenExpired()) {
           config.headers.authorization = `Bearer ${this.accessToken}`;
-
           return config;
         }
         return config;
@@ -36,19 +39,18 @@ class Http {
     );
 
     this.instance.interceptors.response.use(
-      (response) => {
-        console.log('response: ', response);
+      async (response) => {
         const url = response.config.url;
-        if (url === '/auth/login') {
+        if (url === URL_LOGIN) {
           this.accessToken = (response.data as AuthResponse).data.accessToken;
           saveAccessTokenFromLocalStorage(this.accessToken);
-        } else if (url === '/auth/logout') {
+        } else if (url === URL_LOGOUT) {
           this.accessToken = '';
           clearAccessTokenFromLocalStorage();
         }
         return response;
       },
-      function (error: AxiosError) {
+      (error: AxiosError) => {
         if (
           error.response?.status !== HttpStatusCode.Conflict &&
           error.response?.status !== HttpStatusCode.Unauthorized
@@ -58,10 +60,36 @@ class Http {
           const message = data.detail || error.message;
           toast.error(message);
         }
+        // console.log('hehehe');
+        // if (isAxiosUnauthorizedError(error)) {
+        //   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        //   const config = error.response?.config;
+        //   const { url } = config;
+        //   console.log('config error: ', config);
+        //   // if (isAxiosExpiredTokenError(error) && url !== URL_REFRESH_TOKEN) {
+        //   // }
+        //   clearAccessTokenFromLocalStorage();
+        // }
         return Promise.reject(error);
       }
     );
   }
+
+  // private handleRefreshToken() {
+  //   this.instance
+  //     .post<RefreshTokenResponse>(URL_REFRESH_TOKEN)
+  //     .then((response) => {
+  //       const { accessToken } = response.data.data;
+  //       saveAccessTokenFromLocalStorage('access_token');
+  //       this.accessToken = accessToken;
+  //       return accessToken;
+  //     })
+  //     .catch((error) => {
+  //       clearAccessTokenFromLocalStorage();
+  //       this.accessToken = '';
+  //       throw error;
+  //     });
+  // }
 }
 
 const http = new Http().instance;
