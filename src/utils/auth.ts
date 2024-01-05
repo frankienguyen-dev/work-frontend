@@ -18,3 +18,15 @@ export const isAccessTokenExpired = () => {
   const expirationTime = decodedToken.exp * 1000;
   return expirationTime < Date.now();
 };
+
+export const saveRoleToLocalStorage = (isRole: string) => {
+  return localStorage.setItem('isRole', isRole);
+};
+
+export const getRoleToLocalStorage = () => {
+  return localStorage.getItem('isRole');
+};
+
+export const clearRoleToLocalStorage = () => {
+  return localStorage.removeItem('isRole');
+};

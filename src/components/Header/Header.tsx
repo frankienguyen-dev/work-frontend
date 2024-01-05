@@ -1,16 +1,14 @@
 import NavHeader from '../NavHeader';
 import { Link } from 'react-router-dom';
 import { Dropdown } from 'flowbite-react';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect } from 'react';
 import { AppContext } from '../../contexts/app.context.tsx';
 import { useMutation } from '@tanstack/react-query';
 import { logoutAccount } from '../../apis/auth.api.ts';
 import { isAccessTokenExpired, clearAccessTokenFromLocalStorage } from '../../utils/auth.ts';
-import ModalRegister from '../../pages/Register/ModalRegister';
 
 export default function Header() {
   const { isAuthenticated, setIsAuthenticated } = useContext(AppContext);
-  const [isOpenModal, setIsOpenModal] = useState(false);
 
   const logoutMutation = useMutation({
     mutationFn: logoutAccount,
@@ -21,11 +19,10 @@ export default function Header() {
 
   useEffect(() => {
     if (isAccessTokenExpired() && isAuthenticated) {
-      setIsOpenModal(true);
       clearAccessTokenFromLocalStorage();
       setIsAuthenticated(false);
     }
-  }, [setIsAuthenticated, setIsOpenModal, isAuthenticated]);
+  }, [setIsAuthenticated, isAuthenticated]);
 
   const handleLogout = () => {
     logoutMutation.mutate();
@@ -161,44 +158,6 @@ export default function Header() {
           </div>
         </div>
       </div>
-      {isOpenModal && (
-        <ModalRegister
-          closeModal={() => setIsOpenModal(false)}
-          heading='The session has expired, please sign in again.'
-          textButtonNo='Cancel'
-          textButtonYes='Yes'
-          redirectToYes='/signin'
-          redirectToNo=''
-          icon={
-            <svg
-              width='50'
-              height='50'
-              viewBox='0 0 24 24'
-              fill='none'
-              xmlns='http://www.w3.org/2000/svg'
-            >
-              <path
-                d='M5.10571 18.8943C4.24283 18.0314 4.81514 16.2198 4.37595 15.1584C3.92066 14.058 2.25 13.1723 2.25 12C2.25 10.8276 3.92067 9.942 4.37595 8.84164C4.81515 7.78015 4.24283 5.96858 5.10571 5.10571C5.96858 4.24283 7.78016 4.81514 8.84165 4.37595C9.94203 3.92066 10.8277 2.25 12 2.25C13.1724 2.25 14.058 3.92067 15.1584 4.37595C16.2199 4.81515 18.0314 4.24283 18.8943 5.10571C19.7572 5.96858 19.1849 7.78016 19.6241 8.84165C20.0793 9.94203 21.75 10.8277 21.75 12C21.75 13.1724 20.0793 14.058 19.624 15.1584C19.1848 16.2199 19.7572 18.0314 18.8943 18.8943C18.0314 19.7572 16.2198 19.1849 15.1584 19.6241C14.058 20.0793 13.1723 21.75 12 21.75C10.8276 21.75 9.942 20.0793 8.84164 19.624C7.78015 19.1848 5.96858 19.7572 5.10571 18.8943Z'
-                stroke='red'
-                strokeWidth='1.5'
-                strokeLinecap='round'
-                strokeLinejoin='round'
-              />
-              <path
-                d='M12 7.5V12.75'
-                stroke='red'
-                strokeWidth='1.5'
-                strokeLinecap='round'
-                strokeLinejoin='round'
-              />
-              <path
-                d='M12 17.25C12.6213 17.25 13.125 16.7463 13.125 16.125C13.125 15.5037 12.6213 15 12 15C11.3787 15 10.875 15.5037 10.875 16.125C10.875 16.7463 11.3787 17.25 12 17.25Z'
-                fill='red'
-              />
-            </svg>
-          }
-        />
-      )}
     </div>
   );
 }

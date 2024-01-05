@@ -9,6 +9,7 @@ import { Schema, schema } from 'src/utils/rules';
 import { isAxiosUnauthorizedError } from 'src/utils/utils';
 import { useContext, useEffect, useState } from 'react';
 import { AppContext } from '../../contexts/app.context.tsx';
+import { saveRoleToLocalStorage } from '../../utils/auth.ts';
 
 type FormData = Pick<Schema, 'email' | 'password'>;
 
@@ -20,6 +21,8 @@ type FormError = {
 export default function SignIn() {
   const { setIsAuthenticated } = useContext(AppContext);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+  const { isRole, setRole } = useContext(AppContext);
+  console.log('check is role: ', isRole);
   const navigate = useNavigate();
   const {
     handleSubmit,
@@ -43,7 +46,9 @@ export default function SignIn() {
   const onSubmit = handleSubmit((data) => {
     setIsButtonDisabled(true);
     loginAccountMutation.mutate(data, {
-      onSuccess: () => {
+      onSuccess: (response) => {
+        setRole(response.data.data.role);
+        saveRoleToLocalStorage(response.data.data.role);
         setIsAuthenticated(true);
         navigate('/');
       },
@@ -63,6 +68,7 @@ export default function SignIn() {
     });
   });
 
+  console.log('check is ROle 3: ', isRole);
   return (
     <div>
       <div className='grid grid-cols-1 xl:grid-cols-2 w-full h-[100vh]'>
