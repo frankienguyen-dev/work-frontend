@@ -7,6 +7,7 @@ import Register from 'src/pages/Register';
 import Profile from '../pages/Profile';
 import { useContext } from 'react';
 import { AppContext } from '../contexts/app.context.tsx';
+import UserDashboard from '../pages/UserDashboard';
 
 function ProtectedRoute() {
   const { isAuthenticated } = useContext(AppContext);
@@ -31,6 +32,10 @@ export default function useRouteElement() {
               <Profile />
             </MainLayout>
           )
+        },
+        {
+          path: '/dashboard',
+          element: <UserDashboard />
         }
       ]
     },
