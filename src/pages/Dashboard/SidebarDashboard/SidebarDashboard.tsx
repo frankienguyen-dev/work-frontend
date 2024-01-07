@@ -4,9 +4,9 @@ export default function SidebarDashboard() {
   return (
     <div
       className='hidden lg:block flex flex-col justify-between
-          border-r min-h-[80vh] border-r-[#e4e5e8] solid'
+          border-r min-h-[100vh] border-r-[#e4e5e8] solid'
     >
-      <div className='fixed w-[294px] '>
+      <div className='fixed w-[294px] min-h-[100vh] overflow-auto '>
         <div className='pt-[24px] px-[20px]'>
           <h1 className='text-[14px] font-medium leading-5 text-[#9199a3]'>CANDIDATE DASHBOARD</h1>
         </div>
