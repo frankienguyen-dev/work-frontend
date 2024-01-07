@@ -1,15 +1,27 @@
-import { useContext } from 'react';
-import { AppContext } from '../../contexts/app.context.tsx';
-
-import UserDashboard from '../UserDashboard';
-import AdminDashboard from '../AdminDashboard';
-import HrDashboard from '../HrDashboard';
+import Header from '../../components/Header';
+import SidebarDashboard from './SidebarDashboard';
+import Overview from './Overview/Overview.tsx';
+import { Route, Routes } from 'react-router-dom';
+import Company from './Company';
 
 export default function Dashboard() {
-  const { isRole } = useContext(AppContext);
-  let dashboardComponent;
-  if (isRole === 'ROLE_ADMIN') dashboardComponent = <AdminDashboard />;
-  if (isRole === 'ROLE_HR') dashboardComponent = <HrDashboard />;
-  if (isRole === 'ROLE_USER') dashboardComponent = <UserDashboard />;
-  return <div>{dashboardComponent}</div>;
+  return (
+    <>
+      <Header />
+
+      <div className='container'>
+        <div className='grid grid-cols-12 gap-[48px] pt-[138px]'>
+          <div className='col-span-3'>
+            <SidebarDashboard />
+          </div>
+          <div className='col-span-9'>
+            <Routes>
+              <Route path='' element={<Overview />} />
+              <Route path='company' element={<Company />} />
+            </Routes>
+          </div>
+        </div>
+      </div>
+    </>
+  );
 }
