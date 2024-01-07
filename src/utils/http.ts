@@ -42,7 +42,6 @@ class Http {
     this.instance.interceptors.response.use(
       async (response) => {
         const url = response.config.url;
-        console.log('response: ', response);
         if (url === URL_LOGIN) {
           this.accessToken = (response.data as AuthResponse).data.accessToken;
           saveAccessTokenFromLocalStorage(this.accessToken);

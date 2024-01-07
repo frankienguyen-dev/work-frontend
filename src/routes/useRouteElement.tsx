@@ -8,6 +8,7 @@ import Profile from '../pages/Profile';
 import { useContext } from 'react';
 import { AppContext } from '../contexts/app.context.tsx';
 import Dashboard from '../pages/Dashboard';
+import Company from '../pages/Dashboard/Company';
 
 function ProtectedRoute() {
   const { isAuthenticated } = useContext(AppContext);
@@ -35,7 +36,13 @@ export default function useRouteElement() {
         },
         {
           path: '/dashboard',
-          element: <Dashboard />
+          element: <Dashboard />,
+          children: [
+            {
+              path: 'company',
+              element: <Company />
+            }
+          ]
         }
       ]
     },
