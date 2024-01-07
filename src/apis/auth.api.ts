@@ -6,14 +6,14 @@ export const URL_REGISTER = '/auth/register';
 export const URL_LOGOUT = '/auth/logout';
 export const URL_REFRESH_TOKEN = '/auth/refresh';
 
-export const registerAccount = (body: {
-  fullName: string;
-  email: string;
-  password: string;
-  role: string;
-}) => http.post<AuthResponse>(URL_REGISTER, body);
+const authApi = {
+  registerAccount: (body: { fullName: string; email: string; password: string; role: string }) =>
+    http.post<AuthResponse>(URL_REGISTER, body),
 
-export const loginAccount = (body: { email: string; password: string }) =>
-  http.post<AuthResponse>(URL_LOGIN, body);
+  loginAccount: (body: { email: string; password: string }) =>
+    http.post<AuthResponse>(URL_LOGIN, body),
 
-export const logoutAccount = () => http.post(URL_LOGOUT);
+  logoutAccount: () => http.post(URL_LOGOUT)
+};
+
+export default authApi;

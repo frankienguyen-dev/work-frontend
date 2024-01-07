@@ -3,7 +3,7 @@ import { useMutation } from '@tanstack/react-query';
 import { omit } from 'lodash';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
-import { registerAccount } from 'src/apis/auth.api';
+import authApi from 'src/apis/auth.api';
 import Input from 'src/components/Input';
 import { ErrorResponse } from 'src/types/utils.type';
 import { Schema, schema } from 'src/utils/rules';
@@ -29,7 +29,8 @@ export default function Register() {
   });
 
   const registerAccountMutation = useMutation({
-    mutationFn: (body: Omit<FormData, 'confirm_password' | 'read_agree'>) => registerAccount(body)
+    mutationFn: (body: Omit<FormData, 'confirm_password' | 'read_agree'>) =>
+      authApi.registerAccount(body)
   });
 
   const onSubmit = handleSubmit((data) => {
@@ -213,8 +214,8 @@ export default function Register() {
         <ModalRegister
           closeModal={() => setIsOpenModal(false)}
           heading='Registration successful. Do you want to proceed to the signin page'
-          textButtonNo='Yes, please'
-          textButtonYes='No, cancel'
+          textButtonYes='Yes, please'
+          textButtonNo='No, cancel'
           redirectToYes='/signin'
           redirectToNo=''
           icon={

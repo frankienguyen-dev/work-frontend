@@ -4,14 +4,14 @@ import { Dropdown } from 'flowbite-react';
 import { useContext, useEffect } from 'react';
 import { AppContext } from '../../contexts/app.context.tsx';
 import { useMutation } from '@tanstack/react-query';
-import { logoutAccount } from '../../apis/auth.api.ts';
+import authApi from '../../apis/auth.api.ts';
 import { isAccessTokenExpired, clearAccessTokenFromLocalStorage } from '../../utils/auth.ts';
 
 export default function Header() {
   const { isAuthenticated, setIsAuthenticated } = useContext(AppContext);
 
   const logoutMutation = useMutation({
-    mutationFn: logoutAccount,
+    mutationFn: () => authApi.logoutAccount(),
     onSuccess: () => {
       setIsAuthenticated(false);
     }
@@ -29,7 +29,7 @@ export default function Header() {
   };
 
   return (
-    <div>
+    <div className='fixed top-0 left-0 right-0 z-40 border-b solid border-b-[#e4e5e8]'>
       <NavHeader />
       <div className='bg-white h-[90px]'>
         <div className='container'>

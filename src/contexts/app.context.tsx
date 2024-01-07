@@ -22,7 +22,6 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     initialAppContext.isAuthenticated
   );
   const [isRole, setRole] = useState<string | null>(initialAppContext.isRole);
-  console.log('check role context: ', isRole);
   return (
     <AppContext.Provider
       value={{
