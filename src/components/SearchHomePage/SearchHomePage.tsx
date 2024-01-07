@@ -2,7 +2,7 @@ export default function SearchHomePage() {
   return (
     <div className='bg-[#f7f7f8]'>
       <div className='container'>
-        <div className='pt-[100px]'>
+        <div className='pt-[238px]'>
           <div className='flex items-center'>
             <div className='w-[51.4%] shrink-0 mr-[149px]'>
               <h1 className='font-medium text-[56px] text-[#18191C] leading-[64px] max-w-[652px]'>

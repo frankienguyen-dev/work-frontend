@@ -1,6 +1,37 @@
 import { Link } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+import useQueryParams from '../../hooks/useQueryPrams.tsx';
+import jobApi from '../../apis/job.api.ts';
+// import { getAccessTokenFromLocalStorage } from '../../utils/auth.ts';
+// import axios from 'axios';
 
 export default function FeatureJob() {
+  const queryParams = useQueryParams();
+
+  const { data } = useQuery({
+    queryKey: ['JobList', queryParams],
+    queryFn: () => {
+      console.log('params: ', queryParams);
+      return jobApi.getAllJobs(queryParams);
+    }
+  });
+  console.log('check list job: ', data);
+
+  // const fetchData = async () => {
+  //   try {
+  //     const response = await axios.get('http://localhost:8080/api/v1/jobs', {
+  //       params: queryParams,
+  //       headers: {
+  //         Authorization: `Bearer ${getAccessTokenFromLocalStorage()}`
+  //       }
+  //     });
+  //     console.log(response.data);
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
+
+  // fetchData();
   return (
     <div className='bg-white my-[100px]'>
       <div className='container'>

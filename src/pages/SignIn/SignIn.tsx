@@ -2,7 +2,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
-import { loginAccount } from 'src/apis/auth.api';
+import authApi from 'src/apis/auth.api';
 import Input from 'src/components/Input';
 import { ErrorResponse } from 'src/types/utils.type';
 import { Schema, schema } from 'src/utils/rules';
@@ -21,8 +21,7 @@ type FormError = {
 export default function SignIn() {
   const { setIsAuthenticated } = useContext(AppContext);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
-  const { isRole, setRole } = useContext(AppContext);
-  console.log('check is role: ', isRole);
+  const { setRole } = useContext(AppContext);
   const navigate = useNavigate();
   const {
     handleSubmit,
@@ -34,7 +33,7 @@ export default function SignIn() {
   });
 
   const loginAccountMutation = useMutation({
-    mutationFn: (body: FormData) => loginAccount(body)
+    mutationFn: (body: FormData) => authApi.loginAccount(body)
   });
 
   useEffect(() => {
@@ -68,7 +67,6 @@ export default function SignIn() {
     });
   });
 
-  console.log('check is ROle 3: ', isRole);
   return (
     <div>
       <div className='grid grid-cols-1 xl:grid-cols-2 w-full h-[100vh]'>
