@@ -8,7 +8,9 @@ import Profile from '../pages/Profile';
 import { useContext } from 'react';
 import { AppContext } from '../contexts/app.context.tsx';
 import Dashboard from '../pages/Dashboard';
-import Company from '../pages/Dashboard/Company';
+import AppliedJob from '../pages/Dashboard/AppliedJob';
+import FavoriteJob from '../pages/Dashboard/FavoriteJob';
+import Setting from '../pages/Dashboard/Setting';
 
 function ProtectedRoute() {
   const { isAuthenticated } = useContext(AppContext);
@@ -35,12 +37,20 @@ export default function useRouteElement() {
           )
         },
         {
-          path: '/dashboard',
+          path: '/dashboard/*',
           element: <Dashboard />,
           children: [
             {
-              path: 'company',
-              element: <Company />
+              path: 'applied-job',
+              element: <AppliedJob />
+            },
+            {
+              path: 'favorite-job',
+              element: <FavoriteJob />
+            },
+            {
+              path: 'setting',
+              element: <Setting />
             }
           ]
         }
@@ -79,5 +89,6 @@ export default function useRouteElement() {
       )
     }
   ]);
+
   return routeElement;
 }

@@ -6,6 +6,7 @@ import { AppContext } from '../../contexts/app.context.tsx';
 import { useMutation } from '@tanstack/react-query';
 import authApi from '../../apis/auth.api.ts';
 import { isAccessTokenExpired, clearAccessTokenFromLocalStorage } from '../../utils/auth.ts';
+import avatar from 'src/assets/images/tiktok.png';
 
 export default function Header() {
   const { isAuthenticated, setIsAuthenticated } = useContext(AppContext);
@@ -112,7 +113,8 @@ export default function Header() {
                     inline
                     label={
                       <img
-                        src='src/assets/images/tiktok.png'
+                        // src='src/assets/images/tiktok.png'
+                        src={avatar}
                         alt=''
                         className='w-[48px] h-[48px]
                     object-cover rounded-full flex items-center'
