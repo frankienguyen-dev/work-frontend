@@ -104,7 +104,6 @@ export default function SidebarDashboard() {
               <div className='text-[16px] font-medium text-[currentTextColor]'>Applied Job</div>
             </Link>
           </div>
-
           <div className='group'>
             <Link
               to='favorite-job'
@@ -134,7 +133,47 @@ export default function SidebarDashboard() {
               <div className='text-[16px] font-medium text-[currentTextColor]'>Favorite Jobs</div>
             </Link>
           </div>
-
+          <div className='group'>
+            <Link
+              to='post-job'
+              className='flex items-center gap-[16px] pl-[20px] py-[16px] group-hover:bg-[#E7F0FA]
+              group-hover:cursor-pointer text-[#9199a3] group-hover:text-[#0b65cc] border-l-[3px]
+              border-l-transparent group-hover:border-l-[#0b65cc]  transition-transform transform
+              group-hover:translate-y-0'
+            >
+              <div>
+                <svg
+                  width='24'
+                  height='24'
+                  viewBox='0 0 24 24'
+                  fill='none'
+                  xmlns='http://www.w3.org/2000/svg'
+                >
+                  <path
+                    d='M12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21Z'
+                    stroke='currentColor'
+                    strokeWidth='1.5'
+                    strokeMiterlimit='10'
+                  />
+                  <path
+                    d='M8.25 12H15.75'
+                    stroke='currentColor'
+                    strokeWidth='1.5'
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                  />
+                  <path
+                    d='M12 8.25V15.75'
+                    stroke='currentColor'
+                    strokeWidth='1.5'
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                  />
+                </svg>
+              </div>
+              <div className='text-[16px] font-medium text-[currentTextColor]'>Post A Job</div>
+            </Link>
+          </div>
           <div className='group'>
             <Link
               to='setting'

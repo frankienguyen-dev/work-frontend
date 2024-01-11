@@ -1,7 +1,7 @@
 import axios, { AxiosError, AxiosInstance } from 'axios';
 import { toast } from 'react-toastify';
 import { HttpStatusCode } from 'src/constants/httpStatusCode.enum';
-import { AuthResponse, RefreshTokenResponse } from '../types/auth.type.ts';
+import { AuthResponse } from '../types/auth.type.ts';
 import {
   clearAccessTokenFromLocalStorage,
   clearRoleToLocalStorage,
@@ -9,8 +9,7 @@ import {
   isAccessTokenExpired,
   saveAccessTokenFromLocalStorage
 } from './auth.ts';
-import { URL_LOGIN, URL_LOGOUT, URL_REFRESH_TOKEN } from '../apis/auth.api.ts';
-import { isAxiosExpiredTokenError, isAxiosUnauthorizedError } from './utils.ts';
+import { URL_LOGIN, URL_LOGOUT } from '../apis/auth.api.ts';
 
 class Http {
   instance: AxiosInstance;

@@ -8,6 +8,7 @@ import Setting from './Setting';
 import Personal from './Setting/Personal';
 import ProfileSetting from './Setting/ProfileSetting';
 import AccountSetting from './Setting/AccountSetting';
+import PostAJob from './PostAJob';
 
 export default function Dashboard() {
   return (
@@ -24,6 +25,7 @@ export default function Dashboard() {
               <Route path='' element={<Overview />} />
               <Route path='/applied-job' element={<AppliedJob />} />
               <Route path='/favorite-job' element={<FavoriteJob />} />
+              <Route path='/post-job' element={<PostAJob />} />
               <Route path='/setting' element={<Setting />}>
                 <Route path='' element={<Personal />} />
                 <Route path='profile' element={<ProfileSetting />} />

@@ -11,6 +11,7 @@ import Dashboard from '../pages/Dashboard';
 import AppliedJob from '../pages/Dashboard/AppliedJob';
 import FavoriteJob from '../pages/Dashboard/FavoriteJob';
 import Setting from '../pages/Dashboard/Setting';
+import PostAJob from '../pages/Dashboard/PostAJob';
 
 function ProtectedRoute() {
   const { isAuthenticated } = useContext(AppContext);
@@ -47,6 +48,10 @@ export default function useRouteElement() {
             {
               path: 'favorite-job',
               element: <FavoriteJob />
+            },
+            {
+              path: 'post-job',
+              element: <PostAJob />
             },
             {
               path: 'setting',
