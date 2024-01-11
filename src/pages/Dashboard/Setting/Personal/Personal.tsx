@@ -18,7 +18,7 @@ export default function Personal() {
                   <input
                     type='text'
                     className='w-full mt-2 h-[48px] rounded-[5px] border-[2px] border-[#e4e5e8] text-[16px]
-                      leading-6 text-[#9199a3] focus:outline-none focus:border-[#9099a3] focus:ring-0 '
+                      leading-6 text-[#111827] focus:outline-none focus:border-[#9099a3] focus:ring-0 '
                   />
                 </div>
                 <div className='col-span-1'>
@@ -26,7 +26,7 @@ export default function Personal() {
                   <input
                     type='text'
                     className='w-full mt-2 h-[48px] rounded-[5px] border-[2px] border-[#e4e5e8] text-[16px]
-                      leading-6 text-[#9199a3] focus:outline-none focus:border-[#9099a3] focus:ring-0 '
+                      leading-6 text-[#111827] focus:outline-none focus:border-[#9099a3] focus:ring-0 '
                   />
                 </div>
               </div>
@@ -36,7 +36,7 @@ export default function Personal() {
                   <input
                     type='text'
                     className='w-full mt-2 h-[48px] rounded-[5px] border-[2px] border-[#e4e5e8] text-[16px]
-                      leading-6 text-[#9199a3] focus:outline-none focus:border-[#9099a3] focus:ring-0 '
+                      leading-6 text-[#111827] focus:outline-none focus:border-[#9099a3] focus:ring-0 '
                   />
                 </div>
                 <div className='col-span-1'>
@@ -44,7 +44,7 @@ export default function Personal() {
                   <input
                     type='text'
                     className='w-full mt-2 h-[48px] rounded-[5px] border-[2px] border-[#e4e5e8] text-[16px]
-                      leading-6 text-[#9199a3] focus:outline-none focus:border-[#9099a3] focus:ring-0 '
+                      leading-6 text-[#111827] focus:outline-none focus:border-[#9099a3] focus:ring-0 '
                   />
                 </div>
               </div>

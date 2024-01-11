@@ -138,11 +138,6 @@ export default function Header() {
                         Dashboard
                       </Link>
                     </Dropdown.Item>
-                    <Dropdown.Item>
-                      <Link to='/profile' className='font-medium py-[10px] block w-full text-left'>
-                        Profile
-                      </Link>
-                    </Dropdown.Item>
                     <Dropdown.Divider className='my-0' />
                     <Dropdown.Item>
                       <Link

@@ -3,8 +3,6 @@ import { useQuery } from '@tanstack/react-query';
 import useQueryParams from '../../hooks/useQueryPrams.tsx';
 import jobApi from '../../apis/job.api.ts';
 import { calcDayRemaining, formatSalary } from '../../utils/utils.ts';
-// import { getAccessTokenFromLocalStorage } from '../../utils/auth.ts';
-// import axios from 'axios';
 
 export default function FeatureJob() {
   const { VITE_API_BASE_URL } = import.meta.env;

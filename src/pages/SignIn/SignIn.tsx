@@ -12,12 +12,10 @@ import { AppContext } from '../../contexts/app.context.tsx';
 import { saveRoleToLocalStorage } from '../../utils/auth.ts';
 
 type FormData = Pick<Schema, 'email' | 'password'>;
-
 const loginSchema = schema.pick(['email', 'password']);
 type FormError = {
   message: string;
 };
-
 export default function SignIn() {
   const { setIsAuthenticated } = useContext(AppContext);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);

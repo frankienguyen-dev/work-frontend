@@ -13,7 +13,7 @@ export default function AccountSetting() {
                 type='password'
                 placeholder='Current Password'
                 className='w-full py-[12px] px-[18px] mt-2 h-[48px] rounded-[5px] border-[2px] border-[#e4e5e8] text-[16px]
-                      leading-6 text-[#9199a3] focus:outline-none focus:border-[#9099a3] focus:ring-0 '
+                      leading-6 text-[#111827] focus:outline-none focus:border-[#9099a3] focus:ring-0 '
               />
             </div>
             <div className='mt-8'>
@@ -22,7 +22,7 @@ export default function AccountSetting() {
                 type='password'
                 placeholder='New Password'
                 className='w-full py-[12px] px-[18px] mt-2 h-[48px] rounded-[5px] border-[2px] border-[#e4e5e8] text-[16px]
-              leading-6 text-[#9199a3] focus:outline-none focus:border-[#9099a3] focus:ring-0 '
+              leading-6 text-[#111827] focus:outline-none focus:border-[#9099a3] focus:ring-0 '
               />
             </div>
             <div className='mt-8'>
@@ -31,7 +31,7 @@ export default function AccountSetting() {
                 type='password'
                 placeholder='Confirm Password'
                 className='w-full py-[12px] px-[18px] mt-2 h-[48px] rounded-[5px] border-[2px] border-[#e4e5e8] text-[16px]
-              leading-6 text-[#9199a3] focus:outline-none focus:border-[#9099a3] focus:ring-0 '
+              leading-6 text-[#111827]   focus:outline-none focus:border-[#9099a3] focus:ring-0 '
               />
             </div>
             <div className='grid grid-cols-1 mt-[34px]'>
