@@ -19,7 +19,7 @@ export default function AppliedJob() {
           {/* Item 1*/}
           <div
             className='grid grid-cols-12 p-[20px] items-center border-b border-b-[#e4e5e8]
-           solid hover:cursor-pointer hover:outline outline-[#0b65cc] rounded-[8px]'
+           solid hover:cursor-pointer hover:outline outline-[#0b65cc] rounded-[8px] h-[96px]'
           >
             <div className='col-span-5'>
               <div className='flex gap-[16px] items-center'>
@@ -98,13 +98,39 @@ export default function AppliedJob() {
               <div className='text-center text-[14px] text-[#5e6670]'>Jan 2, 2024 19:28</div>
             </div>
             <div className='col-span-2'>
-              <div className='text-center text-[14px] text-[#07a02b]'>Active</div>
+              <div className='flex items-center justify-center gap-[4px]'>
+                <div>
+                  <svg
+                    width='20'
+                    height='20'
+                    viewBox='0 0 20 20'
+                    fill='none'
+                    xmlns='http://www.w3.org/2000/svg'
+                  >
+                    <path
+                      d='M10 17.5C14.1421 17.5 17.5 14.1421 17.5 10C17.5 5.85786 14.1421 2.5 10 2.5C5.85786 2.5 2.5 5.85786 2.5 10C2.5 14.1421 5.85786 17.5 10 17.5Z'
+                      stroke='#0BA02C'
+                      strokeWidth='1.5'
+                      strokeLinecap='round'
+                      strokeLinejoin='round'
+                    />
+                    <path
+                      d='M13.4375 8.125L8.85414 12.5L6.5625 10.3125'
+                      stroke='#0BA02C'
+                      strokeWidth='1.5'
+                      strokeLinecap='round'
+                      strokeLinejoin='round'
+                    />
+                  </svg>
+                </div>
+                <div className=' text-[14px] text-[#07a02b]'>Active</div>
+              </div>
             </div>
             <div className='col-span-2 text-center'>
               <Link
                 className='min-w-[145px] bg-[#f1f2f4] rounded-[3px] py-[12px] px-[24px]
                  text-[16px] font-semibold text-[#0b65cc] leading-6 hover:bg-[#0b65cc]
-                 hover:text-white'
+                 hover:text-white block'
                 to='/'
               >
                 View Details
@@ -114,7 +140,7 @@ export default function AppliedJob() {
           {/* Item 2*/}
           <div
             className='grid grid-cols-12 p-[20px] items-center border-b border-b-[#e4e5e8]
-           solid hover:cursor-pointer hover:outline outline-[#0b65cc] rounded-[8px]'
+           solid hover:cursor-pointer hover:outline outline-[#0b65cc] rounded-[8px] h-[96px]'
           >
             <div className='col-span-5'>
               <div className='flex gap-[16px] items-center'>
@@ -193,13 +219,39 @@ export default function AppliedJob() {
               <div className='text-center text-[14px] text-[#5e6670]'>Jan 2, 2024 19:28</div>
             </div>
             <div className='col-span-2'>
-              <div className='text-center text-[14px] text-[#07a02b]'>Active</div>
+              <div className='flex items-center justify-center gap-[4px]'>
+                <div>
+                  <svg
+                    width='20'
+                    height='20'
+                    viewBox='0 0 20 20'
+                    fill='none'
+                    xmlns='http://www.w3.org/2000/svg'
+                  >
+                    <path
+                      d='M10 17.5C14.1421 17.5 17.5 14.1421 17.5 10C17.5 5.85786 14.1421 2.5 10 2.5C5.85786 2.5 2.5 5.85786 2.5 10C2.5 14.1421 5.85786 17.5 10 17.5Z'
+                      stroke='#0BA02C'
+                      strokeWidth='1.5'
+                      strokeLinecap='round'
+                      strokeLinejoin='round'
+                    />
+                    <path
+                      d='M13.4375 8.125L8.85414 12.5L6.5625 10.3125'
+                      stroke='#0BA02C'
+                      strokeWidth='1.5'
+                      strokeLinecap='round'
+                      strokeLinejoin='round'
+                    />
+                  </svg>
+                </div>
+                <div className=' text-[14px] text-[#07a02b]'>Active</div>
+              </div>
             </div>
             <div className='col-span-2 text-center'>
               <Link
                 className='min-w-[145px] bg-[#f1f2f4] rounded-[3px] py-[12px] px-[24px]
                  text-[16px] font-semibold text-[#0b65cc] leading-6 hover:bg-[#0b65cc]
-                 hover:text-white'
+                 hover:text-white block'
                 to='/'
               >
                 View Details
@@ -209,7 +261,7 @@ export default function AppliedJob() {
           {/* Item 3*/}
           <div
             className='grid grid-cols-12 p-[20px] items-center border-b border-b-[#e4e5e8]
-           solid hover:cursor-pointer hover:outline outline-[#0b65cc] rounded-[8px]'
+           solid hover:cursor-pointer hover:outline outline-[#0b65cc] rounded-[8px] h-[96px]'
           >
             <div className='col-span-5'>
               <div className='flex gap-[16px] items-center'>
@@ -288,13 +340,39 @@ export default function AppliedJob() {
               <div className='text-center text-[14px] text-[#5e6670]'>Jan 2, 2024 19:28</div>
             </div>
             <div className='col-span-2'>
-              <div className='text-center text-[14px] text-[#07a02b]'>Active</div>
+              <div className='flex items-center justify-center gap-[4px]'>
+                <div>
+                  <svg
+                    width='20'
+                    height='20'
+                    viewBox='0 0 20 20'
+                    fill='none'
+                    xmlns='http://www.w3.org/2000/svg'
+                  >
+                    <path
+                      d='M10 17.5C14.1421 17.5 17.5 14.1421 17.5 10C17.5 5.85786 14.1421 2.5 10 2.5C5.85786 2.5 2.5 5.85786 2.5 10C2.5 14.1421 5.85786 17.5 10 17.5Z'
+                      stroke='#0BA02C'
+                      strokeWidth='1.5'
+                      strokeLinecap='round'
+                      strokeLinejoin='round'
+                    />
+                    <path
+                      d='M13.4375 8.125L8.85414 12.5L6.5625 10.3125'
+                      stroke='#0BA02C'
+                      strokeWidth='1.5'
+                      strokeLinecap='round'
+                      strokeLinejoin='round'
+                    />
+                  </svg>
+                </div>
+                <div className=' text-[14px] text-[#07a02b]'>Active</div>
+              </div>
             </div>
             <div className='col-span-2 text-center'>
               <Link
                 className='min-w-[145px] bg-[#f1f2f4] rounded-[3px] py-[12px] px-[24px]
                  text-[16px] font-semibold text-[#0b65cc] leading-6 hover:bg-[#0b65cc]
-                 hover:text-white'
+                 hover:text-white block'
                 to='/'
               >
                 View Details
@@ -304,7 +382,7 @@ export default function AppliedJob() {
           {/* Item 4*/}
           <div
             className='grid grid-cols-12 p-[20px] items-center border-b border-b-[#e4e5e8]
-           solid hover:cursor-pointer hover:outline outline-[#0b65cc] rounded-[8px]'
+           solid hover:cursor-pointer hover:outline outline-[#0b65cc] rounded-[8px] h-[96px]'
           >
             <div className='col-span-5'>
               <div className='flex gap-[16px] items-center'>
@@ -383,13 +461,39 @@ export default function AppliedJob() {
               <div className='text-center text-[14px] text-[#5e6670]'>Jan 2, 2024 19:28</div>
             </div>
             <div className='col-span-2'>
-              <div className='text-center text-[14px] text-[#07a02b]'>Active</div>
+              <div className='flex items-center justify-center gap-[4px]'>
+                <div>
+                  <svg
+                    width='20'
+                    height='20'
+                    viewBox='0 0 20 20'
+                    fill='none'
+                    xmlns='http://www.w3.org/2000/svg'
+                  >
+                    <path
+                      d='M10 17.5C14.1421 17.5 17.5 14.1421 17.5 10C17.5 5.85786 14.1421 2.5 10 2.5C5.85786 2.5 2.5 5.85786 2.5 10C2.5 14.1421 5.85786 17.5 10 17.5Z'
+                      stroke='#0BA02C'
+                      strokeWidth='1.5'
+                      strokeLinecap='round'
+                      strokeLinejoin='round'
+                    />
+                    <path
+                      d='M13.4375 8.125L8.85414 12.5L6.5625 10.3125'
+                      stroke='#0BA02C'
+                      strokeWidth='1.5'
+                      strokeLinecap='round'
+                      strokeLinejoin='round'
+                    />
+                  </svg>
+                </div>
+                <div className=' text-[14px] text-[#07a02b]'>Active</div>
+              </div>
             </div>
             <div className='col-span-2 text-center'>
               <Link
                 className='min-w-[145px] bg-[#f1f2f4] rounded-[3px] py-[12px] px-[24px]
                  text-[16px] font-semibold text-[#0b65cc] leading-6 hover:bg-[#0b65cc]
-                 hover:text-white'
+                 hover:text-white block'
                 to='/'
               >
                 View Details

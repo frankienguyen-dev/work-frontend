@@ -59,7 +59,7 @@ export default function FeatureJob() {
               <div
                 key={job.id}
                 className='flex justify-between items-center p-[32px] border border-[#EDEFF5] cursor-pointer
-             rounded-[12px] hover:shadow-2xl hover:transition hover:ease-in-out hover:duration-[0.25s]'
+             rounded-[12px] hover:shadow-2xl hover:transition hover:ease-in-out hover:duration-[0.25s] h-[132px]'
               >
                 <div className='flex items-center gap-[20px]'>
                   <img
@@ -193,7 +193,7 @@ export default function FeatureJob() {
                 </div>
                 <div>
                   <Link
-                    className='flex items-center gap-[12px] bg-[#E7F0FA] px-6 py-3 rounded-[12px]
+                    className='flex items-center gap-[12px] bg-[#E7F0FA] px-6 py-3 rounded-[3px]
               text-[16px] font-semibold text-[#0A65CC]'
                     to='/'
                   >

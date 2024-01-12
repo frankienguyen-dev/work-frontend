@@ -11,7 +11,7 @@ export default function Overview() {
         <div className='col-span-1'>
           <div
             className='py-[20px] pl-[24px] pr-[20px] bg-[#e7f0fa] rounded-[8px] flex
-                  items-center gap-[24px] hover:cursor-pointer
+                  items-center gap-[24px] hover:cursor-pointer h-[104px]
                   hover:shadow-2xl hover:transition hover:ease-linear hover:duration-[0.25s]  '
           >
             <div className='min-w-[180px]'>
@@ -75,7 +75,7 @@ export default function Overview() {
         <div className='col-span-1'>
           <div
             className='py-[20px] pl-[24px] pr-[20px] bg-[#fff7e6] rounded-[8px] flex
-                  items-center gap-[24px] hover:cursor-pointer
+                  items-center gap-[24px] hover:cursor-pointer h-[104px]
                   hover:shadow-2xl hover:transition hover:ease-linear hover:duration-[0.25s] '
           >
             <div className='min-w-[180px]'>
@@ -107,7 +107,7 @@ export default function Overview() {
         <div className='col-span-1'>
           <div
             className='py-[20px] pl-[24px] pr-[20px] bg-[#e7f6ea] rounded-[8px] flex
-                  items-center gap-[24px] hover:cursor-pointer
+                  items-center gap-[24px] hover:cursor-pointer h-[104px]
                   hover:shadow-2xl hover:transition hover:ease-linear hover:duration-[0.25s] '
           >
             <div className='min-w-[180px]'>
@@ -161,7 +161,7 @@ export default function Overview() {
       <div className='mt-[24px]'>
         <div
           className='flex items-center justify-between bg-[#e05150] p-[32px] rounded-[8px]
-         hover:cursor-pointer
+         hover:cursor-pointer h-[128px]
            hover:shadow-2xl hover:transition hover:ease-linear hover:duration-[0.25s] '
         >
           <div>
@@ -188,7 +188,7 @@ export default function Overview() {
             <Link
               to='/profile'
               className='bg-white flex items-center py-[12px] px-[24px] justify-center
-                min-w-[168px] gap-[12px] rounded-[3px] text-[16px] font-semibold text-[#e05150]'
+                min-w-[168px] gap-[12px] rounded-[3px] text-[16px] font-semibold text-[#e05150] block'
             >
               Edit Profile
               <div>
@@ -268,7 +268,7 @@ export default function Overview() {
           {/* Item 1*/}
           <div
             className='grid grid-cols-12 p-[20px] items-center border-b border-b-[#e4e5e8]
-           solid hover:cursor-pointer hover:outline outline-[#0b65cc] rounded-[8px] group'
+           solid hover:cursor-pointer hover:outline outline-[#0b65cc] rounded-[8px] group h-[96px]'
           >
             <div className='col-span-5'>
               <div className='flex gap-[16px] items-center'>
@@ -351,12 +351,38 @@ export default function Overview() {
               <div className='text-center text-[14px] text-[#5e6670]'>Jan 2, 2024 19:28</div>
             </div>
             <div className='col-span-2'>
-              <div className='text-center text-[14px] text-[#07a02b]'>Active</div>
+              <div className='flex items-center justify-center gap-[4px]'>
+                <div>
+                  <svg
+                    width='20'
+                    height='20'
+                    viewBox='0 0 20 20'
+                    fill='none'
+                    xmlns='http://www.w3.org/2000/svg'
+                  >
+                    <path
+                      d='M10 17.5C14.1421 17.5 17.5 14.1421 17.5 10C17.5 5.85786 14.1421 2.5 10 2.5C5.85786 2.5 2.5 5.85786 2.5 10C2.5 14.1421 5.85786 17.5 10 17.5Z'
+                      stroke='#0BA02C'
+                      strokeWidth='1.5'
+                      strokeLinecap='round'
+                      strokeLinejoin='round'
+                    />
+                    <path
+                      d='M13.4375 8.125L8.85414 12.5L6.5625 10.3125'
+                      stroke='#0BA02C'
+                      strokeWidth='1.5'
+                      strokeLinecap='round'
+                      strokeLinejoin='round'
+                    />
+                  </svg>
+                </div>
+                <div className='text-center text-[14px] text-[#07a02b]'>Active</div>
+              </div>
             </div>
             <div className='col-span-2 text-center'>
               <Link
                 className='min-w-[145px] bg-[#f1f2f4] rounded-[3px] py-[12px] px-[24px]
-                 text-[16px] font-semibold text-[#0b65cc] leading-6 
+                 text-[16px] font-semibold text-[#0b65cc] leading-6 block
                 group-hover:bg-[#0b65cc] group-hover:text-white transition duration-[0.25s] ease-in-out'
                 to='/'
               >
@@ -367,7 +393,7 @@ export default function Overview() {
           {/* Item 2*/}
           <div
             className='grid grid-cols-12 p-[20px] items-center border-b border-b-[#e4e5e8]
-           solid hover:cursor-pointer hover:outline outline-[#0b65cc] rounded-[8px] group'
+           solid hover:cursor-pointer hover:outline outline-[#0b65cc] rounded-[8px] group h-[96px]'
           >
             <div className='col-span-5'>
               <div className='flex gap-[16px] items-center'>
@@ -450,12 +476,38 @@ export default function Overview() {
               <div className='text-center text-[14px] text-[#5e6670]'>Jan 2, 2024 19:28</div>
             </div>
             <div className='col-span-2'>
-              <div className='text-center text-[14px] text-[#07a02b]'>Active</div>
+              <div className='flex items-center justify-center gap-[4px]'>
+                <div>
+                  <svg
+                    width='20'
+                    height='20'
+                    viewBox='0 0 20 20'
+                    fill='none'
+                    xmlns='http://www.w3.org/2000/svg'
+                  >
+                    <path
+                      d='M10 17.5C14.1421 17.5 17.5 14.1421 17.5 10C17.5 5.85786 14.1421 2.5 10 2.5C5.85786 2.5 2.5 5.85786 2.5 10C2.5 14.1421 5.85786 17.5 10 17.5Z'
+                      stroke='#0BA02C'
+                      strokeWidth='1.5'
+                      strokeLinecap='round'
+                      strokeLinejoin='round'
+                    />
+                    <path
+                      d='M13.4375 8.125L8.85414 12.5L6.5625 10.3125'
+                      stroke='#0BA02C'
+                      strokeWidth='1.5'
+                      strokeLinecap='round'
+                      strokeLinejoin='round'
+                    />
+                  </svg>
+                </div>
+                <div className='text-center text-[14px] text-[#07a02b]'>Active</div>
+              </div>
             </div>
             <div className='col-span-2 text-center'>
               <Link
                 className='min-w-[145px] bg-[#f1f2f4] rounded-[3px] py-[12px] px-[24px]
-                 text-[16px] font-semibold text-[#0b65cc] leading-6
+                 text-[16px] font-semibold text-[#0b65cc] leading-6 block
                 group-hover:bg-[#0b65cc] group-hover:text-white transition duration-[0.25s] ease-in-out'
                 to='/'
               >
@@ -466,7 +518,7 @@ export default function Overview() {
           {/* Item 3*/}
           <div
             className='grid grid-cols-12 p-[20px] items-center border-b border-b-[#e4e5e8]
-           solid hover:cursor-pointer hover:outline outline-[#0b65cc] rounded-[8px] group'
+           solid hover:cursor-pointer hover:outline outline-[#0b65cc] rounded-[8px] group h-[96px]'
           >
             <div className='col-span-5'>
               <div className='flex gap-[16px] items-center'>
@@ -549,12 +601,38 @@ export default function Overview() {
               <div className='text-center text-[14px] text-[#5e6670]'>Jan 2, 2024 19:28</div>
             </div>
             <div className='col-span-2'>
-              <div className='text-center text-[14px] text-[#07a02b]'>Active</div>
+              <div className='flex items-center justify-center gap-[4px]'>
+                <div>
+                  <svg
+                    width='20'
+                    height='20'
+                    viewBox='0 0 20 20'
+                    fill='none'
+                    xmlns='http://www.w3.org/2000/svg'
+                  >
+                    <path
+                      d='M10 17.5C14.1421 17.5 17.5 14.1421 17.5 10C17.5 5.85786 14.1421 2.5 10 2.5C5.85786 2.5 2.5 5.85786 2.5 10C2.5 14.1421 5.85786 17.5 10 17.5Z'
+                      stroke='#0BA02C'
+                      strokeWidth='1.5'
+                      strokeLinecap='round'
+                      strokeLinejoin='round'
+                    />
+                    <path
+                      d='M13.4375 8.125L8.85414 12.5L6.5625 10.3125'
+                      stroke='#0BA02C'
+                      strokeWidth='1.5'
+                      strokeLinecap='round'
+                      strokeLinejoin='round'
+                    />
+                  </svg>
+                </div>
+                <div className='text-center text-[14px] text-[#07a02b]'>Active</div>
+              </div>
             </div>
             <div className='col-span-2 text-center'>
               <Link
                 className='min-w-[145px] bg-[#f1f2f4] rounded-[3px] py-[12px] px-[24px]
-                 text-[16px] font-semibold text-[#0b65cc] leading-6
+                 text-[16px] font-semibold text-[#0b65cc] leading-6 block
                 group-hover:bg-[#0b65cc] group-hover:text-white transition duration-[0.25s] ease-in-out'
                 to='/'
               >
@@ -565,7 +643,7 @@ export default function Overview() {
           {/* Item 4*/}
           <div
             className='grid grid-cols-12 p-[20px] items-center border-b border-b-[#e4e5e8]
-           solid hover:cursor-pointer hover:outline outline-[#0b65cc] rounded-[8px] group'
+           solid hover:cursor-pointer hover:outline outline-[#0b65cc] rounded-[8px] group h-[96px]'
           >
             <div className='col-span-5'>
               <div className='flex gap-[16px] items-center'>
@@ -648,12 +726,38 @@ export default function Overview() {
               <div className='text-center text-[14px] text-[#5e6670]'>Jan 2, 2024 19:28</div>
             </div>
             <div className='col-span-2'>
-              <div className='text-center text-[14px] text-[#07a02b]'>Active</div>
+              <div className='flex items-center justify-center gap-[4px]'>
+                <div>
+                  <svg
+                    width='20'
+                    height='20'
+                    viewBox='0 0 20 20'
+                    fill='none'
+                    xmlns='http://www.w3.org/2000/svg'
+                  >
+                    <path
+                      d='M10 17.5C14.1421 17.5 17.5 14.1421 17.5 10C17.5 5.85786 14.1421 2.5 10 2.5C5.85786 2.5 2.5 5.85786 2.5 10C2.5 14.1421 5.85786 17.5 10 17.5Z'
+                      stroke='#0BA02C'
+                      strokeWidth='1.5'
+                      strokeLinecap='round'
+                      strokeLinejoin='round'
+                    />
+                    <path
+                      d='M13.4375 8.125L8.85414 12.5L6.5625 10.3125'
+                      stroke='#0BA02C'
+                      strokeWidth='1.5'
+                      strokeLinecap='round'
+                      strokeLinejoin='round'
+                    />
+                  </svg>
+                </div>
+                <div className='text-center text-[14px] text-[#07a02b]'>Active</div>
+              </div>
             </div>
             <div className='col-span-2 text-center'>
               <Link
                 className='min-w-[145px] bg-[#f1f2f4] rounded-[3px] py-[12px] px-[24px]
-                 text-[16px] font-semibold text-[#0b65cc] leading-6
+                 text-[16px] font-semibold text-[#0b65cc] leading-6 block
                 group-hover:bg-[#0b65cc] group-hover:text-white transition duration-[0.25s] ease-in-out'
                 to='/'
               >
@@ -664,7 +768,7 @@ export default function Overview() {
           {/* Item 5*/}
           <div
             className='grid grid-cols-12 p-[20px] items-center border-b border-b-[#e4e5e8]
-           solid hover:cursor-pointer hover:outline outline-[#0b65cc] rounded-[8px] group'
+           solid hover:cursor-pointer hover:outline outline-[#0b65cc] rounded-[8px] group h-[96px]'
           >
             <div className='col-span-5'>
               <div className='flex gap-[16px] items-center'>
@@ -747,12 +851,38 @@ export default function Overview() {
               <div className='text-center text-[14px] text-[#5e6670]'>Jan 2, 2024 19:28</div>
             </div>
             <div className='col-span-2'>
-              <div className='text-center text-[14px] text-[#07a02b]'>Active</div>
+              <div className='flex items-center justify-center gap-[4px]'>
+                <div>
+                  <svg
+                    width='20'
+                    height='20'
+                    viewBox='0 0 20 20'
+                    fill='none'
+                    xmlns='http://www.w3.org/2000/svg'
+                  >
+                    <path
+                      d='M10 17.5C14.1421 17.5 17.5 14.1421 17.5 10C17.5 5.85786 14.1421 2.5 10 2.5C5.85786 2.5 2.5 5.85786 2.5 10C2.5 14.1421 5.85786 17.5 10 17.5Z'
+                      stroke='#0BA02C'
+                      strokeWidth='1.5'
+                      strokeLinecap='round'
+                      strokeLinejoin='round'
+                    />
+                    <path
+                      d='M13.4375 8.125L8.85414 12.5L6.5625 10.3125'
+                      stroke='#0BA02C'
+                      strokeWidth='1.5'
+                      strokeLinecap='round'
+                      strokeLinejoin='round'
+                    />
+                  </svg>
+                </div>
+                <div className='text-center text-[14px] text-[#07a02b]'>Active</div>
+              </div>
             </div>
             <div className='col-span-2 text-center'>
               <Link
                 className='min-w-[145px] bg-[#f1f2f4] rounded-[3px] py-[12px] px-[24px]
-                 text-[16px] font-semibold text-[#0b65cc] leading-6
+                 text-[16px] font-semibold text-[#0b65cc] leading-6 block
                 group-hover:bg-[#0b65cc] group-hover:text-white transition duration-[0.25s] ease-in-out'
                 to='/'
               >
@@ -763,7 +893,7 @@ export default function Overview() {
           {/* Item 6*/}
           <div
             className='grid grid-cols-12 p-[20px] items-center border-b border-b-[#e4e5e8]
-           solid hover:cursor-pointer hover:outline outline-[#0b65cc] rounded-[8px] group'
+           solid hover:cursor-pointer hover:outline outline-[#0b65cc] rounded-[8px] group h-[96px]'
           >
             <div className='col-span-5'>
               <div className='flex gap-[16px] items-center'>
@@ -846,12 +976,38 @@ export default function Overview() {
               <div className='text-center text-[14px] text-[#5e6670]'>Jan 2, 2024 19:28</div>
             </div>
             <div className='col-span-2'>
-              <div className='text-center text-[14px] text-[#07a02b]'>Active</div>
+              <div className='flex items-center justify-center gap-[4px]'>
+                <div>
+                  <svg
+                    width='20'
+                    height='20'
+                    viewBox='0 0 20 20'
+                    fill='none'
+                    xmlns='http://www.w3.org/2000/svg'
+                  >
+                    <path
+                      d='M10 17.5C14.1421 17.5 17.5 14.1421 17.5 10C17.5 5.85786 14.1421 2.5 10 2.5C5.85786 2.5 2.5 5.85786 2.5 10C2.5 14.1421 5.85786 17.5 10 17.5Z'
+                      stroke='#0BA02C'
+                      strokeWidth='1.5'
+                      strokeLinecap='round'
+                      strokeLinejoin='round'
+                    />
+                    <path
+                      d='M13.4375 8.125L8.85414 12.5L6.5625 10.3125'
+                      stroke='#0BA02C'
+                      strokeWidth='1.5'
+                      strokeLinecap='round'
+                      strokeLinejoin='round'
+                    />
+                  </svg>
+                </div>
+                <div className='text-center text-[14px] text-[#07a02b]'>Active</div>
+              </div>
             </div>
             <div className='col-span-2 text-center'>
               <Link
                 className='min-w-[145px] bg-[#f1f2f4] rounded-[3px] py-[12px] px-[24px]
-                 text-[16px] font-semibold text-[#0b65cc] leading-6
+                 text-[16px] font-semibold text-[#0b65cc] leading-6 block
                 group-hover:bg-[#0b65cc] group-hover:text-white transition duration-[0.25s] ease-in-out'
                 to='/'
               >
@@ -862,7 +1018,7 @@ export default function Overview() {
           {/* Item 7*/}
           <div
             className='grid grid-cols-12 p-[20px] items-center border-b border-b-[#e4e5e8]
-           solid hover:cursor-pointer hover:outline outline-[#0b65cc] rounded-[8px] group'
+           solid hover:cursor-pointer hover:outline outline-[#0b65cc] rounded-[8px] group h-[96px]'
           >
             <div className='col-span-5'>
               <div className='flex gap-[16px] items-center'>
@@ -945,12 +1101,38 @@ export default function Overview() {
               <div className='text-center text-[14px] text-[#5e6670]'>Jan 2, 2024 19:28</div>
             </div>
             <div className='col-span-2'>
-              <div className='text-center text-[14px] text-[#07a02b]'>Active</div>
+              <div className='flex items-center justify-center gap-[4px]'>
+                <div>
+                  <svg
+                    width='20'
+                    height='20'
+                    viewBox='0 0 20 20'
+                    fill='none'
+                    xmlns='http://www.w3.org/2000/svg'
+                  >
+                    <path
+                      d='M10 17.5C14.1421 17.5 17.5 14.1421 17.5 10C17.5 5.85786 14.1421 2.5 10 2.5C5.85786 2.5 2.5 5.85786 2.5 10C2.5 14.1421 5.85786 17.5 10 17.5Z'
+                      stroke='#0BA02C'
+                      strokeWidth='1.5'
+                      strokeLinecap='round'
+                      strokeLinejoin='round'
+                    />
+                    <path
+                      d='M13.4375 8.125L8.85414 12.5L6.5625 10.3125'
+                      stroke='#0BA02C'
+                      strokeWidth='1.5'
+                      strokeLinecap='round'
+                      strokeLinejoin='round'
+                    />
+                  </svg>
+                </div>
+                <div className='text-center text-[14px] text-[#07a02b]'>Active</div>
+              </div>
             </div>
             <div className='col-span-2 text-center'>
               <Link
                 className='min-w-[145px] bg-[#f1f2f4] rounded-[3px] py-[12px] px-[24px]
-                 text-[16px] font-semibold text-[#0b65cc] leading-6
+                 text-[16px] font-semibold text-[#0b65cc] leading-6 block
                 group-hover:bg-[#0b65cc] group-hover:text-white transition duration-[0.25s] ease-in-out'
                 to='/'
               >

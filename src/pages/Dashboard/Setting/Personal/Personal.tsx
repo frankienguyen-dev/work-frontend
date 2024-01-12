@@ -40,7 +40,7 @@ export default function Personal() {
                   />
                 </div>
                 <div className='col-span-1'>
-                  <div className='text-[14px] leading-5 text-[#18191c]'>Educations</div>
+                  <div className='text-[14px] leading-5 text-[#18191c]'>Education</div>
                   <input
                     type='text'
                     className='w-full mt-2 h-[48px] rounded-[5px] border-[2px] border-[#e4e5e8] text-[16px]

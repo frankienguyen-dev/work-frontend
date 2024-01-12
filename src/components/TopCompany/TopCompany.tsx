@@ -87,7 +87,7 @@ export default function TopCompany() {
                   <div
                     key={company.id}
                     className='bg-white p-8 border border-[#EDEFF5] rounded-[12px] hover:cursor-pointer
-                  hover:shadow-2xl hover:transition hover:ease-in-out hover:duration-[0.25s]'
+                  hover:shadow-2xl hover:transition hover:ease-in-out hover:duration-[0.25s] h-[200px]'
                   >
                     <div className='flex items-center gap-[16px]'>
                       <img

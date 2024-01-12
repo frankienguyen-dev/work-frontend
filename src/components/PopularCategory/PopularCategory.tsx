@@ -73,7 +73,7 @@ export default function PopularCategory() {
               <Link to='/'>
                 <div
                   className='bg-white rounded-[12px] p-6 hover:shadow-2xl hover:transition
-                hover:ease-in-out hover:duration-[0.25s]'
+                hover:ease-in-out hover:duration-[0.25s] h-[116px]'
                 >
                   <div className='flex items-center gap-[16px]'>
                     <div
@@ -133,11 +133,10 @@ export default function PopularCategory() {
                   </div>
                 </div>
               </Link>
-
               <Link to='/'>
                 <div
                   className='bg-white rounded-[12px] p-6 hover:shadow-2xl hover:transition
-                hover:ease-in-out hover:duration-[0.25s]'
+                hover:ease-in-out hover:duration-[0.25s] h-[116px]'
                 >
                   <div className='flex items-center gap-[16px]'>
                     <div
@@ -197,11 +196,10 @@ export default function PopularCategory() {
                   </div>
                 </div>
               </Link>
-
               <Link to='/'>
                 <div
                   className='bg-white rounded-[12px] p-6 hover:shadow-2xl hover:transition
-                hover:ease-in-out hover:duration-[0.25s]'
+                hover:ease-in-out hover:duration-[0.25s] h-[116px]'
                 >
                   <div className='flex items-center gap-[16px]'>
                     <div
@@ -261,11 +259,10 @@ export default function PopularCategory() {
                   </div>
                 </div>
               </Link>
-
               <Link to='/'>
                 <div
                   className='bg-white rounded-[12px] p-6 hover:shadow-2xl hover:transition
-                hover:ease-in-out hover:duration-[0.25s]'
+                hover:ease-in-out hover:duration-[0.25s] h-[116px]'
                 >
                   <div className='flex items-center gap-[16px]'>
                     <div
@@ -325,11 +322,10 @@ export default function PopularCategory() {
                   </div>
                 </div>
               </Link>
-
               <Link to='/'>
                 <div
                   className='bg-white rounded-[12px] p-6 hover:shadow-2xl hover:transition
-                hover:ease-in-out hover:duration-[0.25s]'
+                hover:ease-in-out hover:duration-[0.25s] h-[116px]'
                 >
                   <div className='flex items-center gap-[16px]'>
                     <div
@@ -389,11 +385,10 @@ export default function PopularCategory() {
                   </div>
                 </div>
               </Link>
-
               <Link to='/'>
                 <div
                   className='bg-white rounded-[12px] p-6 hover:shadow-2xl hover:transition
-                hover:ease-in-out hover:duration-[0.25s]'
+                hover:ease-in-out hover:duration-[0.25s] h-[116px]'
                 >
                   <div className='flex items-center gap-[16px]'>
                     <div
@@ -453,11 +448,10 @@ export default function PopularCategory() {
                   </div>
                 </div>
               </Link>
-
               <Link to='/'>
                 <div
                   className='bg-white rounded-[12px] p-6 hover:shadow-2xl hover:transition
-                hover:ease-in-out hover:duration-[0.25s]'
+                hover:ease-in-out hover:duration-[0.25s] h-[116px]'
                 >
                   <div className='flex items-center gap-[16px]'>
                     <div
@@ -517,11 +511,10 @@ export default function PopularCategory() {
                   </div>
                 </div>
               </Link>
-
               <Link to='/'>
                 <div
                   className='bg-white rounded-[12px] p-6 hover:shadow-2xl hover:transition
-                hover:ease-in-out hover:duration-[0.25s]'
+                hover:ease-in-out hover:duration-[0.25s] h-[116px]'
                 >
                   <div className='flex items-center gap-[16px]'>
                     <div

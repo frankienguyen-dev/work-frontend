@@ -1088,7 +1088,7 @@ export default function SearchHomePage() {
           <div className='grid grid-cols-4 w-full py-[100px] gap-[24px]'>
             <div
               className='bg-white rounded-[8px] p-5 hover:cursor-pointer hover:shadow-2xl
-            hover:transition hover:ease-in-out hover:duration-[0.25s]'
+            hover:transition hover:ease-in-out hover:duration-[0.25s] h-[112px]'
             >
               <div className='flex gap-[20px]'>
                 <div
@@ -1153,7 +1153,7 @@ export default function SearchHomePage() {
 
             <div
               className='bg-white rounded-[8px] p-5 hover:cursor-pointer hover:shadow-2xl
-            hover:transition hover:ease-in-out hover:duration-[0.25s]'
+            hover:transition hover:ease-in-out hover:duration-[0.25s] h-[112px]'
             >
               <div className='flex gap-[20px]'>
                 <div className='bg-[#E7F0FA] rounded-[8px] w-[72px] h-[72px] flex items-center justify-center'>
@@ -1243,7 +1243,7 @@ export default function SearchHomePage() {
 
             <div
               className='bg-white rounded-[8px] p-5 hover:cursor-pointer hover:shadow-2xl
-            hover:transition hover:ease-in-out hover:duration-[0.25s]'
+            hover:transition hover:ease-in-out hover:duration-[0.25s] h-[112px]'
             >
               <div className='flex gap-[20px]'>
                 <div className='bg-[#E7F0FA] rounded-[8px] h-[72px] w-[72px] flex items-center justify-center'>
@@ -1304,7 +1304,7 @@ export default function SearchHomePage() {
 
             <div
               className='bg-white rounded-[8px] p-5 hover:cursor-pointer hover:shadow-2xl
-            hover:transition hover:ease-in-out hover:duration-[0.25s]'
+            hover:transition hover:ease-in-out hover:duration-[0.25s] h-[112px]'
             >
               <div className='flex gap-[20px]'>
                 <div
