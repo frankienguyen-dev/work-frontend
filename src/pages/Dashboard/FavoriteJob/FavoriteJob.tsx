@@ -12,7 +12,7 @@ export default function FavoriteJob() {
         {/* Item 1 */}
         <div
           className='flex items-center justify-between py-[22px] px-[20px] group hover:cursor-pointer
-        hover:outline hover:outline-[#0b65cc] hover:rounded-[8px] border-b border-b-[#e4e5e8] solid'
+        hover:outline hover:outline-[#0b65cc] hover:rounded-[8px] border-b border-b-[#e4e5e8] solid h-[100px]'
         >
           <div className='flex items-center gap-[20px]'>
             <div>
@@ -193,7 +193,7 @@ export default function FavoriteJob() {
         {/* Item 2 */}
         <div
           className='flex items-center justify-between py-[22px] px-[20px] group hover:cursor-pointer
-        hover:outline hover:outline-[#0b65cc] hover:rounded-[8px] border-b border-b-[#e4e5e8] solid'
+        hover:outline hover:outline-[#0b65cc] hover:rounded-[8px] border-b border-b-[#e4e5e8] solid h-[100px]'
         >
           <div className='flex items-center gap-[20px]'>
             <div>

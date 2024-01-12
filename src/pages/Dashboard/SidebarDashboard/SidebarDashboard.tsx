@@ -2,11 +2,8 @@ import { Link } from 'react-router-dom';
 
 export default function SidebarDashboard() {
   return (
-    <div
-      className='hidden 2xl:flex flex-col justify-between
-          border-r min-h-[100vh] border-r-[#e4e5e8] solid'
-    >
-      <div className='fixed lg:w-[294px] min-h-[100vh] overflow-auto '>
+    <div className='hidden 2xl:flex flex-col justify-between min-h-screen'>
+      <div className='fixed lg:w-[294px] border-r min-h-screen solid border-r-[#e4e5e8] overflow-auto'>
         <div className='pt-[24px] px-[20px]'>
           <h1 className='text-[14px] font-medium leading-5 text-[#9199a3]'>CANDIDATE DASHBOARD</h1>
         </div>
@@ -133,6 +130,7 @@ export default function SidebarDashboard() {
               <div className='text-[16px] font-medium text-[currentTextColor]'>Favorite Jobs</div>
             </Link>
           </div>
+
           <div className='group'>
             <Link
               to='post-job'
@@ -172,6 +170,55 @@ export default function SidebarDashboard() {
                 </svg>
               </div>
               <div className='text-[16px] font-medium text-[currentTextColor]'>Post A Job</div>
+            </Link>
+          </div>
+          <div className='group'>
+            <Link
+              to='my-jobs'
+              className='flex items-center gap-[16px] pl-[20px] py-[16px] group-hover:bg-[#E7F0FA]
+              group-hover:cursor-pointer text-[#9199a3] group-hover:text-[#0b65cc] border-l-[3px]
+              border-l-transparent group-hover:border-l-[#0b65cc]  transition-transform transform
+              group-hover:translate-y-0'
+            >
+              <div>
+                <svg
+                  width='24'
+                  height='24'
+                  viewBox='0 0 24 24'
+                  fill='none'
+                  xmlns='http://www.w3.org/2000/svg'
+                >
+                  <path
+                    d='M20.25 6.75H3.75C3.33579 6.75 3 7.08579 3 7.5V19.5C3 19.9142 3.33579 20.25 3.75 20.25H20.25C20.6642 20.25 21 19.9142 21 19.5V7.5C21 7.08579 20.6642 6.75 20.25 6.75Z'
+                    stroke='currentColor'
+                    strokeWidth='1.5'
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                  />
+                  <path
+                    d='M15.75 6.75V5.25C15.75 4.85218 15.592 4.47064 15.3107 4.18934C15.0294 3.90804 14.6478 3.75 14.25 3.75H9.75C9.35218 3.75 8.97064 3.90804 8.68934 4.18934C8.40804 4.47064 8.25 4.85218 8.25 5.25V6.75'
+                    stroke='currentColor'
+                    strokeWidth='1.5'
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                  />
+                  <path
+                    d='M21.0001 11.8418C18.2648 13.4243 15.1595 14.2553 11.9994 14.2503C8.83977 14.2553 5.73503 13.4246 3 11.8426'
+                    stroke='currentColor'
+                    strokeWidth='1.5'
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                  />
+                  <path
+                    d='M10.875 11.25H13.125'
+                    stroke='currentColor'
+                    strokeWidth='1.5'
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                  />
+                </svg>
+              </div>
+              <div className='text-[16px] font-medium text-[currentTextColor]'>My Jobs</div>
             </Link>
           </div>
           <div className='group'>
