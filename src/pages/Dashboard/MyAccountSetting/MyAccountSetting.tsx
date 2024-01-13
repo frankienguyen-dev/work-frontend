@@ -1,7 +1,7 @@
 import { Outlet } from 'react-router-dom';
 import TopBarSetting from './TopBarSetting';
 
-export default function Setting() {
+export default function MyAccountSetting() {
   return (
     <div className='mt-[48px]'>
       <div>

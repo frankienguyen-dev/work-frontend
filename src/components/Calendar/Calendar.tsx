@@ -11,6 +11,9 @@ const custom: CustomFlowbiteTheme = {
                 'bg-white border-[#e4e5e8] rounded-[5px] focus:outline-none focus:border-[#9099a3] focus:ring-0' +
                 ' text-[16px]'
             },
+            withRightIcon: {
+              off: 'pl-[40px]'
+            },
             base:
               'block w-full disabled:cursor-not-allowed disabled:opacity-50' +
               ' border-[2px] hover:cursor-pointer' +

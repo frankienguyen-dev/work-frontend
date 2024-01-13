@@ -32,9 +32,12 @@ export default function ProfileSetting() {
                       leading-6 text-[#111827] focus:outline-none focus:border-[#9099a3] focus:ring-0
                        hover:cursor-pointer'
             >
-              <option value='Male'>Male</option>
-              <option value='Female'>Female</option>
-              <option value='Others'>Others</option>
+              <option value='' disabled selected>
+                Select...
+              </option>
+              <option value='male'>Male</option>
+              <option value='female'>Female</option>
+              <option value='others'>Others</option>
             </select>
           </div>
           <div className='grid-cols-1'>
@@ -46,6 +49,9 @@ export default function ProfileSetting() {
                       leading-6 text-[#111827] focus:outline-none focus:border-[#9099a3] focus:ring-0
                        hover:cursor-pointer'
             >
+              <option value='' disabled selected>
+                Select...
+              </option>
               {range(1, 100).map((age) => (
                 <option key={age} value='{age}'>
                   {age}
@@ -72,9 +78,12 @@ export default function ProfileSetting() {
                       leading-6 text-[#111827] focus:outline-none focus:border-[#9099a3] focus:ring-0
                        hover:cursor-pointer'
             >
-              <option value='Company 1'>Company 1</option>
-              <option value='Company 2'>Company 2</option>
-              <option value='Company 3'>Company 3</option>
+              <option value='' disabled selected>
+                Select...
+              </option>
+              <option value='company 1'>Company 1</option>
+              <option value='company 2'>Company 2</option>
+              <option value='company 3'>Company 3</option>
             </select>
           </div>
         </div>

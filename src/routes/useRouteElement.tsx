@@ -10,9 +10,10 @@ import { AppContext } from '../contexts/app.context.tsx';
 import Dashboard from '../pages/Dashboard';
 import AppliedJob from '../pages/Dashboard/AppliedJob';
 import FavoriteJob from '../pages/Dashboard/FavoriteJob';
-import Setting from '../pages/Dashboard/Setting';
+import MyAccountSetting from '../pages/Dashboard/MyAccountSetting';
 import PostAJob from '../pages/Dashboard/PostAJob';
 import MyJobs from '../pages/Dashboard/MyJobs';
+import SearchPage from '../pages/SearchPage';
 
 function ProtectedRoute() {
   const { isAuthenticated } = useContext(AppContext);
@@ -59,8 +60,8 @@ export default function useRouteElement() {
               element: <MyJobs />
             },
             {
-              path: 'setting',
-              element: <Setting />
+              path: 'my-account-setting',
+              element: <MyAccountSetting />
             }
           ]
         }
@@ -95,6 +96,14 @@ export default function useRouteElement() {
       element: (
         <MainLayout>
           <HomePage />
+        </MainLayout>
+      )
+    },
+    {
+      path: '/search',
+      element: (
+        <MainLayout>
+          <SearchPage />
         </MainLayout>
       )
     }
