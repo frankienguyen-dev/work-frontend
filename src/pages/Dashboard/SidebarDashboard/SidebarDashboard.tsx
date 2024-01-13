@@ -223,7 +223,7 @@ export default function SidebarDashboard() {
           </div>
           <div className='group'>
             <Link
-              to='setting'
+              to='my-account-setting'
               className='flex items-center gap-[16px] pl-[20px] py-[16px] group-hover:bg-[#E7F0FA]
               group-hover:cursor-pointer text-[#9199a3] group-hover:text-[#0b65cc] border-l-[3px]
               border-l-transparent group-hover:border-l-[#0b65cc]  transition-transform transform
@@ -254,7 +254,9 @@ export default function SidebarDashboard() {
                   />
                 </svg>
               </div>
-              <div className='text-[16px] font-medium text-[currentTextColor]'>Setting</div>
+              <div className='text-[16px] font-medium text-[currentTextColor]'>
+                My Account Setting
+              </div>
             </Link>
           </div>
         </div>
