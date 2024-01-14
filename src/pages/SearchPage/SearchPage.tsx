@@ -1,6 +1,9 @@
 import { Link } from 'react-router-dom';
+import Pagination from '../../components/Pagination';
+import { useState } from 'react';
 
 export default function SearchPage() {
+  const [page, setPage] = useState(1);
   return (
     <div className='pt-[138px]'>
       <div className='h-[76px] bg-[#f1f2f4]'>
@@ -1492,6 +1495,9 @@ export default function SearchPage() {
               </div>
             </div>
           </div>
+        </div>
+        <div className='mb-[100px]'>
+          <Pagination currentPage={page} setPage={setPage} pageSize={4} />
         </div>
       </div>
     </div>
