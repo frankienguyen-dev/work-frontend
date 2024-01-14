@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import useQueryParams from '../../../hooks/useQueryPrams.tsx';
 import { useQuery } from '@tanstack/react-query';
 import companyApi from '../../../apis/company.api.ts';
-import Pagination from '../../../components/Pagination';
+import PaginationComponent from '../../../components/Pagination';
 
 export default function Company() {
   const queryParams = useQueryParams();
@@ -155,7 +155,7 @@ export default function Company() {
             ))}
           </div>
           <div className='mt-[20px]'>
-            <Pagination />
+            <PaginationComponent />
           </div>
         </div>
       )}
