@@ -15,6 +15,7 @@ import PostAJob from '../pages/Dashboard/PostAJob';
 import MyJobs from '../pages/Dashboard/MyJobs';
 import SearchPage from '../pages/SearchPage';
 import JobDetails from '../pages/JobDetails';
+import CompanyDetails from '../pages/CompanyDetails';
 
 function ProtectedRoute() {
   const { isAuthenticated } = useContext(AppContext);
@@ -101,7 +102,7 @@ export default function useRouteElement() {
       )
     },
     {
-      path: '/search',
+      path: '/job/search',
       element: (
         <MainLayout>
           <SearchPage />
@@ -113,6 +114,14 @@ export default function useRouteElement() {
       element: (
         <MainLayout>
           <JobDetails />
+        </MainLayout>
+      )
+    },
+    {
+      path: '/company/:id',
+      element: (
+        <MainLayout>
+          <CompanyDetails />
         </MainLayout>
       )
     }

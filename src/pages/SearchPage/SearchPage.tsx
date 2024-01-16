@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import Pagination from '../../components/Pagination';
 import { useState } from 'react';
+import logoJob from 'src/assets/images/insta.jpeg';
 
 export default function SearchPage() {
   const [page, setPage] = useState(1);
@@ -179,7 +180,7 @@ export default function SearchPage() {
             <div className='flex items-center gap-[20px] '>
               <div>
                 <img
-                  src='src/assets/images/tiktok.png'
+                  src={logoJob}
                   alt=''
                   className='w-[68px] h-[68px] object-cover rounded-[6px]'
                 />
@@ -368,7 +369,7 @@ export default function SearchPage() {
             <div className='flex items-center gap-[20px] '>
               <div>
                 <img
-                  src='src/assets/images/tiktok.png'
+                  src={logoJob}
                   alt=''
                   className='w-[68px] h-[68px] object-cover rounded-[6px]'
                 />
@@ -558,7 +559,7 @@ export default function SearchPage() {
             <div className='flex items-center gap-[20px] '>
               <div>
                 <img
-                  src='src/assets/images/tiktok.png'
+                  src={logoJob}
                   alt=''
                   className='w-[68px] h-[68px] object-cover rounded-[6px]'
                 />
@@ -747,7 +748,7 @@ export default function SearchPage() {
             <div className='flex items-center gap-[20px] '>
               <div>
                 <img
-                  src='src/assets/images/tiktok.png'
+                  src={logoJob}
                   alt=''
                   className='w-[68px] h-[68px] object-cover rounded-[6px]'
                 />
@@ -936,7 +937,7 @@ export default function SearchPage() {
             <div className='flex items-center gap-[20px] '>
               <div>
                 <img
-                  src='src/assets/images/tiktok.png'
+                  src={logoJob}
                   alt=''
                   className='w-[68px] h-[68px] object-cover rounded-[6px]'
                 />
@@ -1126,7 +1127,7 @@ export default function SearchPage() {
             <div className='flex items-center gap-[20px] '>
               <div>
                 <img
-                  src='src/assets/images/tiktok.png'
+                  src={logoJob}
                   alt=''
                   className='w-[68px] h-[68px] object-cover rounded-[6px]'
                 />
@@ -1315,7 +1316,7 @@ export default function SearchPage() {
             <div className='flex items-center gap-[20px] '>
               <div>
                 <img
-                  src='src/assets/images/tiktok.png'
+                  src={logoJob}
                   alt=''
                   className='w-[68px] h-[68px] object-cover rounded-[6px]'
                 />

@@ -3,7 +3,7 @@ import logoJob from 'src/assets/images/insta.jpeg';
 
 export default function JobDetails() {
   return (
-    <div className='mt-[138px] '>
+    <div className='mt-[138px]'>
       <div className='h-[76px] bg-[#f1f2f4]'>
         <div className='container'>
           <div className='py-[24px]'>
@@ -128,7 +128,7 @@ export default function JobDetails() {
           {/* Right */}
           <div className='flex flex-col gap-[12px]'>
             <div className='flex items-center gap-[12px]'>
-              <div className='p-[16px] bg-[#e7f0fa] w-[56px] h-[56px] rounded-[4px]'>
+              <div className='p-[16px] bg-[#e7f0fa] w-[56px] h-[56px] rounded-[4px] hover:cursor-pointer'>
                 <svg
                   width='24'
                   height='24'
@@ -245,7 +245,7 @@ export default function JobDetails() {
           <div className='col-span-5'>
             <div className='p-[32px] w-full  h-[438px] border-[2px] solid border-[#e7f0fa] rounded-[8px]'>
               <div className='text-[20px] leading-8 font-medium text-[#191f33]'>Job Overview</div>
-              <div className='grid grid-cols-3 gap-[20px] mt-[24px]'>
+              <div className='grid grid-cols-3 gap-x-[20px] gap-y-[24px] mt-[24px]'>
                 <div className='col-span-1'>
                   <div>
                     <svg
