@@ -6,6 +6,13 @@ export interface Company {
   name: string;
   description: string;
   address: string;
+  email: string;
+  phoneNumber: string;
+  website: string;
+  teamSize: number;
+  foundedDate: string;
+  responsibility: string;
+  companyType: string;
   logo: {
     id: string;
     fileName: string;

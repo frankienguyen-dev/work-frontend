@@ -1,10 +1,9 @@
 import { Link } from 'react-router-dom';
-import useQueryParams from '../../../hooks/useQueryPrams.tsx';
+import useQueryParams from '../../hooks/useQueryPrams.tsx';
 import { useQuery } from '@tanstack/react-query';
-import companyApi from '../../../apis/company.api.ts';
-import PaginationComponent from '../../../components/Pagination';
+import companyApi from '../../apis/company.api.ts';
 
-export default function Company() {
+export default function CompanyList() {
   const queryParams = useQueryParams();
   const { data: companyData } = useQuery({
     queryKey: ['CompanyList', queryParams],
@@ -153,9 +152,6 @@ export default function Company() {
                 </div>
               </div>
             ))}
-          </div>
-          <div className='mt-[20px]'>
-            <PaginationComponent />
           </div>
         </div>
       )}

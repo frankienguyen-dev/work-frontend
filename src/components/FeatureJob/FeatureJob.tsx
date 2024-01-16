@@ -56,7 +56,8 @@ export default function FeatureJob() {
         <div className='mt-[50px]'>
           {jobData &&
             jobData.data.data.data.slice(0, 6).map((job) => (
-              <div
+              <Link
+                to={`/job/${job.id}`}
                 key={job.id}
                 className='flex justify-between items-center p-[32px] border border-[#EDEFF5] cursor-pointer
              rounded-[12px] hover:shadow-2xl hover:transition hover:ease-in-out hover:duration-[0.25s] h-[132px]'
@@ -69,11 +70,7 @@ export default function FeatureJob() {
                   />
 
                   <div>
-                    <Link to='/'>
-                      <h3 className='text-[20px] leading-8 font-medium text-[#191F33]'>
-                        {job.name}
-                      </h3>
-                    </Link>
+                    <h3 className='text-[20px] leading-8 font-medium text-[#191F33]'>{job.name}</h3>
 
                     <div className='flex items-center gap-[16px] mt-[14px]'>
                       <div className='flex items-center gap-[6px]'>
@@ -224,7 +221,7 @@ export default function FeatureJob() {
                     </div>
                   </Link>
                 </div>
-              </div>
+              </Link>
             ))}
         </div>
       </div>

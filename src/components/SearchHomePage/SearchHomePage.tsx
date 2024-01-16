@@ -43,7 +43,7 @@ export default function SearchHomePage() {
                       type='text'
                       className='w-[512px] h-[56px] text-[16px] leading-6 font-medium m-3 pl-[54px]
                         border-none border-transparent focus:border-transparent focus:ring-0'
-                      placeholder='Job Title, Keywords, or Company Name'
+                      placeholder='Job Title, Keywords, or CompanyList Name'
                     />
                   </div>
 

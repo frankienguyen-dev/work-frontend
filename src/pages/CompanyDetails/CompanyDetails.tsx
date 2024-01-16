@@ -78,7 +78,7 @@ export default function CompanyDetails() {
         </div>
       </div>
       <div className='container mt-[128px] mb-[234px]'>
-        <div className='grid grid-cols-12 gap-[60px]'>
+        <div className='grid grid-cols-12 gap-[60px] min-h-[862px]'>
           <div className='col-span-7'>
             <div>
               <div className='text-[20px] text-[#18191c] leading-8 font-medium'>Description</div>

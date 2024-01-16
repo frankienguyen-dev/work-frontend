@@ -7,10 +7,14 @@ export interface Job {
   id: string;
   name: string;
   description: string;
+  responsibility: string;
   location: string;
   quantity: number;
   salary: number;
   level: string;
+  experience: string;
+  jobType: string;
+  education: string;
   createdBy: ByUser | null;
   createdAt: string | null;
   updatedBy: ByUser | null;

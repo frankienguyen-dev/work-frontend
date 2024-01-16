@@ -79,12 +79,17 @@ export default function PostAJob() {
           </div>
         </div>
         <div className='mt-[32px]'>
-          <div className='text-[18px] leading-7 text-[#18191c] font-medium mb-5'>
+          <div className='text-[18px] leading-7 text-[#18191c] font-medium'>
             Description & Responsibility
           </div>
+          <div className='mt-[18px] text-[14px] leading-5 text-[#18191C]'>Description</div>
+          <div className='mt-[8px]'>
+            <TextArea placeholder='Add your description' />
+          </div>
 
-          <div>
-            <TextArea />
+          <div className='mt-[18px] text-[14px] leading-5 text-[#18191C]'>Responsibility</div>
+          <div className='mt-[8px]'>
+            <TextArea placeholder='Add your responsibility' />
           </div>
         </div>
 
