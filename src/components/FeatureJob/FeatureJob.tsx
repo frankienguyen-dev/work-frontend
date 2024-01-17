@@ -2,11 +2,9 @@ import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import useQueryParams from '../../hooks/useQueryPrams.tsx';
 import jobApi from '../../apis/job.api.ts';
-import { calcDayRemaining, formatSalary } from '../../utils/utils.ts';
+import { calcDayRemaining, formatSalary, getLogoUrl } from '../../utils/utils.ts';
 
 export default function FeatureJob() {
-  const { VITE_API_BASE_URL } = import.meta.env;
-
   const queryParams = useQueryParams();
 
   const { data: jobData } = useQuery({
@@ -58,13 +56,16 @@ export default function FeatureJob() {
             jobData.data.data.data.slice(0, 6).map((job) => (
               <Link
                 to={`/job/${job.id}`}
+                onClick={() => {
+                  window.scrollTo(0, 0);
+                }}
                 key={job.id}
                 className='flex justify-between items-center p-[32px] border border-[#EDEFF5] cursor-pointer
              rounded-[12px] hover:shadow-2xl hover:transition hover:ease-in-out hover:duration-[0.25s] h-[132px]'
               >
                 <div className='flex items-center gap-[20px]'>
                   <img
-                    src={`${VITE_API_BASE_URL}/files/${job.company.logo?.fileName}`}
+                    src={getLogoUrl(job.company.logo?.fileName)}
                     alt=''
                     className='w-[68px] h-[68px] object-cover rounded-[6px]'
                   />
@@ -189,10 +190,9 @@ export default function FeatureJob() {
                   </div>
                 </div>
                 <div>
-                  <Link
+                  <button
                     className='flex items-center gap-[12px] bg-[#E7F0FA] px-6 py-3 rounded-[3px]
               text-[16px] font-semibold text-[#0A65CC]'
-                    to='/'
                   >
                     Apply Now{' '}
                     <div>
@@ -219,7 +219,7 @@ export default function FeatureJob() {
                         />
                       </svg>
                     </div>
-                  </Link>
+                  </button>
                 </div>
               </Link>
             ))}

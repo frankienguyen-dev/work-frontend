@@ -6,6 +6,9 @@ const jobApi = {
   getAllJobs: (params: JobListConfig & AxiosRequestConfig) => {
     return http.get<JobList>('/jobs', { params });
   },
-  getJobDetail: (id: string) => http.get<JobResponse>(`/jobs/${id}`)
+  getJobDetail: (id: string) => http.get<JobResponse>(`/jobs/${id}`),
+  searchJob: (params: JobListConfig & AxiosRequestConfig) => {
+    return http.get<JobList>('/jobs/search', { params });
+  }
 };
 export default jobApi;

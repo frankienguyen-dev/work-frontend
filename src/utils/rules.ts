@@ -72,7 +72,9 @@ export const schema = yup.object({
     .min(6, 'Password must be at least 6 characters')
     .oneOf([yup.ref('password')], "Password doesn't match"),
   read_agree: yup.boolean().oneOf([true], 'You must agree to our terms and conditions'),
-  role: yup.string().required('Role is required')
+  role: yup.string().required('Role is required'),
+  name: yup.string().trim(),
+  location: yup.string().trim()
 });
 
 export type Schema = yup.InferType<typeof schema>;

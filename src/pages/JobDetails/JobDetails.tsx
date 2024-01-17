@@ -3,10 +3,9 @@ import logoJob from 'src/assets/images/insta.jpeg';
 import { useQuery } from '@tanstack/react-query';
 import jobApi from '../../apis/job.api.ts';
 import moment from 'moment';
-import { formatSalary } from '../../utils/utils.ts';
+import { formatSalary, getLogoUrl } from '../../utils/utils.ts';
 
 export default function JobDetails() {
-  const { VITE_API_BASE_URL } = import.meta.env;
   const { id } = useParams();
   const { data: jobDetailData } = useQuery({
     queryKey: ['jobDetail', id],
@@ -19,7 +18,7 @@ export default function JobDetails() {
   console.log('check job: ', job);
 
   return (
-    <div className='mt-[138px]'>
+    <div className='mt-[138px] min-h-[1900px]'>
       <div className='h-[76px] bg-[#f1f2f4]'>
         <div className='container'>
           <div className='py-[24px]'>
@@ -33,7 +32,7 @@ export default function JobDetails() {
             <div className='flex items-center gap-[24px]'>
               <div>
                 <img
-                  src={`${VITE_API_BASE_URL}/files/${job.company.logo?.fileName}`}
+                  src={getLogoUrl(job.company.logo?.fileName)}
                   alt=''
                   className='w-[96px] h-[96px] object-cover rounded-[100px]'
                 />
@@ -211,7 +210,7 @@ export default function JobDetails() {
               </div>
             </div>
           </div>
-          <div className='grid grid-cols-12 gap-[50px] min-h-[770px] mb-[28px]'>
+          <div className='grid grid-cols-12 gap-[50px] mb-[28px]'>
             <div className='col-span-7'>
               <div className='text-[18px] font-medium leading-7 text-[#000000]'>
                 Job Description
@@ -551,7 +550,7 @@ export default function JobDetails() {
                 <div className='flex items-center gap-[16px]'>
                   <div>
                     <img
-                      src={`${VITE_API_BASE_URL}/files/${job.company.logo?.fileName}`}
+                      src={getLogoUrl(job.company.logo?.fileName)}
                       alt=''
                       className='w-[64px] h-[64px] object-cover rounded-[6px]'
                     />
