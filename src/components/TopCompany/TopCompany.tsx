@@ -2,10 +2,9 @@ import { Link } from 'react-router-dom';
 import useQueryParams from '../../hooks/useQueryPrams.tsx';
 import { useQuery } from '@tanstack/react-query';
 import companyApi from '../../apis/company.api.ts';
+import { getLogoUrl } from '../../utils/utils.ts';
 
 export default function TopCompany() {
-  const { VITE_API_BASE_URL } = import.meta.env;
-
   const queryParams = useQueryParams();
   const { data: companyData } = useQuery({
     queryKey: ['CompanyList', queryParams],
@@ -22,7 +21,8 @@ export default function TopCompany() {
           <div className='flex items-center justify-between'>
             <h1 className='text-[40px] font-medium leading-[48px] text-[#18191C]'>Top companies</h1>
             <div className='flex gap-[16px] items-center'>
-              <button
+              <Link
+                to=''
                 className='w-[48px] h-[48px] bg-[#E7F0FA] items-center
               justify-center flex rounded-[5px] text-[#0A65CC] hover:bg-[#0A65CC]
               hover:text-white duration-[0.25s] ease-in'
@@ -49,8 +49,9 @@ export default function TopCompany() {
                     strokeLinejoin='round'
                   />
                 </svg>
-              </button>
-              <button
+              </Link>
+              <Link
+                to=''
                 className='w-[48px] h-[48px] bg-[#E7F0FA] items-center
               justify-center flex rounded-[5px] text-[#0A65CC] hover:bg-[#0A65CC]
               hover:text-white duration-[0.25s] ease-in'
@@ -77,30 +78,34 @@ export default function TopCompany() {
                     strokeLinejoin='round'
                   />
                 </svg>
-              </button>
+              </Link>
             </div>
           </div>
           <div className='mt-[50px]'>
             <div className='grid grid-cols-4 gap-[24px]'>
               {companyData &&
                 companyData.data.data.data.slice(0, 8).map((company) => (
-                  <div
+                  <Link
+                    to={`/company/${company.id}`}
+                    onClick={() => {
+                      window.scrollTo(0, 0);
+                    }}
                     key={company.id}
                     className='bg-white p-8 border border-[#EDEFF5] rounded-[12px] hover:cursor-pointer
                   hover:shadow-2xl hover:transition hover:ease-in-out hover:duration-[0.25s] h-[200px]'
                   >
                     <div className='flex items-center gap-[16px]'>
                       <img
-                        src={`${VITE_API_BASE_URL}/files/${company?.logo?.fileName}`}
+                        src={getLogoUrl(company?.logo?.fileName)}
                         alt=''
                         className='w-[56px] h-[56px] object-cover rounded-[4px]'
                       />
                       <div>
-                        <Link to='/'>
+                        <div>
                           <h3 className='text-[18px] text-[#191F33] font-medium leading-7'>
                             Tiktok
                           </h3>
-                        </Link>
+                        </div>
                         <div className='flex mt-[6px] gap-[6px] items-center'>
                           <svg
                             width='22'
@@ -131,16 +136,15 @@ export default function TopCompany() {
                       </div>
                     </div>
                     <div className='mt-[32px]'>
-                      <Link
-                        to='/'
+                      <button
                         className='bg-[#E7F0FA] min-w-[248px] h-[48px] rounded-[3px] text-[16px]
                       leading-6 text-[#0A65CC] font-semibold flex items-center justify-center
                       hover:bg-[#0A65CC] hover:text-white'
                       >
                         Open Position
-                      </Link>
+                      </button>
                     </div>
-                  </div>
+                  </Link>
                 ))}
             </div>
           </div>

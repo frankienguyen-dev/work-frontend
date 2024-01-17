@@ -1,4 +1,36 @@
+import useQueryConfig, { QueryConfig } from '../../hooks/useQueryConfig.tsx';
+import { useForm } from 'react-hook-form';
+import { schema, Schema } from '../../utils/rules.ts';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { createSearchParams, useNavigate } from 'react-router-dom';
+import { omit } from 'lodash';
+
+type FormData = Pick<Schema, 'name'>;
+const nameSearchSchema = schema.pick(['name']);
 export default function SearchHomePage() {
+  const queryConfig: QueryConfig = useQueryConfig();
+  const { register, handleSubmit } = useForm<FormData>({
+    defaultValues: {
+      name: ''
+    },
+    resolver: yupResolver(nameSearchSchema)
+  });
+  const navigate = useNavigate();
+
+  const onSubmitSearch = handleSubmit((data) => {
+    navigate({
+      pathname: '/job/search',
+      search: createSearchParams(
+        omit(
+          {
+            ...queryConfig,
+            name: data.name as string
+          },
+          ['sortBy', 'sortDir', 'location', 'salary']
+        )
+      ).toString()
+    });
+  });
   return (
     <div className='bg-[#f7f7f8]'>
       <div className='container'>
@@ -12,7 +44,7 @@ export default function SearchHomePage() {
                 Best tools for your application journey. Make your profile stand out with useful
                 tools and knowledge from Workdev.
               </p>
-              <form className='mt-[32px]' noValidate>
+              <form className='mt-[32px]' noValidate onSubmit={onSubmitSearch}>
                 <div className='relative'>
                   <div className='absolute left-[30px] top-[50%] translate-y-[-50%]'>
                     <svg
@@ -44,11 +76,15 @@ export default function SearchHomePage() {
                       className='w-[512px] h-[56px] text-[16px] leading-6 font-medium m-3 pl-[54px]
                         border-none border-transparent focus:border-transparent focus:ring-0'
                       placeholder='Job Title, Keywords, or CompanyList Name'
+                      {...register('name')}
                     />
                   </div>
 
                   <button
                     type='submit'
+                    onClick={() => {
+                      scrollTo(0, 0);
+                    }}
                     className='w-[131px] h-[56px] bg-[#0A65CC] text-white text-[16px]
                       leading-6 font-semibold rounded-[4px] absolute right-0 top-[50%] translate-y-[-50%]
                       mr-3 hover:opacity-90

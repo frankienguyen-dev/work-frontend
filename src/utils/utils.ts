@@ -2,6 +2,7 @@ import axios, { AxiosError } from 'axios';
 import { HttpStatusCode } from 'src/constants/httpStatusCode.enum';
 import { ErrorResponse } from '../types/utils.type.ts';
 import moment from 'moment';
+import logoImage from 'src/assets/images/logoImage.jpeg';
 
 export function isAxiosError<T>(error: unknown): error is AxiosError<T> {
   // eslint-disable-next-line import/no-named-as-default-member
@@ -46,3 +47,8 @@ export function formatSalary(salary: number) {
   });
   return formatter.format(salary);
 }
+
+export const getLogoUrl = (logoName?: string) => {
+  const { VITE_API_BASE_URL } = import.meta.env;
+  return logoName ? `${VITE_API_BASE_URL}/files/${logoName}` : logoImage;
+};

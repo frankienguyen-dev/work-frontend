@@ -49,4 +49,7 @@ export interface JobListConfig {
   pageSize?: number | string;
   sortBy?: number | string;
   sortDir?: number | string;
+  name?: string;
+  location?: string;
+  salary?: number | string;
 }

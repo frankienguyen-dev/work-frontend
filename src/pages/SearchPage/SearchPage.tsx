@@ -1,10 +1,53 @@
-import { Link } from 'react-router-dom';
 import Pagination from '../../components/Pagination';
 import { useState } from 'react';
-import logoJob from 'src/assets/images/insta.jpeg';
+import useQueryParams from '../../hooks/useQueryPrams.tsx';
+import { useQuery } from '@tanstack/react-query';
+import jobApi from '../../apis/job.api.ts';
+import { calcDayRemaining, formatSalary, getLogoUrl } from '../../utils/utils.ts';
+import { createSearchParams, Link, useNavigate } from 'react-router-dom';
+import useQueryConfig from '../../hooks/useQueryConfig.tsx';
+import { useForm } from 'react-hook-form';
+import { schema, Schema } from '../../utils/rules.ts';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { omit } from 'lodash';
+
+type FormData = Pick<Schema, 'name' | 'location'>;
+const searchPageSchema = schema.pick(['name', 'location']);
 
 export default function SearchPage() {
   const [page, setPage] = useState(1);
+  const queryConfig = useQueryConfig();
+  const { register, handleSubmit } = useForm<FormData>({
+    defaultValues: {
+      name: '',
+      location: ''
+    },
+    resolver: yupResolver(searchPageSchema)
+  });
+  const queryParams = useQueryParams();
+  const { data: searchJobData } = useQuery({
+    queryKey: ['JobList', queryParams],
+    queryFn: () => {
+      return jobApi.searchJob(queryParams);
+    }
+  });
+  const navigate = useNavigate();
+  const onSubmitSearch = handleSubmit((data) => {
+    console.log('check search page: ', data);
+    navigate({
+      pathname: '/job/search',
+      search: createSearchParams(
+        omit(
+          {
+            ...queryConfig,
+            name: data.name as string,
+            location: data.location as string
+          },
+          ['salary', 'sortBy', 'sortDir']
+        )
+      ).toString()
+    });
+  });
   return (
     <div className='pt-[138px]'>
       <div className='h-[76px] bg-[#f1f2f4]'>
@@ -14,7 +57,7 @@ export default function SearchPage() {
       </div>
       <div className='h-[112px] bg-[#f1f2f4]'>
         <div className='container'>
-          <form>
+          <form noValidate onSubmit={onSubmitSearch}>
             <div className='bg-white h-[80px] rounded-[8px] grid grid-cols-12 p-[12px]'>
               <div className='col-span-7 relative border-r solid border-r-[#eeeff5]'>
                 <div className='absolute left-[18px] top-[50%] translate-y-[-50%]'>
@@ -46,6 +89,7 @@ export default function SearchPage() {
                   type='text'
                   className='w-full h-[56px] pl-[54px] border-none border-transparent
                   focus:border-transparent focus:ring-0 leading-6 text-[16px] text-[]'
+                  {...register('name')}
                 />
               </div>
               <div className='col-span-3 relative'>
@@ -79,6 +123,7 @@ export default function SearchPage() {
                     type='text'
                     className='w-full h-[56px] pl-[54px] border-none border-transparent
                   focus:border-transparent focus:ring-0 leading-6 text-[16px] text-[]'
+                    {...register('location')}
                   />
                 </div>
               </div>
@@ -171,167 +216,151 @@ export default function SearchPage() {
           </div>
         </div>
         <div className='mt-[20px] mb-[48px]'>
-          {/* Item 1 */}
-          <div
-            className='flex items-center justify-between p-[32px] h-[132px] rounded-[12px] group
+          {searchJobData &&
+            searchJobData.data.data.data.map((job) => (
+              <Link
+                to={`/job/${job.id}`}
+                key={job.id}
+                className='flex items-center justify-between p-[32px] h-[132px] rounded-[12px] group
           hover:cursor-pointer hover:shadow-2xl hover:transition hover:ease-in-out hover:duration-[0.25s]
           border solid border-[#e3e4e7] mt-[24px]'
-          >
-            <div className='flex items-center gap-[20px] '>
-              <div>
-                <img
-                  src={logoJob}
-                  alt=''
-                  className='w-[68px] h-[68px] object-cover rounded-[6px]'
-                />
-              </div>
-              <div>
-                <div className='text-[18px] leading-7 font-medium text-[#18191c]'>
-                  Project Manager
-                </div>
-                <div className='flex gap-[16px] items-center mt-[12px]'>
-                  <div className='flex items-center gap-[6px]'>
-                    <div>
-                      <svg
-                        width='22'
-                        height='22'
-                        viewBox='0 0 22 22'
-                        fill='none'
-                        xmlns='http://www.w3.org/2000/svg'
-                      >
-                        <path
-                          d='M19.25 9.16699C19.25 15.5837 11 21.0837 11 21.0837C11 21.0837 2.75 15.5837 2.75 9.16699C2.75 6.97896 3.61919 4.88054 5.16637 3.33336C6.71354 1.78619 8.81196 0.916992 11 0.916992C13.188 0.916992 15.2865 1.78619 16.8336 3.33336C18.3808 4.88054 19.25 6.97896 19.25 9.16699Z'
-                          stroke='#C8CCD1'
-                          strokeWidth='1.5'
-                          strokeLinecap='round'
-                          strokeLinejoin='round'
-                        />
-                        <path
-                          d='M11 11.917C12.5188 11.917 13.75 10.6858 13.75 9.16699C13.75 7.64821 12.5188 6.41699 11 6.41699C9.48122 6.41699 8.25 7.64821 8.25 9.16699C8.25 10.6858 9.48122 11.917 11 11.917Z'
-                          stroke='#C8CCD1'
-                          strokeWidth='1.5'
-                          strokeLinecap='round'
-                          strokeLinejoin='round'
-                        />
-                      </svg>
-                    </div>
-                    <div className='text-[14px] leading-5 text-[#5e6670]'>New York, USA</div>
-                  </div>
-                  <div className='flex items-center gap-[4px]'>
-                    <div>
-                      <svg
-                        width='22'
-                        height='22'
-                        viewBox='0 0 22 22'
-                        fill='none'
-                        xmlns='http://www.w3.org/2000/svg'
-                      >
-                        <g clipPath='url(#clip0_321_11228)'>
-                          <path
-                            d='M11 2.0625V19.9375'
-                            stroke='#C8CCD1'
-                            strokeWidth='1.5'
-                            strokeLinecap='round'
-                            strokeLinejoin='round'
-                          />
-                          <path
-                            d='M15.8125 7.5625C15.8125 7.11108 15.7236 6.66408 15.5508 6.24703C15.3781 5.82997 15.1249 5.45102 14.8057 5.13182C14.4865 4.81262 14.1075 4.55941 13.6905 4.38666C13.2734 4.21391 12.8264 4.125 12.375 4.125H9.28125C8.36957 4.125 7.49523 4.48716 6.85057 5.13182C6.20591 5.77648 5.84375 6.65082 5.84375 7.5625C5.84375 8.47418 6.20591 9.34852 6.85057 9.99318C7.49523 10.6378 8.36957 11 9.28125 11H13.0625C13.9742 11 14.8485 11.3622 15.4932 12.0068C16.1378 12.6515 16.5 13.5258 16.5 14.4375C16.5 15.3492 16.1378 16.2235 15.4932 16.8682C14.8485 17.5128 13.9742 17.875 13.0625 17.875H8.9375C8.02582 17.875 7.15148 17.5128 6.50682 16.8682C5.86216 16.2235 5.5 15.3492 5.5 14.4375'
-                            stroke='#C8CCD1'
-                            strokeWidth='1.5'
-                            strokeLinecap='round'
-                            strokeLinejoin='round'
-                          />
-                        </g>
-                        <defs>
-                          <clipPath id='clip0_321_11228'>
-                            <rect width='22' height='22' fill='white' />
-                          </clipPath>
-                        </defs>
-                      </svg>
-                    </div>
-                    <div className='text-[14px] leading-5 text-[#5e6670]'>$50k-80k/month</div>
-                  </div>
-                  <div className='flex items-center gap-[6px]'>
-                    <div>
-                      <svg
-                        width='22'
-                        height='22'
-                        viewBox='0 0 22 22'
-                        fill='none'
-                        xmlns='http://www.w3.org/2000/svg'
-                      >
-                        <g clipPath='url(#clip0_321_11234)'>
-                          <path
-                            d='M17.875 3.4375H4.125C3.7453 3.4375 3.4375 3.7453 3.4375 4.125V17.875C3.4375 18.2547 3.7453 18.5625 4.125 18.5625H17.875C18.2547 18.5625 18.5625 18.2547 18.5625 17.875V4.125C18.5625 3.7453 18.2547 3.4375 17.875 3.4375Z'
-                            stroke='#C8CCD1'
-                            strokeWidth='1.5'
-                            strokeLinecap='round'
-                            strokeLinejoin='round'
-                          />
-                          <path
-                            d='M15.125 2.0625V4.8125'
-                            stroke='#C8CCD1'
-                            strokeWidth='1.5'
-                            strokeLinecap='round'
-                            strokeLinejoin='round'
-                          />
-                          <path
-                            d='M6.875 2.0625V4.8125'
-                            stroke='#C8CCD1'
-                            strokeWidth='1.5'
-                            strokeLinecap='round'
-                            strokeLinejoin='round'
-                          />
-                          <path
-                            d='M3.4375 7.5625H18.5625'
-                            stroke='#C8CCD1'
-                            strokeWidth='1.5'
-                            strokeLinecap='round'
-                            strokeLinejoin='round'
-                          />
-                        </g>
-                        <defs>
-                          <clipPath id='clip0_321_11234'>
-                            <rect width='22' height='22' fill='white' />
-                          </clipPath>
-                        </defs>
-                      </svg>
-                    </div>
-                    <div className='text-[14px] leading-5 text-[#5e6670]'>4 Days Remaining</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className='flex items-center gap-[8px]'>
-              <div
-                className='w-[48px] h-[48px] rounded-[5px] flex items-center
-              justify-center group-hover:bg-[#f1f2f4] group-hover:text-[#18191c] text-[#767f8c]'
               >
-                <svg
-                  width='24'
-                  height='24'
-                  viewBox='0 0 24 24'
-                  fill='none'
-                  xmlns='http://www.w3.org/2000/svg'
-                >
-                  <path
-                    d='M18 21L11.9993 17.25L6 21V4.5C6 4.30109 6.07902 4.11032 6.21967 3.96967C6.36032 3.82902 6.55109 3.75 6.75 3.75H17.25C17.4489 3.75 17.6397 3.82902 17.7803 3.96967C17.921 4.11032 18 4.30109 18 4.5V21Z'
-                    stroke='currentColor'
-                    strokeWidth='1.5'
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                  />
-                </svg>
-              </div>
-              <div>
-                <Link
-                  to=''
-                  className='min-w-[168px] h-[48px] py-[12px] px-[24px] flex items-center gap-[12px]
-                  text-[16px] leading-6 font-semibold text-[#0b65cc] bg-[#e7f0fa] rounded-[3px]
-                  group-hover:bg-[#0A65CC] group-hover:text-white'
-                >
-                  Apply Now
+                <div className='flex items-center gap-[20px] '>
                   <div>
+                    <img
+                      src={getLogoUrl(job.company.logo?.fileName)}
+                      alt=''
+                      className='w-[68px] h-[68px] object-cover rounded-[6px]'
+                    />
+                  </div>
+                  <div>
+                    <div className='text-[18px] leading-7 font-medium text-[#18191c]'>
+                      {job.name}
+                    </div>
+                    <div className='flex gap-[16px] items-center mt-[12px]'>
+                      <div className='flex items-center gap-[6px]'>
+                        <div>
+                          <svg
+                            width='22'
+                            height='22'
+                            viewBox='0 0 22 22'
+                            fill='none'
+                            xmlns='http://www.w3.org/2000/svg'
+                          >
+                            <path
+                              d='M19.25 9.16699C19.25 15.5837 11 21.0837 11 21.0837C11 21.0837 2.75 15.5837 2.75 9.16699C2.75 6.97896 3.61919 4.88054 5.16637 3.33336C6.71354 1.78619 8.81196 0.916992 11 0.916992C13.188 0.916992 15.2865 1.78619 16.8336 3.33336C18.3808 4.88054 19.25 6.97896 19.25 9.16699Z'
+                              stroke='#C8CCD1'
+                              strokeWidth='1.5'
+                              strokeLinecap='round'
+                              strokeLinejoin='round'
+                            />
+                            <path
+                              d='M11 11.917C12.5188 11.917 13.75 10.6858 13.75 9.16699C13.75 7.64821 12.5188 6.41699 11 6.41699C9.48122 6.41699 8.25 7.64821 8.25 9.16699C8.25 10.6858 9.48122 11.917 11 11.917Z'
+                              stroke='#C8CCD1'
+                              strokeWidth='1.5'
+                              strokeLinecap='round'
+                              strokeLinejoin='round'
+                            />
+                          </svg>
+                        </div>
+                        <div className='text-[14px] leading-5 text-[#5e6670]'>{job.location}</div>
+                      </div>
+                      <div className='flex items-center gap-[4px]'>
+                        <div>
+                          <svg
+                            width='22'
+                            height='22'
+                            viewBox='0 0 22 22'
+                            fill='none'
+                            xmlns='http://www.w3.org/2000/svg'
+                          >
+                            <g clipPath='url(#clip0_321_11228)'>
+                              <path
+                                d='M11 2.0625V19.9375'
+                                stroke='#C8CCD1'
+                                strokeWidth='1.5'
+                                strokeLinecap='round'
+                                strokeLinejoin='round'
+                              />
+                              <path
+                                d='M15.8125 7.5625C15.8125 7.11108 15.7236 6.66408 15.5508 6.24703C15.3781 5.82997 15.1249 5.45102 14.8057 5.13182C14.4865 4.81262 14.1075 4.55941 13.6905 4.38666C13.2734 4.21391 12.8264 4.125 12.375 4.125H9.28125C8.36957 4.125 7.49523 4.48716 6.85057 5.13182C6.20591 5.77648 5.84375 6.65082 5.84375 7.5625C5.84375 8.47418 6.20591 9.34852 6.85057 9.99318C7.49523 10.6378 8.36957 11 9.28125 11H13.0625C13.9742 11 14.8485 11.3622 15.4932 12.0068C16.1378 12.6515 16.5 13.5258 16.5 14.4375C16.5 15.3492 16.1378 16.2235 15.4932 16.8682C14.8485 17.5128 13.9742 17.875 13.0625 17.875H8.9375C8.02582 17.875 7.15148 17.5128 6.50682 16.8682C5.86216 16.2235 5.5 15.3492 5.5 14.4375'
+                                stroke='#C8CCD1'
+                                strokeWidth='1.5'
+                                strokeLinecap='round'
+                                strokeLinejoin='round'
+                              />
+                            </g>
+                            <defs>
+                              <clipPath id='clip0_321_11228'>
+                                <rect width='22' height='22' fill='white' />
+                              </clipPath>
+                            </defs>
+                          </svg>
+                        </div>
+                        <div className='text-[14px] leading-5 text-[#5e6670]'>
+                          {formatSalary(job.salary)}/month
+                        </div>
+                      </div>
+                      <div className='flex items-center gap-[6px]'>
+                        <div>
+                          <svg
+                            width='22'
+                            height='22'
+                            viewBox='0 0 22 22'
+                            fill='none'
+                            xmlns='http://www.w3.org/2000/svg'
+                          >
+                            <g clipPath='url(#clip0_321_11234)'>
+                              <path
+                                d='M17.875 3.4375H4.125C3.7453 3.4375 3.4375 3.7453 3.4375 4.125V17.875C3.4375 18.2547 3.7453 18.5625 4.125 18.5625H17.875C18.2547 18.5625 18.5625 18.2547 18.5625 17.875V4.125C18.5625 3.7453 18.2547 3.4375 17.875 3.4375Z'
+                                stroke='#C8CCD1'
+                                strokeWidth='1.5'
+                                strokeLinecap='round'
+                                strokeLinejoin='round'
+                              />
+                              <path
+                                d='M15.125 2.0625V4.8125'
+                                stroke='#C8CCD1'
+                                strokeWidth='1.5'
+                                strokeLinecap='round'
+                                strokeLinejoin='round'
+                              />
+                              <path
+                                d='M6.875 2.0625V4.8125'
+                                stroke='#C8CCD1'
+                                strokeWidth='1.5'
+                                strokeLinecap='round'
+                                strokeLinejoin='round'
+                              />
+                              <path
+                                d='M3.4375 7.5625H18.5625'
+                                stroke='#C8CCD1'
+                                strokeWidth='1.5'
+                                strokeLinecap='round'
+                                strokeLinejoin='round'
+                              />
+                            </g>
+                            <defs>
+                              <clipPath id='clip0_321_11234'>
+                                <rect width='22' height='22' fill='white' />
+                              </clipPath>
+                            </defs>
+                          </svg>
+                        </div>
+                        <div className='text-[14px] leading-5 text-[#5e6670]'>
+                          {calcDayRemaining(job.endDate) > 1
+                            ? calcDayRemaining(job.endDate) + ' Days Remaining'
+                            : calcDayRemaining(job.endDate) + ' Day Remaining'}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className='flex items-center gap-[8px]'>
+                  <div
+                    className='w-[48px] h-[48px] rounded-[5px] flex items-center
+              justify-center group-hover:bg-[#f1f2f4] group-hover:text-[#18191c] text-[#767f8c]'
+                  >
                     <svg
                       width='24'
                       height='24'
@@ -340,14 +369,7 @@ export default function SearchPage() {
                       xmlns='http://www.w3.org/2000/svg'
                     >
                       <path
-                        d='M5 12H19'
-                        stroke='currentColor'
-                        strokeWidth='1.5'
-                        strokeLinecap='round'
-                        strokeLinejoin='round'
-                      />
-                      <path
-                        d='M12 5L19 12L12 19'
+                        d='M18 21L11.9993 17.25L6 21V4.5C6 4.30109 6.07902 4.11032 6.21967 3.96967C6.36032 3.82902 6.55109 3.75 6.75 3.75H17.25C17.4489 3.75 17.6397 3.82902 17.7803 3.96967C17.921 4.11032 18 4.30109 18 4.5V21Z'
                         stroke='currentColor'
                         strokeWidth='1.5'
                         strokeLinecap='round'
@@ -355,1147 +377,42 @@ export default function SearchPage() {
                       />
                     </svg>
                   </div>
-                </Link>
-              </div>
-            </div>
-          </div>
-
-          {/* Item 2 */}
-          <div
-            className='flex items-center justify-between p-[32px] h-[132px] rounded-[12px] group mt-[24px]
-          hover:cursor-pointer hover:shadow-2xl hover:transition hover:ease-in-out hover:duration-[0.25s]
-          border solid border-[#e3e4e7]'
-          >
-            <div className='flex items-center gap-[20px] '>
-              <div>
-                <img
-                  src={logoJob}
-                  alt=''
-                  className='w-[68px] h-[68px] object-cover rounded-[6px]'
-                />
-              </div>
-              <div>
-                <div className='text-[18px] leading-7 font-medium text-[#18191c]'>
-                  Project Manager
-                </div>
-                <div className='flex gap-[16px] items-center mt-[12px]'>
-                  <div className='flex items-center gap-[6px]'>
-                    <div>
-                      <svg
-                        width='22'
-                        height='22'
-                        viewBox='0 0 22 22'
-                        fill='none'
-                        xmlns='http://www.w3.org/2000/svg'
-                      >
-                        <path
-                          d='M19.25 9.16699C19.25 15.5837 11 21.0837 11 21.0837C11 21.0837 2.75 15.5837 2.75 9.16699C2.75 6.97896 3.61919 4.88054 5.16637 3.33336C6.71354 1.78619 8.81196 0.916992 11 0.916992C13.188 0.916992 15.2865 1.78619 16.8336 3.33336C18.3808 4.88054 19.25 6.97896 19.25 9.16699Z'
-                          stroke='#C8CCD1'
-                          strokeWidth='1.5'
-                          strokeLinecap='round'
-                          strokeLinejoin='round'
-                        />
-                        <path
-                          d='M11 11.917C12.5188 11.917 13.75 10.6858 13.75 9.16699C13.75 7.64821 12.5188 6.41699 11 6.41699C9.48122 6.41699 8.25 7.64821 8.25 9.16699C8.25 10.6858 9.48122 11.917 11 11.917Z'
-                          stroke='#C8CCD1'
-                          strokeWidth='1.5'
-                          strokeLinecap='round'
-                          strokeLinejoin='round'
-                        />
-                      </svg>
-                    </div>
-                    <div className='text-[14px] leading-5 text-[#5e6670]'>New York, USA</div>
-                  </div>
-                  <div className='flex items-center gap-[4px]'>
-                    <div>
-                      <svg
-                        width='22'
-                        height='22'
-                        viewBox='0 0 22 22'
-                        fill='none'
-                        xmlns='http://www.w3.org/2000/svg'
-                      >
-                        <g clipPath='url(#clip0_321_11228)'>
-                          <path
-                            d='M11 2.0625V19.9375'
-                            stroke='#C8CCD1'
-                            strokeWidth='1.5'
-                            strokeLinecap='round'
-                            strokeLinejoin='round'
-                          />
-                          <path
-                            d='M15.8125 7.5625C15.8125 7.11108 15.7236 6.66408 15.5508 6.24703C15.3781 5.82997 15.1249 5.45102 14.8057 5.13182C14.4865 4.81262 14.1075 4.55941 13.6905 4.38666C13.2734 4.21391 12.8264 4.125 12.375 4.125H9.28125C8.36957 4.125 7.49523 4.48716 6.85057 5.13182C6.20591 5.77648 5.84375 6.65082 5.84375 7.5625C5.84375 8.47418 6.20591 9.34852 6.85057 9.99318C7.49523 10.6378 8.36957 11 9.28125 11H13.0625C13.9742 11 14.8485 11.3622 15.4932 12.0068C16.1378 12.6515 16.5 13.5258 16.5 14.4375C16.5 15.3492 16.1378 16.2235 15.4932 16.8682C14.8485 17.5128 13.9742 17.875 13.0625 17.875H8.9375C8.02582 17.875 7.15148 17.5128 6.50682 16.8682C5.86216 16.2235 5.5 15.3492 5.5 14.4375'
-                            stroke='#C8CCD1'
-                            strokeWidth='1.5'
-                            strokeLinecap='round'
-                            strokeLinejoin='round'
-                          />
-                        </g>
-                        <defs>
-                          <clipPath id='clip0_321_11228'>
-                            <rect width='22' height='22' fill='white' />
-                          </clipPath>
-                        </defs>
-                      </svg>
-                    </div>
-                    <div className='text-[14px] leading-5 text-[#5e6670]'>$50k-80k/month</div>
-                  </div>
-                  <div className='flex items-center gap-[6px]'>
-                    <div>
-                      <svg
-                        width='22'
-                        height='22'
-                        viewBox='0 0 22 22'
-                        fill='none'
-                        xmlns='http://www.w3.org/2000/svg'
-                      >
-                        <g clipPath='url(#clip0_321_11234)'>
-                          <path
-                            d='M17.875 3.4375H4.125C3.7453 3.4375 3.4375 3.7453 3.4375 4.125V17.875C3.4375 18.2547 3.7453 18.5625 4.125 18.5625H17.875C18.2547 18.5625 18.5625 18.2547 18.5625 17.875V4.125C18.5625 3.7453 18.2547 3.4375 17.875 3.4375Z'
-                            stroke='#C8CCD1'
-                            strokeWidth='1.5'
-                            strokeLinecap='round'
-                            strokeLinejoin='round'
-                          />
-                          <path
-                            d='M15.125 2.0625V4.8125'
-                            stroke='#C8CCD1'
-                            strokeWidth='1.5'
-                            strokeLinecap='round'
-                            strokeLinejoin='round'
-                          />
-                          <path
-                            d='M6.875 2.0625V4.8125'
-                            stroke='#C8CCD1'
-                            strokeWidth='1.5'
-                            strokeLinecap='round'
-                            strokeLinejoin='round'
-                          />
-                          <path
-                            d='M3.4375 7.5625H18.5625'
-                            stroke='#C8CCD1'
-                            strokeWidth='1.5'
-                            strokeLinecap='round'
-                            strokeLinejoin='round'
-                          />
-                        </g>
-                        <defs>
-                          <clipPath id='clip0_321_11234'>
-                            <rect width='22' height='22' fill='white' />
-                          </clipPath>
-                        </defs>
-                      </svg>
-                    </div>
-                    <div className='text-[14px] leading-5 text-[#5e6670]'>4 Days Remaining</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className='flex items-center gap-[8px]'>
-              <div
-                className='w-[48px] h-[48px] rounded-[5px] flex items-center
-              justify-center group-hover:bg-[#f1f2f4] group-hover:text-[#18191c] text-[#767f8c]'
-              >
-                <svg
-                  width='24'
-                  height='24'
-                  viewBox='0 0 24 24'
-                  fill='none'
-                  xmlns='http://www.w3.org/2000/svg'
-                >
-                  <path
-                    d='M18 21L11.9993 17.25L6 21V4.5C6 4.30109 6.07902 4.11032 6.21967 3.96967C6.36032 3.82902 6.55109 3.75 6.75 3.75H17.25C17.4489 3.75 17.6397 3.82902 17.7803 3.96967C17.921 4.11032 18 4.30109 18 4.5V21Z'
-                    fill='#18191C'
-                    stroke='#18191C'
-                    strokeWidth='1.5'
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                  />
-                </svg>
-              </div>
-              <div>
-                <Link
-                  to=''
-                  className='min-w-[168px] h-[48px] py-[12px] px-[24px] flex items-center gap-[12px]
+                  <div>
+                    <button
+                      className='min-w-[168px] h-[48px] py-[12px] px-[24px] flex items-center gap-[12px]
                   text-[16px] leading-6 font-semibold text-[#0b65cc] bg-[#e7f0fa] rounded-[3px]
                   group-hover:bg-[#0A65CC] group-hover:text-white'
-                >
-                  Apply Now
-                  <div>
-                    <svg
-                      width='24'
-                      height='24'
-                      viewBox='0 0 24 24'
-                      fill='none'
-                      xmlns='http://www.w3.org/2000/svg'
                     >
-                      <path
-                        d='M5 12H19'
-                        stroke='currentColor'
-                        strokeWidth='1.5'
-                        strokeLinecap='round'
-                        strokeLinejoin='round'
-                      />
-                      <path
-                        d='M12 5L19 12L12 19'
-                        stroke='currentColor'
-                        strokeWidth='1.5'
-                        strokeLinecap='round'
-                        strokeLinejoin='round'
-                      />
-                    </svg>
-                  </div>
-                </Link>
-              </div>
-            </div>
-          </div>
-
-          {/* Item 3 */}
-          <div
-            className='flex items-center justify-between p-[32px] h-[132px] rounded-[12px] group
-          hover:cursor-pointer hover:shadow-2xl hover:transition hover:ease-in-out border solid
-          hover:duration-[0.25s] border-[#e3e4e7] mt-[24px]'
-          >
-            <div className='flex items-center gap-[20px] '>
-              <div>
-                <img
-                  src={logoJob}
-                  alt=''
-                  className='w-[68px] h-[68px] object-cover rounded-[6px]'
-                />
-              </div>
-              <div>
-                <div className='text-[18px] leading-7 font-medium text-[#18191c]'>
-                  Project Manager
-                </div>
-                <div className='flex gap-[16px] items-center mt-[12px]'>
-                  <div className='flex items-center gap-[6px]'>
-                    <div>
-                      <svg
-                        width='22'
-                        height='22'
-                        viewBox='0 0 22 22'
-                        fill='none'
-                        xmlns='http://www.w3.org/2000/svg'
-                      >
-                        <path
-                          d='M19.25 9.16699C19.25 15.5837 11 21.0837 11 21.0837C11 21.0837 2.75 15.5837 2.75 9.16699C2.75 6.97896 3.61919 4.88054 5.16637 3.33336C6.71354 1.78619 8.81196 0.916992 11 0.916992C13.188 0.916992 15.2865 1.78619 16.8336 3.33336C18.3808 4.88054 19.25 6.97896 19.25 9.16699Z'
-                          stroke='#C8CCD1'
-                          strokeWidth='1.5'
-                          strokeLinecap='round'
-                          strokeLinejoin='round'
-                        />
-                        <path
-                          d='M11 11.917C12.5188 11.917 13.75 10.6858 13.75 9.16699C13.75 7.64821 12.5188 6.41699 11 6.41699C9.48122 6.41699 8.25 7.64821 8.25 9.16699C8.25 10.6858 9.48122 11.917 11 11.917Z'
-                          stroke='#C8CCD1'
-                          strokeWidth='1.5'
-                          strokeLinecap='round'
-                          strokeLinejoin='round'
-                        />
-                      </svg>
-                    </div>
-                    <div className='text-[14px] leading-5 text-[#5e6670]'>New York, USA</div>
-                  </div>
-                  <div className='flex items-center gap-[4px]'>
-                    <div>
-                      <svg
-                        width='22'
-                        height='22'
-                        viewBox='0 0 22 22'
-                        fill='none'
-                        xmlns='http://www.w3.org/2000/svg'
-                      >
-                        <g clipPath='url(#clip0_321_11228)'>
+                      Apply Now
+                      <div>
+                        <svg
+                          width='24'
+                          height='24'
+                          viewBox='0 0 24 24'
+                          fill='none'
+                          xmlns='http://www.w3.org/2000/svg'
+                        >
                           <path
-                            d='M11 2.0625V19.9375'
-                            stroke='#C8CCD1'
+                            d='M5 12H19'
+                            stroke='currentColor'
                             strokeWidth='1.5'
                             strokeLinecap='round'
                             strokeLinejoin='round'
                           />
                           <path
-                            d='M15.8125 7.5625C15.8125 7.11108 15.7236 6.66408 15.5508 6.24703C15.3781 5.82997 15.1249 5.45102 14.8057 5.13182C14.4865 4.81262 14.1075 4.55941 13.6905 4.38666C13.2734 4.21391 12.8264 4.125 12.375 4.125H9.28125C8.36957 4.125 7.49523 4.48716 6.85057 5.13182C6.20591 5.77648 5.84375 6.65082 5.84375 7.5625C5.84375 8.47418 6.20591 9.34852 6.85057 9.99318C7.49523 10.6378 8.36957 11 9.28125 11H13.0625C13.9742 11 14.8485 11.3622 15.4932 12.0068C16.1378 12.6515 16.5 13.5258 16.5 14.4375C16.5 15.3492 16.1378 16.2235 15.4932 16.8682C14.8485 17.5128 13.9742 17.875 13.0625 17.875H8.9375C8.02582 17.875 7.15148 17.5128 6.50682 16.8682C5.86216 16.2235 5.5 15.3492 5.5 14.4375'
-                            stroke='#C8CCD1'
+                            d='M12 5L19 12L12 19'
+                            stroke='currentColor'
                             strokeWidth='1.5'
                             strokeLinecap='round'
                             strokeLinejoin='round'
                           />
-                        </g>
-                        <defs>
-                          <clipPath id='clip0_321_11228'>
-                            <rect width='22' height='22' fill='white' />
-                          </clipPath>
-                        </defs>
-                      </svg>
-                    </div>
-                    <div className='text-[14px] leading-5 text-[#5e6670]'>$50k-80k/month</div>
-                  </div>
-                  <div className='flex items-center gap-[6px]'>
-                    <div>
-                      <svg
-                        width='22'
-                        height='22'
-                        viewBox='0 0 22 22'
-                        fill='none'
-                        xmlns='http://www.w3.org/2000/svg'
-                      >
-                        <g clipPath='url(#clip0_321_11234)'>
-                          <path
-                            d='M17.875 3.4375H4.125C3.7453 3.4375 3.4375 3.7453 3.4375 4.125V17.875C3.4375 18.2547 3.7453 18.5625 4.125 18.5625H17.875C18.2547 18.5625 18.5625 18.2547 18.5625 17.875V4.125C18.5625 3.7453 18.2547 3.4375 17.875 3.4375Z'
-                            stroke='#C8CCD1'
-                            strokeWidth='1.5'
-                            strokeLinecap='round'
-                            strokeLinejoin='round'
-                          />
-                          <path
-                            d='M15.125 2.0625V4.8125'
-                            stroke='#C8CCD1'
-                            strokeWidth='1.5'
-                            strokeLinecap='round'
-                            strokeLinejoin='round'
-                          />
-                          <path
-                            d='M6.875 2.0625V4.8125'
-                            stroke='#C8CCD1'
-                            strokeWidth='1.5'
-                            strokeLinecap='round'
-                            strokeLinejoin='round'
-                          />
-                          <path
-                            d='M3.4375 7.5625H18.5625'
-                            stroke='#C8CCD1'
-                            strokeWidth='1.5'
-                            strokeLinecap='round'
-                            strokeLinejoin='round'
-                          />
-                        </g>
-                        <defs>
-                          <clipPath id='clip0_321_11234'>
-                            <rect width='22' height='22' fill='white' />
-                          </clipPath>
-                        </defs>
-                      </svg>
-                    </div>
-                    <div className='text-[14px] leading-5 text-[#5e6670]'>4 Days Remaining</div>
+                        </svg>
+                      </div>
+                    </button>
                   </div>
                 </div>
-              </div>
-            </div>
-            <div className='flex items-center gap-[8px]'>
-              <div
-                className='w-[48px] h-[48px] rounded-[5px] flex items-center
-              justify-center group-hover:bg-[#f1f2f4] group-hover:text-[#18191c] text-[#767f8c]'
-              >
-                <svg
-                  width='24'
-                  height='24'
-                  viewBox='0 0 24 24'
-                  fill='none'
-                  xmlns='http://www.w3.org/2000/svg'
-                >
-                  <path
-                    d='M18 21L11.9993 17.25L6 21V4.5C6 4.30109 6.07902 4.11032 6.21967 3.96967C6.36032 3.82902 6.55109 3.75 6.75 3.75H17.25C17.4489 3.75 17.6397 3.82902 17.7803 3.96967C17.921 4.11032 18 4.30109 18 4.5V21Z'
-                    stroke='currentColor'
-                    strokeWidth='1.5'
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                  />
-                </svg>
-              </div>
-              <div>
-                <Link
-                  to=''
-                  className='min-w-[168px] h-[48px] py-[12px] px-[24px] flex items-center gap-[12px]
-                  text-[16px] leading-6 font-semibold text-[#0b65cc] bg-[#e7f0fa] rounded-[3px]
-                  group-hover:bg-[#0A65CC] group-hover:text-white'
-                >
-                  Apply Now
-                  <div>
-                    <svg
-                      width='24'
-                      height='24'
-                      viewBox='0 0 24 24'
-                      fill='none'
-                      xmlns='http://www.w3.org/2000/svg'
-                    >
-                      <path
-                        d='M5 12H19'
-                        stroke='currentColor'
-                        strokeWidth='1.5'
-                        strokeLinecap='round'
-                        strokeLinejoin='round'
-                      />
-                      <path
-                        d='M12 5L19 12L12 19'
-                        stroke='currentColor'
-                        strokeWidth='1.5'
-                        strokeLinecap='round'
-                        strokeLinejoin='round'
-                      />
-                    </svg>
-                  </div>
-                </Link>
-              </div>
-            </div>
-          </div>
-
-          {/* Item 4 */}
-          <div
-            className='flex items-center justify-between p-[32px] h-[132px] rounded-[12px] group
-          hover:cursor-pointer hover:shadow-2xl hover:transition hover:ease-in-out hover:duration-[0.25s]
-          border solid border-[#e3e4e7] mt-[24px]'
-          >
-            <div className='flex items-center gap-[20px] '>
-              <div>
-                <img
-                  src={logoJob}
-                  alt=''
-                  className='w-[68px] h-[68px] object-cover rounded-[6px]'
-                />
-              </div>
-              <div>
-                <div className='text-[18px] leading-7 font-medium text-[#18191c]'>
-                  Project Manager
-                </div>
-                <div className='flex gap-[16px] items-center mt-[12px]'>
-                  <div className='flex items-center gap-[6px]'>
-                    <div>
-                      <svg
-                        width='22'
-                        height='22'
-                        viewBox='0 0 22 22'
-                        fill='none'
-                        xmlns='http://www.w3.org/2000/svg'
-                      >
-                        <path
-                          d='M19.25 9.16699C19.25 15.5837 11 21.0837 11 21.0837C11 21.0837 2.75 15.5837 2.75 9.16699C2.75 6.97896 3.61919 4.88054 5.16637 3.33336C6.71354 1.78619 8.81196 0.916992 11 0.916992C13.188 0.916992 15.2865 1.78619 16.8336 3.33336C18.3808 4.88054 19.25 6.97896 19.25 9.16699Z'
-                          stroke='#C8CCD1'
-                          strokeWidth='1.5'
-                          strokeLinecap='round'
-                          strokeLinejoin='round'
-                        />
-                        <path
-                          d='M11 11.917C12.5188 11.917 13.75 10.6858 13.75 9.16699C13.75 7.64821 12.5188 6.41699 11 6.41699C9.48122 6.41699 8.25 7.64821 8.25 9.16699C8.25 10.6858 9.48122 11.917 11 11.917Z'
-                          stroke='#C8CCD1'
-                          strokeWidth='1.5'
-                          strokeLinecap='round'
-                          strokeLinejoin='round'
-                        />
-                      </svg>
-                    </div>
-                    <div className='text-[14px] leading-5 text-[#5e6670]'>New York, USA</div>
-                  </div>
-                  <div className='flex items-center gap-[4px]'>
-                    <div>
-                      <svg
-                        width='22'
-                        height='22'
-                        viewBox='0 0 22 22'
-                        fill='none'
-                        xmlns='http://www.w3.org/2000/svg'
-                      >
-                        <g clipPath='url(#clip0_321_11228)'>
-                          <path
-                            d='M11 2.0625V19.9375'
-                            stroke='#C8CCD1'
-                            strokeWidth='1.5'
-                            strokeLinecap='round'
-                            strokeLinejoin='round'
-                          />
-                          <path
-                            d='M15.8125 7.5625C15.8125 7.11108 15.7236 6.66408 15.5508 6.24703C15.3781 5.82997 15.1249 5.45102 14.8057 5.13182C14.4865 4.81262 14.1075 4.55941 13.6905 4.38666C13.2734 4.21391 12.8264 4.125 12.375 4.125H9.28125C8.36957 4.125 7.49523 4.48716 6.85057 5.13182C6.20591 5.77648 5.84375 6.65082 5.84375 7.5625C5.84375 8.47418 6.20591 9.34852 6.85057 9.99318C7.49523 10.6378 8.36957 11 9.28125 11H13.0625C13.9742 11 14.8485 11.3622 15.4932 12.0068C16.1378 12.6515 16.5 13.5258 16.5 14.4375C16.5 15.3492 16.1378 16.2235 15.4932 16.8682C14.8485 17.5128 13.9742 17.875 13.0625 17.875H8.9375C8.02582 17.875 7.15148 17.5128 6.50682 16.8682C5.86216 16.2235 5.5 15.3492 5.5 14.4375'
-                            stroke='#C8CCD1'
-                            strokeWidth='1.5'
-                            strokeLinecap='round'
-                            strokeLinejoin='round'
-                          />
-                        </g>
-                        <defs>
-                          <clipPath id='clip0_321_11228'>
-                            <rect width='22' height='22' fill='white' />
-                          </clipPath>
-                        </defs>
-                      </svg>
-                    </div>
-                    <div className='text-[14px] leading-5 text-[#5e6670]'>$50k-80k/month</div>
-                  </div>
-                  <div className='flex items-center gap-[6px]'>
-                    <div>
-                      <svg
-                        width='22'
-                        height='22'
-                        viewBox='0 0 22 22'
-                        fill='none'
-                        xmlns='http://www.w3.org/2000/svg'
-                      >
-                        <g clipPath='url(#clip0_321_11234)'>
-                          <path
-                            d='M17.875 3.4375H4.125C3.7453 3.4375 3.4375 3.7453 3.4375 4.125V17.875C3.4375 18.2547 3.7453 18.5625 4.125 18.5625H17.875C18.2547 18.5625 18.5625 18.2547 18.5625 17.875V4.125C18.5625 3.7453 18.2547 3.4375 17.875 3.4375Z'
-                            stroke='#C8CCD1'
-                            strokeWidth='1.5'
-                            strokeLinecap='round'
-                            strokeLinejoin='round'
-                          />
-                          <path
-                            d='M15.125 2.0625V4.8125'
-                            stroke='#C8CCD1'
-                            strokeWidth='1.5'
-                            strokeLinecap='round'
-                            strokeLinejoin='round'
-                          />
-                          <path
-                            d='M6.875 2.0625V4.8125'
-                            stroke='#C8CCD1'
-                            strokeWidth='1.5'
-                            strokeLinecap='round'
-                            strokeLinejoin='round'
-                          />
-                          <path
-                            d='M3.4375 7.5625H18.5625'
-                            stroke='#C8CCD1'
-                            strokeWidth='1.5'
-                            strokeLinecap='round'
-                            strokeLinejoin='round'
-                          />
-                        </g>
-                        <defs>
-                          <clipPath id='clip0_321_11234'>
-                            <rect width='22' height='22' fill='white' />
-                          </clipPath>
-                        </defs>
-                      </svg>
-                    </div>
-                    <div className='text-[14px] leading-5 text-[#5e6670]'>4 Days Remaining</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className='flex items-center gap-[8px]'>
-              <div
-                className='w-[48px] h-[48px] rounded-[5px] flex items-center
-              justify-center group-hover:bg-[#f1f2f4] group-hover:text-[#18191c] text-[#767f8c]'
-              >
-                <svg
-                  width='24'
-                  height='24'
-                  viewBox='0 0 24 24'
-                  fill='none'
-                  xmlns='http://www.w3.org/2000/svg'
-                >
-                  <path
-                    d='M18 21L11.9993 17.25L6 21V4.5C6 4.30109 6.07902 4.11032 6.21967 3.96967C6.36032 3.82902 6.55109 3.75 6.75 3.75H17.25C17.4489 3.75 17.6397 3.82902 17.7803 3.96967C17.921 4.11032 18 4.30109 18 4.5V21Z'
-                    stroke='currentColor'
-                    strokeWidth='1.5'
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                  />
-                </svg>
-              </div>
-              <div>
-                <Link
-                  to=''
-                  className='min-w-[168px] h-[48px] py-[12px] px-[24px] flex items-center gap-[12px]
-                  text-[16px] leading-6 font-semibold text-[#0b65cc] bg-[#e7f0fa] rounded-[3px]
-                  group-hover:bg-[#0A65CC] group-hover:text-white'
-                >
-                  Apply Now
-                  <div>
-                    <svg
-                      width='24'
-                      height='24'
-                      viewBox='0 0 24 24'
-                      fill='none'
-                      xmlns='http://www.w3.org/2000/svg'
-                    >
-                      <path
-                        d='M5 12H19'
-                        stroke='currentColor'
-                        strokeWidth='1.5'
-                        strokeLinecap='round'
-                        strokeLinejoin='round'
-                      />
-                      <path
-                        d='M12 5L19 12L12 19'
-                        stroke='currentColor'
-                        strokeWidth='1.5'
-                        strokeLinecap='round'
-                        strokeLinejoin='round'
-                      />
-                    </svg>
-                  </div>
-                </Link>
-              </div>
-            </div>
-          </div>
-
-          {/* Item 5 */}
-          <div
-            className='flex items-center justify-between p-[32px] h-[132px] rounded-[12px] group mt-[24px]
-          hover:cursor-pointer hover:shadow-2xl hover:transition hover:ease-in-out hover:duration-[0.25s]
-          border solid border-[#e3e4e7] mt-[24px]'
-          >
-            <div className='flex items-center gap-[20px] '>
-              <div>
-                <img
-                  src={logoJob}
-                  alt=''
-                  className='w-[68px] h-[68px] object-cover rounded-[6px]'
-                />
-              </div>
-              <div>
-                <div className='text-[18px] leading-7 font-medium text-[#18191c]'>
-                  Project Manager
-                </div>
-                <div className='flex gap-[16px] items-center mt-[12px]'>
-                  <div className='flex items-center gap-[6px]'>
-                    <div>
-                      <svg
-                        width='22'
-                        height='22'
-                        viewBox='0 0 22 22'
-                        fill='none'
-                        xmlns='http://www.w3.org/2000/svg'
-                      >
-                        <path
-                          d='M19.25 9.16699C19.25 15.5837 11 21.0837 11 21.0837C11 21.0837 2.75 15.5837 2.75 9.16699C2.75 6.97896 3.61919 4.88054 5.16637 3.33336C6.71354 1.78619 8.81196 0.916992 11 0.916992C13.188 0.916992 15.2865 1.78619 16.8336 3.33336C18.3808 4.88054 19.25 6.97896 19.25 9.16699Z'
-                          stroke='#C8CCD1'
-                          strokeWidth='1.5'
-                          strokeLinecap='round'
-                          strokeLinejoin='round'
-                        />
-                        <path
-                          d='M11 11.917C12.5188 11.917 13.75 10.6858 13.75 9.16699C13.75 7.64821 12.5188 6.41699 11 6.41699C9.48122 6.41699 8.25 7.64821 8.25 9.16699C8.25 10.6858 9.48122 11.917 11 11.917Z'
-                          stroke='#C8CCD1'
-                          strokeWidth='1.5'
-                          strokeLinecap='round'
-                          strokeLinejoin='round'
-                        />
-                      </svg>
-                    </div>
-                    <div className='text-[14px] leading-5 text-[#5e6670]'>New York, USA</div>
-                  </div>
-                  <div className='flex items-center gap-[4px]'>
-                    <div>
-                      <svg
-                        width='22'
-                        height='22'
-                        viewBox='0 0 22 22'
-                        fill='none'
-                        xmlns='http://www.w3.org/2000/svg'
-                      >
-                        <g clipPath='url(#clip0_321_11228)'>
-                          <path
-                            d='M11 2.0625V19.9375'
-                            stroke='#C8CCD1'
-                            strokeWidth='1.5'
-                            strokeLinecap='round'
-                            strokeLinejoin='round'
-                          />
-                          <path
-                            d='M15.8125 7.5625C15.8125 7.11108 15.7236 6.66408 15.5508 6.24703C15.3781 5.82997 15.1249 5.45102 14.8057 5.13182C14.4865 4.81262 14.1075 4.55941 13.6905 4.38666C13.2734 4.21391 12.8264 4.125 12.375 4.125H9.28125C8.36957 4.125 7.49523 4.48716 6.85057 5.13182C6.20591 5.77648 5.84375 6.65082 5.84375 7.5625C5.84375 8.47418 6.20591 9.34852 6.85057 9.99318C7.49523 10.6378 8.36957 11 9.28125 11H13.0625C13.9742 11 14.8485 11.3622 15.4932 12.0068C16.1378 12.6515 16.5 13.5258 16.5 14.4375C16.5 15.3492 16.1378 16.2235 15.4932 16.8682C14.8485 17.5128 13.9742 17.875 13.0625 17.875H8.9375C8.02582 17.875 7.15148 17.5128 6.50682 16.8682C5.86216 16.2235 5.5 15.3492 5.5 14.4375'
-                            stroke='#C8CCD1'
-                            strokeWidth='1.5'
-                            strokeLinecap='round'
-                            strokeLinejoin='round'
-                          />
-                        </g>
-                        <defs>
-                          <clipPath id='clip0_321_11228'>
-                            <rect width='22' height='22' fill='white' />
-                          </clipPath>
-                        </defs>
-                      </svg>
-                    </div>
-                    <div className='text-[14px] leading-5 text-[#5e6670]'>$50k-80k/month</div>
-                  </div>
-                  <div className='flex items-center gap-[6px]'>
-                    <div>
-                      <svg
-                        width='22'
-                        height='22'
-                        viewBox='0 0 22 22'
-                        fill='none'
-                        xmlns='http://www.w3.org/2000/svg'
-                      >
-                        <g clipPath='url(#clip0_321_11234)'>
-                          <path
-                            d='M17.875 3.4375H4.125C3.7453 3.4375 3.4375 3.7453 3.4375 4.125V17.875C3.4375 18.2547 3.7453 18.5625 4.125 18.5625H17.875C18.2547 18.5625 18.5625 18.2547 18.5625 17.875V4.125C18.5625 3.7453 18.2547 3.4375 17.875 3.4375Z'
-                            stroke='#C8CCD1'
-                            strokeWidth='1.5'
-                            strokeLinecap='round'
-                            strokeLinejoin='round'
-                          />
-                          <path
-                            d='M15.125 2.0625V4.8125'
-                            stroke='#C8CCD1'
-                            strokeWidth='1.5'
-                            strokeLinecap='round'
-                            strokeLinejoin='round'
-                          />
-                          <path
-                            d='M6.875 2.0625V4.8125'
-                            stroke='#C8CCD1'
-                            strokeWidth='1.5'
-                            strokeLinecap='round'
-                            strokeLinejoin='round'
-                          />
-                          <path
-                            d='M3.4375 7.5625H18.5625'
-                            stroke='#C8CCD1'
-                            strokeWidth='1.5'
-                            strokeLinecap='round'
-                            strokeLinejoin='round'
-                          />
-                        </g>
-                        <defs>
-                          <clipPath id='clip0_321_11234'>
-                            <rect width='22' height='22' fill='white' />
-                          </clipPath>
-                        </defs>
-                      </svg>
-                    </div>
-                    <div className='text-[14px] leading-5 text-[#5e6670]'>4 Days Remaining</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className='flex items-center gap-[8px]'>
-              <div
-                className='w-[48px] h-[48px] rounded-[5px] flex items-center
-              justify-center group-hover:bg-[#f1f2f4] group-hover:text-[#18191c] text-[#767f8c]'
-              >
-                <svg
-                  width='24'
-                  height='24'
-                  viewBox='0 0 24 24'
-                  fill='none'
-                  xmlns='http://www.w3.org/2000/svg'
-                >
-                  <path
-                    d='M18 21L11.9993 17.25L6 21V4.5C6 4.30109 6.07902 4.11032 6.21967 3.96967C6.36032 3.82902 6.55109 3.75 6.75 3.75H17.25C17.4489 3.75 17.6397 3.82902 17.7803 3.96967C17.921 4.11032 18 4.30109 18 4.5V21Z'
-                    fill='#18191C'
-                    stroke='#18191C'
-                    strokeWidth='1.5'
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                  />
-                </svg>
-              </div>
-              <div>
-                <Link
-                  to=''
-                  className='min-w-[168px] h-[48px] py-[12px] px-[24px] flex items-center gap-[12px]
-                  text-[16px] leading-6 font-semibold text-[#0b65cc] bg-[#e7f0fa] rounded-[3px]
-                  group-hover:bg-[#0A65CC] group-hover:text-white'
-                >
-                  Apply Now
-                  <div>
-                    <svg
-                      width='24'
-                      height='24'
-                      viewBox='0 0 24 24'
-                      fill='none'
-                      xmlns='http://www.w3.org/2000/svg'
-                    >
-                      <path
-                        d='M5 12H19'
-                        stroke='currentColor'
-                        strokeWidth='1.5'
-                        strokeLinecap='round'
-                        strokeLinejoin='round'
-                      />
-                      <path
-                        d='M12 5L19 12L12 19'
-                        stroke='currentColor'
-                        strokeWidth='1.5'
-                        strokeLinecap='round'
-                        strokeLinejoin='round'
-                      />
-                    </svg>
-                  </div>
-                </Link>
-              </div>
-            </div>
-          </div>
-
-          {/* Item 6 */}
-          <div
-            className='flex items-center justify-between p-[32px] h-[132px] rounded-[12px] group
-          hover:cursor-pointer hover:shadow-2xl hover:transition hover:ease-in-out hover:duration-[0.25s]
-          border solid border-[#e3e4e7] mt-[24px]'
-          >
-            <div className='flex items-center gap-[20px] '>
-              <div>
-                <img
-                  src={logoJob}
-                  alt=''
-                  className='w-[68px] h-[68px] object-cover rounded-[6px]'
-                />
-              </div>
-              <div>
-                <div className='text-[18px] leading-7 font-medium text-[#18191c]'>
-                  Project Manager
-                </div>
-                <div className='flex gap-[16px] items-center mt-[12px]'>
-                  <div className='flex items-center gap-[6px]'>
-                    <div>
-                      <svg
-                        width='22'
-                        height='22'
-                        viewBox='0 0 22 22'
-                        fill='none'
-                        xmlns='http://www.w3.org/2000/svg'
-                      >
-                        <path
-                          d='M19.25 9.16699C19.25 15.5837 11 21.0837 11 21.0837C11 21.0837 2.75 15.5837 2.75 9.16699C2.75 6.97896 3.61919 4.88054 5.16637 3.33336C6.71354 1.78619 8.81196 0.916992 11 0.916992C13.188 0.916992 15.2865 1.78619 16.8336 3.33336C18.3808 4.88054 19.25 6.97896 19.25 9.16699Z'
-                          stroke='#C8CCD1'
-                          strokeWidth='1.5'
-                          strokeLinecap='round'
-                          strokeLinejoin='round'
-                        />
-                        <path
-                          d='M11 11.917C12.5188 11.917 13.75 10.6858 13.75 9.16699C13.75 7.64821 12.5188 6.41699 11 6.41699C9.48122 6.41699 8.25 7.64821 8.25 9.16699C8.25 10.6858 9.48122 11.917 11 11.917Z'
-                          stroke='#C8CCD1'
-                          strokeWidth='1.5'
-                          strokeLinecap='round'
-                          strokeLinejoin='round'
-                        />
-                      </svg>
-                    </div>
-                    <div className='text-[14px] leading-5 text-[#5e6670]'>New York, USA</div>
-                  </div>
-                  <div className='flex items-center gap-[4px]'>
-                    <div>
-                      <svg
-                        width='22'
-                        height='22'
-                        viewBox='0 0 22 22'
-                        fill='none'
-                        xmlns='http://www.w3.org/2000/svg'
-                      >
-                        <g clipPath='url(#clip0_321_11228)'>
-                          <path
-                            d='M11 2.0625V19.9375'
-                            stroke='#C8CCD1'
-                            strokeWidth='1.5'
-                            strokeLinecap='round'
-                            strokeLinejoin='round'
-                          />
-                          <path
-                            d='M15.8125 7.5625C15.8125 7.11108 15.7236 6.66408 15.5508 6.24703C15.3781 5.82997 15.1249 5.45102 14.8057 5.13182C14.4865 4.81262 14.1075 4.55941 13.6905 4.38666C13.2734 4.21391 12.8264 4.125 12.375 4.125H9.28125C8.36957 4.125 7.49523 4.48716 6.85057 5.13182C6.20591 5.77648 5.84375 6.65082 5.84375 7.5625C5.84375 8.47418 6.20591 9.34852 6.85057 9.99318C7.49523 10.6378 8.36957 11 9.28125 11H13.0625C13.9742 11 14.8485 11.3622 15.4932 12.0068C16.1378 12.6515 16.5 13.5258 16.5 14.4375C16.5 15.3492 16.1378 16.2235 15.4932 16.8682C14.8485 17.5128 13.9742 17.875 13.0625 17.875H8.9375C8.02582 17.875 7.15148 17.5128 6.50682 16.8682C5.86216 16.2235 5.5 15.3492 5.5 14.4375'
-                            stroke='#C8CCD1'
-                            strokeWidth='1.5'
-                            strokeLinecap='round'
-                            strokeLinejoin='round'
-                          />
-                        </g>
-                        <defs>
-                          <clipPath id='clip0_321_11228'>
-                            <rect width='22' height='22' fill='white' />
-                          </clipPath>
-                        </defs>
-                      </svg>
-                    </div>
-                    <div className='text-[14px] leading-5 text-[#5e6670]'>$50k-80k/month</div>
-                  </div>
-                  <div className='flex items-center gap-[6px]'>
-                    <div>
-                      <svg
-                        width='22'
-                        height='22'
-                        viewBox='0 0 22 22'
-                        fill='none'
-                        xmlns='http://www.w3.org/2000/svg'
-                      >
-                        <g clipPath='url(#clip0_321_11234)'>
-                          <path
-                            d='M17.875 3.4375H4.125C3.7453 3.4375 3.4375 3.7453 3.4375 4.125V17.875C3.4375 18.2547 3.7453 18.5625 4.125 18.5625H17.875C18.2547 18.5625 18.5625 18.2547 18.5625 17.875V4.125C18.5625 3.7453 18.2547 3.4375 17.875 3.4375Z'
-                            stroke='#C8CCD1'
-                            strokeWidth='1.5'
-                            strokeLinecap='round'
-                            strokeLinejoin='round'
-                          />
-                          <path
-                            d='M15.125 2.0625V4.8125'
-                            stroke='#C8CCD1'
-                            strokeWidth='1.5'
-                            strokeLinecap='round'
-                            strokeLinejoin='round'
-                          />
-                          <path
-                            d='M6.875 2.0625V4.8125'
-                            stroke='#C8CCD1'
-                            strokeWidth='1.5'
-                            strokeLinecap='round'
-                            strokeLinejoin='round'
-                          />
-                          <path
-                            d='M3.4375 7.5625H18.5625'
-                            stroke='#C8CCD1'
-                            strokeWidth='1.5'
-                            strokeLinecap='round'
-                            strokeLinejoin='round'
-                          />
-                        </g>
-                        <defs>
-                          <clipPath id='clip0_321_11234'>
-                            <rect width='22' height='22' fill='white' />
-                          </clipPath>
-                        </defs>
-                      </svg>
-                    </div>
-                    <div className='text-[14px] leading-5 text-[#5e6670]'>4 Days Remaining</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className='flex items-center gap-[8px]'>
-              <div
-                className='w-[48px] h-[48px] rounded-[5px] flex items-center
-              justify-center group-hover:bg-[#f1f2f4] group-hover:text-[#18191c] text-[#767f8c]'
-              >
-                <svg
-                  width='24'
-                  height='24'
-                  viewBox='0 0 24 24'
-                  fill='none'
-                  xmlns='http://www.w3.org/2000/svg'
-                >
-                  <path
-                    d='M18 21L11.9993 17.25L6 21V4.5C6 4.30109 6.07902 4.11032 6.21967 3.96967C6.36032 3.82902 6.55109 3.75 6.75 3.75H17.25C17.4489 3.75 17.6397 3.82902 17.7803 3.96967C17.921 4.11032 18 4.30109 18 4.5V21Z'
-                    stroke='currentColor'
-                    strokeWidth='1.5'
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                  />
-                </svg>
-              </div>
-              <div>
-                <Link
-                  to=''
-                  className='min-w-[168px] h-[48px] py-[12px] px-[24px] flex items-center gap-[12px]
-                  text-[16px] leading-6 font-semibold text-[#0b65cc] bg-[#e7f0fa] rounded-[3px]
-                  group-hover:bg-[#0A65CC] group-hover:text-white'
-                >
-                  Apply Now
-                  <div>
-                    <svg
-                      width='24'
-                      height='24'
-                      viewBox='0 0 24 24'
-                      fill='none'
-                      xmlns='http://www.w3.org/2000/svg'
-                    >
-                      <path
-                        d='M5 12H19'
-                        stroke='currentColor'
-                        strokeWidth='1.5'
-                        strokeLinecap='round'
-                        strokeLinejoin='round'
-                      />
-                      <path
-                        d='M12 5L19 12L12 19'
-                        stroke='currentColor'
-                        strokeWidth='1.5'
-                        strokeLinecap='round'
-                        strokeLinejoin='round'
-                      />
-                    </svg>
-                  </div>
-                </Link>
-              </div>
-            </div>
-          </div>
-
-          {/* Item 7 */}
-          <div
-            className='flex items-center justify-between p-[32px] h-[132px] rounded-[12px] group mt-[24px]
-          hover:cursor-pointer hover:shadow-2xl hover:transition hover:ease-in-out hover:duration-[0.25s]
-          border solid border-[#e3e4e7] mt-[24px]'
-          >
-            <div className='flex items-center gap-[20px] '>
-              <div>
-                <img
-                  src={logoJob}
-                  alt=''
-                  className='w-[68px] h-[68px] object-cover rounded-[6px]'
-                />
-              </div>
-              <div>
-                <div className='text-[18px] leading-7 font-medium text-[#18191c]'>
-                  Project Manager
-                </div>
-                <div className='flex gap-[16px] items-center mt-[12px]'>
-                  <div className='flex items-center gap-[6px]'>
-                    <div>
-                      <svg
-                        width='22'
-                        height='22'
-                        viewBox='0 0 22 22'
-                        fill='none'
-                        xmlns='http://www.w3.org/2000/svg'
-                      >
-                        <path
-                          d='M19.25 9.16699C19.25 15.5837 11 21.0837 11 21.0837C11 21.0837 2.75 15.5837 2.75 9.16699C2.75 6.97896 3.61919 4.88054 5.16637 3.33336C6.71354 1.78619 8.81196 0.916992 11 0.916992C13.188 0.916992 15.2865 1.78619 16.8336 3.33336C18.3808 4.88054 19.25 6.97896 19.25 9.16699Z'
-                          stroke='#C8CCD1'
-                          strokeWidth='1.5'
-                          strokeLinecap='round'
-                          strokeLinejoin='round'
-                        />
-                        <path
-                          d='M11 11.917C12.5188 11.917 13.75 10.6858 13.75 9.16699C13.75 7.64821 12.5188 6.41699 11 6.41699C9.48122 6.41699 8.25 7.64821 8.25 9.16699C8.25 10.6858 9.48122 11.917 11 11.917Z'
-                          stroke='#C8CCD1'
-                          strokeWidth='1.5'
-                          strokeLinecap='round'
-                          strokeLinejoin='round'
-                        />
-                      </svg>
-                    </div>
-                    <div className='text-[14px] leading-5 text-[#5e6670]'>New York, USA</div>
-                  </div>
-                  <div className='flex items-center gap-[4px]'>
-                    <div>
-                      <svg
-                        width='22'
-                        height='22'
-                        viewBox='0 0 22 22'
-                        fill='none'
-                        xmlns='http://www.w3.org/2000/svg'
-                      >
-                        <g clipPath='url(#clip0_321_11228)'>
-                          <path
-                            d='M11 2.0625V19.9375'
-                            stroke='#C8CCD1'
-                            strokeWidth='1.5'
-                            strokeLinecap='round'
-                            strokeLinejoin='round'
-                          />
-                          <path
-                            d='M15.8125 7.5625C15.8125 7.11108 15.7236 6.66408 15.5508 6.24703C15.3781 5.82997 15.1249 5.45102 14.8057 5.13182C14.4865 4.81262 14.1075 4.55941 13.6905 4.38666C13.2734 4.21391 12.8264 4.125 12.375 4.125H9.28125C8.36957 4.125 7.49523 4.48716 6.85057 5.13182C6.20591 5.77648 5.84375 6.65082 5.84375 7.5625C5.84375 8.47418 6.20591 9.34852 6.85057 9.99318C7.49523 10.6378 8.36957 11 9.28125 11H13.0625C13.9742 11 14.8485 11.3622 15.4932 12.0068C16.1378 12.6515 16.5 13.5258 16.5 14.4375C16.5 15.3492 16.1378 16.2235 15.4932 16.8682C14.8485 17.5128 13.9742 17.875 13.0625 17.875H8.9375C8.02582 17.875 7.15148 17.5128 6.50682 16.8682C5.86216 16.2235 5.5 15.3492 5.5 14.4375'
-                            stroke='#C8CCD1'
-                            strokeWidth='1.5'
-                            strokeLinecap='round'
-                            strokeLinejoin='round'
-                          />
-                        </g>
-                        <defs>
-                          <clipPath id='clip0_321_11228'>
-                            <rect width='22' height='22' fill='white' />
-                          </clipPath>
-                        </defs>
-                      </svg>
-                    </div>
-                    <div className='text-[14px] leading-5 text-[#5e6670]'>$50k-80k/month</div>
-                  </div>
-                  <div className='flex items-center gap-[6px]'>
-                    <div>
-                      <svg
-                        width='22'
-                        height='22'
-                        viewBox='0 0 22 22'
-                        fill='none'
-                        xmlns='http://www.w3.org/2000/svg'
-                      >
-                        <g clipPath='url(#clip0_321_11234)'>
-                          <path
-                            d='M17.875 3.4375H4.125C3.7453 3.4375 3.4375 3.7453 3.4375 4.125V17.875C3.4375 18.2547 3.7453 18.5625 4.125 18.5625H17.875C18.2547 18.5625 18.5625 18.2547 18.5625 17.875V4.125C18.5625 3.7453 18.2547 3.4375 17.875 3.4375Z'
-                            stroke='#C8CCD1'
-                            strokeWidth='1.5'
-                            strokeLinecap='round'
-                            strokeLinejoin='round'
-                          />
-                          <path
-                            d='M15.125 2.0625V4.8125'
-                            stroke='#C8CCD1'
-                            strokeWidth='1.5'
-                            strokeLinecap='round'
-                            strokeLinejoin='round'
-                          />
-                          <path
-                            d='M6.875 2.0625V4.8125'
-                            stroke='#C8CCD1'
-                            strokeWidth='1.5'
-                            strokeLinecap='round'
-                            strokeLinejoin='round'
-                          />
-                          <path
-                            d='M3.4375 7.5625H18.5625'
-                            stroke='#C8CCD1'
-                            strokeWidth='1.5'
-                            strokeLinecap='round'
-                            strokeLinejoin='round'
-                          />
-                        </g>
-                        <defs>
-                          <clipPath id='clip0_321_11234'>
-                            <rect width='22' height='22' fill='white' />
-                          </clipPath>
-                        </defs>
-                      </svg>
-                    </div>
-                    <div className='text-[14px] leading-5 text-[#5e6670]'>4 Days Remaining</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className='flex items-center gap-[8px]'>
-              <div
-                className='w-[48px] h-[48px] rounded-[5px] flex items-center
-              justify-center group-hover:bg-[#f1f2f4] group-hover:text-[#18191c] text-[#767f8c]'
-              >
-                <svg
-                  width='24'
-                  height='24'
-                  viewBox='0 0 24 24'
-                  fill='none'
-                  xmlns='http://www.w3.org/2000/svg'
-                >
-                  <path
-                    d='M18 21L11.9993 17.25L6 21V4.5C6 4.30109 6.07902 4.11032 6.21967 3.96967C6.36032 3.82902 6.55109 3.75 6.75 3.75H17.25C17.4489 3.75 17.6397 3.82902 17.7803 3.96967C17.921 4.11032 18 4.30109 18 4.5V21Z'
-                    fill='#18191C'
-                    stroke='#18191C'
-                    strokeWidth='1.5'
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                  />
-                </svg>
-              </div>
-              <div>
-                <Link
-                  to=''
-                  className='min-w-[168px] h-[48px] py-[12px] px-[24px] flex items-center gap-[12px]
-                  text-[16px] leading-6 font-semibold text-[#0b65cc] bg-[#e7f0fa] rounded-[3px]
-                  group-hover:bg-[#0A65CC] group-hover:text-white'
-                >
-                  Apply Now
-                  <div>
-                    <svg
-                      width='24'
-                      height='24'
-                      viewBox='0 0 24 24'
-                      fill='none'
-                      xmlns='http://www.w3.org/2000/svg'
-                    >
-                      <path
-                        d='M5 12H19'
-                        stroke='currentColor'
-                        strokeWidth='1.5'
-                        strokeLinecap='round'
-                        strokeLinejoin='round'
-                      />
-                      <path
-                        d='M12 5L19 12L12 19'
-                        stroke='currentColor'
-                        strokeWidth='1.5'
-                        strokeLinecap='round'
-                        strokeLinejoin='round'
-                      />
-                    </svg>
-                  </div>
-                </Link>
-              </div>
-            </div>
-          </div>
+              </Link>
+            ))}
         </div>
         <div className='mb-[100px]'>
           <Pagination currentPage={page} setPage={setPage} pageSize={4} />

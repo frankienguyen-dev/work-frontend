@@ -11,9 +11,17 @@ export interface Company {
   website: string;
   teamSize: number;
   foundedDate: string;
-  responsibility: string;
+  companyBenefit: string;
+  companyVision: string;
   companyType: string;
   logo: {
+    id: string;
+    fileName: string;
+    fileType: string;
+    size: number;
+    uploadTime: string;
+  } | null;
+  banner: {
     id: string;
     fileName: string;
     fileType: string;
