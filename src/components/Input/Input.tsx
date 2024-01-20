@@ -1,5 +1,6 @@
 import { RegisterOptions, UseFormRegister } from 'react-hook-form';
 import { Link } from 'react-router-dom';
+import React from 'react';
 
 interface Props {
   className?: string;

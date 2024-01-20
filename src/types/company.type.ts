@@ -53,6 +53,11 @@ export interface CompanyList {
   };
 }
 
+export interface BelongToCompany {
+  id: string;
+  name: string;
+}
+
 export interface CompanyConfig {
   pageNo?: number | string;
   pageSize?: number | string;

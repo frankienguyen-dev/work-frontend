@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import companyApi from '../../apis/company.api.ts';
 import { getLogoUrl } from '../../utils/utils.ts';
 import moment from 'moment';
+import DOMPurify from 'dompurify';
 
 export default function CompanyDetails() {
   const { id } = useParams();
@@ -100,27 +101,34 @@ export default function CompanyDetails() {
                   <div className='text-[20px] text-[#18191c] leading-8 font-medium'>
                     Description
                   </div>
-                  <div className='mt-[16px] text-[16px] leading-6 text-[#5e6670]'>
-                    {company.description}
-                  </div>
+                  <div
+                    dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(company.description) }}
+                    className='mt-[16px] text-[16px] leading-6 text-[#5e6670]'
+                  />
                 </div>
                 <div className='mt-[36px]'>
                   <div className='text-[20px] text-[#18191c] leading-8 font-medium'>
                     Company Benefits
                   </div>
                   <div className='mt-[16px]'>
-                    <div className='mt-[16px] text-[16px] leading-6 text-[#5e6670]'>
-                      {company.companyBenefit}
-                    </div>
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: DOMPurify.sanitize(company.companyBenefit)
+                      }}
+                      className='mt-[16px] text-[16px] leading-6 text-[#5e6670]'
+                    />
                   </div>
                 </div>
                 <div className='mt-[36px]'>
                   <div className='text-[20px] text-[#18191c] leading-8 font-medium'>
                     Company Vision
                   </div>
-                  <div className='mt-[16px] text-[16px] leading-6 text-[#5e6670]'>
-                    {company.companyVision}
-                  </div>
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: DOMPurify.sanitize(company.companyVision)
+                    }}
+                    className='mt-[16px] text-[16px] leading-6 text-[#5e6670]'
+                  />
                 </div>
               </div>
               <div className='col-span-5'>

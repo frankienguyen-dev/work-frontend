@@ -12,8 +12,6 @@ export default function TopCompany() {
       return companyApi.getAllCompanies(queryParams);
     }
   });
-
-  console.log('check data company: ', companyData);
   return (
     <div className='bg-white'>
       <div className='container'>
