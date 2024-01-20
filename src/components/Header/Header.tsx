@@ -9,7 +9,7 @@ import { isAccessTokenExpired, clearAccessTokenFromLocalStorage } from '../../ut
 import avatar from 'src/assets/images/tiktok.png';
 
 export default function Header() {
-  const { isAuthenticated, setIsAuthenticated } = useContext(AppContext);
+  const { isAuthenticated, setIsAuthenticated, isRole } = useContext(AppContext);
 
   const logoutMutation = useMutation({
     mutationFn: () => authApi.logoutAccount(),
@@ -85,8 +85,8 @@ export default function Header() {
                 <div className='font-bold text-[20px]'>Workdev</div>
               </div>
             </Link>
-            <div className='flex gap-3 items-center'>
-              {!isAuthenticated && (
+            {!isAuthenticated && (
+              <div className='flex gap-3 items-center'>
                 <Link
                   to='/signin'
                   className='w-[101px] border border-[#CEE0F5] flex items-center justify-center
@@ -95,17 +95,30 @@ export default function Header() {
                 >
                   Sign In
                 </Link>
-              )}
-
-              <Link
-                to='/'
-                className='w-[140px] border bg-[#0A65CC] border-[#CEE0F5] flex items-center justify-center
+                <Link
+                  to='/dashboard/post-job'
+                  className='w-[140px] border bg-[#0A65CC] border-[#CEE0F5] flex items-center justify-center
                 rounded-[3px] text-[16px] font-semibold text-white h-[48px] '
-                color='blue'
-              >
-                Post A Job
-              </Link>
-              {isAuthenticated && (
+                  color='blue'
+                >
+                  Post A Job
+                </Link>
+              </div>
+            )}
+
+            {isAuthenticated && (
+              <div className='flex gap-3 items-center'>
+                {isRole !== 'ROLE_USER' && (
+                  <Link
+                    to={'/dashboard/post-job'}
+                    className='w-[140px] border bg-[#0A65CC] border-[#CEE0F5] flex items-center justify-center
+                rounded-[3px] text-[16px] font-semibold text-white h-[48px] '
+                    color='blue'
+                  >
+                    Post A Job
+                  </Link>
+                )}
+
                 <div className='ml-[20px]'>
                   <Dropdown
                     className='w-[200px]'
@@ -150,8 +163,8 @@ export default function Header() {
                     </Dropdown.Item>
                   </Dropdown>
                 </div>
-              )}
-            </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

@@ -53,3 +53,22 @@ export interface JobListConfig {
   location?: string;
   salary?: number | string;
 }
+
+export interface PostJob {
+  name: string;
+  description: string;
+  responsibility: string;
+  location: string;
+  quantity: number;
+  salary: number;
+  level: string;
+  experience: string;
+  jobType: string;
+  education: string;
+  company: {
+    name: string;
+  };
+  startDate: string;
+  endDate: string;
+  skills?: { name: string }[];
+}

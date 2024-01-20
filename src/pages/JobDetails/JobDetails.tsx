@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import jobApi from '../../apis/job.api.ts';
 import moment from 'moment';
 import { formatSalary, getLogoUrl } from '../../utils/utils.ts';
+import DOMPurify from 'dompurify';
 
 export default function JobDetails() {
   const { id } = useParams();
@@ -13,7 +14,6 @@ export default function JobDetails() {
       return jobApi.getJobDetail(id as string);
     }
   });
-
   const job = jobDetailData?.data.data;
   console.log('check job: ', job);
 
@@ -216,14 +216,18 @@ export default function JobDetails() {
                 Job Description
               </div>
               <div className='mt-[16px]'>
-                <div className='text-[16px] leading-6 text-[#5e6670] w-[734px] break-all'>
-                  {job.description}
-                </div>
+                <div
+                  dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(job.description) }}
+                  className='text-[16px] leading-6 text-[#5e6670] w-[734px] break-all'
+                />
               </div>
               <div className='mt-[32px] text-[18px] font-medium leading-7 text-[#000000]'>
                 Responsibilities
               </div>
-              <div className='mt-[16px]'>{job.responsibility}</div>
+              <div
+                dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(job.responsibility) }}
+                className='mt-[16px]'
+              />
             </div>
             <div className='col-span-5'>
               <div className='p-[32px] w-full h-[438px] border-[2px] solid border-[#e7f0fa] rounded-[8px]'>

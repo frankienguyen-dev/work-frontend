@@ -1,64 +1,6 @@
-// import { RegisterOptions, UseFormGetValues } from 'react-hook-form';
 import * as yup from 'yup';
 
-// type Rules = {
-//   [key in 'email' | 'password' | 'confirm_password' | 'full_name' | 'read_agree']: RegisterOptions;
-// };
-
-// // eslint-disable-next-line @typescript-eslint/no-explicit-any
-// export const getRules = (getValues?: UseFormGetValues<any>): Rules => ({
-//   read_agree: {
-//     required: {
-//       value: true,
-//       message: 'You must agree to our terms and conditions'
-//     }
-//   },
-
-//   full_name: {
-//     required: {
-//       value: true,
-//       message: 'Full name is required'
-//     }
-//   },
-
-//   email: {
-//     required: {
-//       value: true,
-//       message: 'Email is required'
-//     },
-//     pattern: {
-//       value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-//       message: 'Invalid email address'
-//     }
-//   },
-
-//   password: {
-//     required: {
-//       value: true,
-//       message: 'Password is required'
-//     },
-//     minLength: {
-//       value: 6,
-//       message: 'Password must be at least 6 characters'
-//     }
-//   },
-
-//   confirm_password: {
-//     required: {
-//       value: true,
-//       message: 'Confirm password is required'
-//     },
-//     minLength: {
-//       value: 6,
-//       message: 'Confirm password must be at least 6 characters'
-//     },
-//     validate:
-//       typeof getValues === 'function'
-//         ? (value) => value === getValues('password') || " Password doesn't match"
-//         : undefined
-//   }
-// });
-
+const today = new Date();
 export const schema = yup.object({
   fullName: yup.string().required('Full name is required'),
   email: yup.string().required('Email is required').email('Invalid email address'),
@@ -77,4 +19,43 @@ export const schema = yup.object({
   location: yup.string().trim()
 });
 
+export const jobSchema = yup.object({
+  name: yup.string().trim().required('Job name is required'),
+  location: yup.string().trim().required('Location is required'),
+  quantity: yup
+    .number()
+    .typeError('Quantity must be a number')
+    .min(1, 'Quantity employer must be at least 1 employer')
+    .required('Quantity is required'),
+  level: yup.string().trim().required('Level is required'),
+  salary: yup
+    .number()
+    .typeError('Quantity must be a number')
+    .min(1, 'Salary must be at least $1')
+    .required('Salary is required'),
+  startDate: yup
+    .date()
+    .min(
+      new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0, 0),
+      'Start date must be at least today'
+    )
+    .required('Start date is required'),
+  endDate: yup
+    .date()
+    .min(yup.ref('startDate'), 'End date must be after start date')
+    .required('End date is required'),
+  description: yup.string().trim().required('Description is required'),
+  responsibility: yup.string().trim().required('Responsibility is required'),
+  experience: yup.string().trim().required('Experience is required'),
+  jobType: yup.string().trim().required('Job type is required'),
+  education: yup.string().trim().required('Education is required'),
+  skills: yup
+    .array()
+    .required('Skills is required')
+    .min(1, 'The job requires at least 1 skill.')
+    .max(4, 'The job allows adding a maximum of 4 skills.'),
+  company: yup.string().required('Company name is required')
+});
+
 export type Schema = yup.InferType<typeof schema>;
+export type postJobSchema = yup.InferType<typeof jobSchema>;
