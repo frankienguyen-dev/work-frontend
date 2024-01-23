@@ -22,7 +22,10 @@ export default function FeatureJob() {
           <Link
             className='hover:underline gap-[12px] flex items-center text-[#0A65CC] text-[16px]
             leading-6 font-semibold'
-            to='/'
+            to={'/jobs'}
+            onClick={() => {
+              scrollTo(0, 0);
+            }}
           >
             View All{' '}
             <div>

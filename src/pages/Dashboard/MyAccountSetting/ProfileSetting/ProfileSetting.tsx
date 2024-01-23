@@ -28,11 +28,12 @@ export default function ProfileSetting() {
             <select
               id='gender'
               name=' gender'
+              defaultValue='Select...'
               className='w-full mt-2 h-[48px] rounded-[5px] border-[2px] border-[#e4e5e8] text-[16px]
                       leading-6 text-[#111827] focus:outline-none focus:border-[#9099a3] focus:ring-0
                        hover:cursor-pointer'
             >
-              <option value='' disabled selected>
+              <option value='Select...' disabled>
                 Select...
               </option>
               <option value='male'>Male</option>
@@ -45,11 +46,12 @@ export default function ProfileSetting() {
             <select
               id='age'
               name='age'
+              defaultValue='Select...'
               className='w-full mt-2 h-[48px] rounded-[5px] border-[2px] border-[#e4e5e8] text-[16px]
                       leading-6 text-[#111827] focus:outline-none focus:border-[#9099a3] focus:ring-0
                        hover:cursor-pointer'
             >
-              <option value='' disabled selected>
+              <option value='Select...' disabled>
                 Select...
               </option>
               {range(1, 100).map((age) => (
@@ -74,11 +76,12 @@ export default function ProfileSetting() {
             <select
               id='companies'
               name='companies'
+              defaultValue='Select...'
               className='w-full mt-2 h-[48px] rounded-[5px] border-[2px] border-[#e4e5e8] text-[16px]
                       leading-6 text-[#111827] focus:outline-none focus:border-[#9099a3] focus:ring-0
                        hover:cursor-pointer'
             >
-              <option value='' disabled selected>
+              <option value='Select...' disabled>
                 Select...
               </option>
               <option value='company 1'>Company 1</option>

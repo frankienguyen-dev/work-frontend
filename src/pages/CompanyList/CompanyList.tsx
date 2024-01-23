@@ -65,7 +65,7 @@ export default function CompanyList() {
             </div>
           </div>
           <div className='mt-[10px]'>
-            {companyData.data.data.data.map((company, index) => (
+            {companyData.data.data.data.slice(0, 8).map((company, index) => (
               <div
                 key={company.id}
                 className='grid grid-cols-12 p-[20px] items-center border-b border-b-[#e4e5e8]

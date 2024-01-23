@@ -16,6 +16,7 @@ import MyJobs from '../pages/Dashboard/MyJobs';
 import SearchPage from '../pages/SearchPage';
 import JobDetails from '../pages/JobDetails';
 import CompanyDetails from '../pages/CompanyDetails';
+import AllJobs from '../pages/AllJobs';
 
 function ProtectedRoute() {
   const { isAuthenticated } = useContext(AppContext);
@@ -122,6 +123,14 @@ export default function useRouteElement() {
       element: (
         <MainLayout>
           <CompanyDetails />
+        </MainLayout>
+      )
+    },
+    {
+      path: '/jobs',
+      element: (
+        <MainLayout>
+          <AllJobs />
         </MainLayout>
       )
     }

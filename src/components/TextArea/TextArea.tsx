@@ -1,6 +1,6 @@
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import './TextArea.css';
 import { RegisterOptions, UseFormRegister, UseFormSetValue } from 'react-hook-form';
 
@@ -11,6 +11,7 @@ interface Props {
   register: UseFormRegister<any>;
   rules?: RegisterOptions;
   name: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   setValue: UseFormSetValue<any>;
 }
 

@@ -1,63 +1,46 @@
-import Pagination from '../../components/Pagination';
-import { useState } from 'react';
-import useQueryParams from '../../hooks/useQueryPrams.tsx';
-import { useQuery } from '@tanstack/react-query';
-import jobApi from '../../apis/job.api.ts';
-import { calcDayRemaining, formatSalary, getLogoUrl } from '../../utils/utils.ts';
 import { createSearchParams, Link, useNavigate } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+import { calcDayRemaining, formatSalary, getLogoUrl } from '../../utils/utils.ts';
+import jobApi from '../../apis/job.api.ts';
 import useQueryConfig from '../../hooks/useQueryConfig.tsx';
-import { useForm } from 'react-hook-form';
-import { schema, Schema } from '../../utils/rules.ts';
-import { yupResolver } from '@hookform/resolvers/yup';
+import { sortByJob, sortDirJob } from '../../constants/sort.ts';
+import { JobListConfig } from '../../types/job.type.ts';
 import { omit } from 'lodash';
 
-type FormData = Pick<Schema, 'name' | 'location'>;
-const searchPageSchema = schema.pick(['name', 'location']);
-
-export default function SearchPage() {
-  const [page, setPage] = useState(1);
+export default function AllJobs() {
   const queryConfig = useQueryConfig();
-  const { register, handleSubmit } = useForm<FormData>({
-    defaultValues: {
-      name: '',
-      location: ''
-    },
-    resolver: yupResolver(searchPageSchema)
-  });
-  const queryParams = useQueryParams();
-  const { data: searchJobData } = useQuery({
-    queryKey: ['JobList', queryParams],
-    queryFn: () => {
-      return jobApi.searchJob(queryParams);
-    }
+  const { data: allJobsData } = useQuery({
+    queryKey: ['allJobs', queryConfig],
+    queryFn: () => jobApi.getAllJobs(queryConfig)
   });
   const navigate = useNavigate();
-  const onSubmitSearch = handleSubmit((data) => {
-    console.log('check search page: ', data);
+
+  const handleSelectSortDir = (sortDirValue: Exclude<JobListConfig['sortDir'], undefined>) => {
     navigate({
-      pathname: '/job/search',
+      pathname: '/jobs',
       search: createSearchParams(
         omit(
           {
             ...queryConfig,
-            name: data.name as string,
-            location: data.location as string
+            sortDir: sortDirValue as string,
+            sortBy: sortByJob.startDate as string
           },
-          ['salary', 'sortBy', 'sortDir']
+          ['location', 'name', 'salary']
         )
       ).toString()
     });
-  });
+  };
+  console.log('all job data: ', allJobsData);
   return (
-    <div className='pt-[138px] min-h-[1900px]'>
+    <div className='mt-[138px] min-h-[1900px]'>
       <div className='h-[76px] bg-[#f1f2f4]'>
         <div className='container py-[24px]'>
-          <div className='text-[18px] leading-7 font-medium text-[#18191c]'>Search Job</div>
+          <div className='text-[18px] leading-7 font-medium text-[#18191c]'>All Jobs</div>
         </div>
       </div>
       <div className='h-[112px] bg-[#f1f2f4]'>
         <div className='container'>
-          <form noValidate onSubmit={onSubmitSearch}>
+          <form noValidate>
             <div className='bg-white h-[80px] rounded-[8px] grid grid-cols-12 p-[12px]'>
               <div className='col-span-7 relative border-r solid border-r-[#eeeff5]'>
                 <div className='absolute left-[18px] top-[50%] translate-y-[-50%]'>
@@ -89,7 +72,6 @@ export default function SearchPage() {
                   type='text'
                   className='w-full h-[56px] pl-[54px] border-none border-transparent
                   focus:border-transparent focus:ring-0 leading-6 text-[16px] text-[]'
-                  {...register('name')}
                 />
               </div>
               <div className='col-span-3 relative'>
@@ -123,7 +105,6 @@ export default function SearchPage() {
                     type='text'
                     className='w-full h-[56px] pl-[54px] border-none border-transparent
                   focus:border-transparent focus:ring-0 leading-6 text-[16px] text-[]'
-                    {...register('location')}
                   />
                 </div>
               </div>
@@ -142,7 +123,7 @@ export default function SearchPage() {
       </div>
       <div className='container'>
         <div className='flex justify-end gap-[16px] items-center my-[18px]'>
-          <div className='text-[16px] font-semibold text-[#18191c]'>Page 1 / 12</div>
+          <div className='text-[16px] font-semibold text-[#18191c]'>Page 1/12</div>
           <div>
             <select
               name='filter_time'
@@ -150,9 +131,18 @@ export default function SearchPage() {
               className='w-[180px] h-[48px] rounded-[6px] border border-[#e4e5e8]
               text-[16px] leading-5 text-[#474d61] py-[14px] px-[18px] hover:cursor-pointer
               focus:outline-none focus:border-[#9099a3] focus:ring-0'
+              onChange={(event) =>
+                handleSelectSortDir(
+                  event.target.value as Exclude<JobListConfig['sortDir'], undefined>
+                )
+              }
+              defaultValue='Filter sort...'
             >
-              <option value='newest'>Newest</option>
-              <option value='lasted'>Latest</option>
+              <option value='Filter sort...' disabled>
+                Filter sort...
+              </option>
+              <option value={sortDirJob.desc}>Newest</option>
+              <option value={sortDirJob.asc}>Latest</option>
             </select>
           </div>
           <div
@@ -216,11 +206,14 @@ export default function SearchPage() {
           </div>
         </div>
         <div className='mt-[20px] mb-[48px]'>
-          {searchJobData &&
-            searchJobData.data.data.data.map((job) => (
+          {allJobsData &&
+            allJobsData.data.data.data.map((job) => (
               <Link
-                to={`/job/${job.id}`}
+                onClick={() => {
+                  scrollTo(0, 0);
+                }}
                 key={job.id}
+                to={`/job/${job.id}`}
                 className='flex items-center justify-between p-[32px] h-[132px] rounded-[12px] group
           hover:cursor-pointer hover:shadow-2xl hover:transition hover:ease-in-out hover:duration-[0.25s]
           border solid border-[#e3e4e7] mt-[24px]'
@@ -413,9 +406,6 @@ export default function SearchPage() {
                 </div>
               </Link>
             ))}
-        </div>
-        <div className='mb-[100px]'>
-          <Pagination currentPage={page} setPage={setPage} pageSize={4} />
         </div>
       </div>
     </div>
