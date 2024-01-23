@@ -3,13 +3,21 @@ import { Link } from 'react-router-dom';
 import { Dropdown } from 'flowbite-react';
 import { useContext, useEffect } from 'react';
 import { AppContext } from '../../contexts/app.context.tsx';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import authApi from '../../apis/auth.api.ts';
 import { isAccessTokenExpired, clearAccessTokenFromLocalStorage } from '../../utils/auth.ts';
 import avatar from 'src/assets/images/tiktok.png';
+import userApi from '../../apis/user.api.ts';
 
 export default function Header() {
   const { isAuthenticated, setIsAuthenticated, isRole } = useContext(AppContext);
+
+  const { data } = useQuery({
+    queryKey: ['userData'],
+    queryFn: () => userApi.getProfile()
+  });
+
+  const profile = data?.data.data;
 
   const logoutMutation = useMutation({
     mutationFn: () => authApi.logoutAccount(),
@@ -120,48 +128,53 @@ export default function Header() {
                 )}
 
                 <div className='ml-[20px]'>
-                  <Dropdown
-                    className='w-[200px]'
-                    arrowIcon={false}
-                    inline
-                    label={
-                      <img
-                        // src='src/assets/images/tiktok.png'
-                        src={avatar}
-                        alt=''
-                        className='w-[48px] h-[48px]
+                  {profile && (
+                    <Dropdown
+                      className='w-[200px]'
+                      arrowIcon={false}
+                      inline
+                      label={
+                        <img
+                          // src='src/assets/images/tiktok.png'
+                          src={avatar}
+                          alt=''
+                          className='w-[48px] h-[48px]
                     object-cover rounded-full flex items-center'
-                      />
-                    }
-                  >
-                    <Dropdown.Header>
-                      <span className='block text-sm font-medium'>Frankie Nguyen</span>
-                      <span className='block truncate text-sm font-medium'>admin@gmail.com</span>
-                    </Dropdown.Header>
-                    <Dropdown.Item>
-                      <Link to='/profile' className='font-medium py-[10px] block w-full text-left'>
-                        Profile
-                      </Link>
-                    </Dropdown.Item>
-                    <Dropdown.Item>
-                      <Link
-                        to='/dashboard'
-                        className='font-medium py-[10px] block w-full text-left'
-                      >
-                        Dashboard
-                      </Link>
-                    </Dropdown.Item>
-                    <Dropdown.Divider className='my-0' />
-                    <Dropdown.Item>
-                      <Link
-                        to=''
-                        onClick={handleLogout}
-                        className='font-medium py-[10px] block w-full text-left'
-                      >
-                        Logout
-                      </Link>
-                    </Dropdown.Item>
-                  </Dropdown>
+                        />
+                      }
+                    >
+                      <Dropdown.Header>
+                        <span className='block text-sm font-medium'>{profile.fullName}</span>
+                        <span className='block truncate text-sm font-medium'>{profile.email}</span>
+                      </Dropdown.Header>
+                      <Dropdown.Item>
+                        <Link
+                          to='/profile'
+                          className='font-medium py-[10px] block w-full text-left'
+                        >
+                          Profile
+                        </Link>
+                      </Dropdown.Item>
+                      <Dropdown.Item>
+                        <Link
+                          to='/dashboard'
+                          className='font-medium py-[10px] block w-full text-left'
+                        >
+                          Dashboard
+                        </Link>
+                      </Dropdown.Item>
+                      <Dropdown.Divider className='my-0' />
+                      <Dropdown.Item>
+                        <Link
+                          to=''
+                          onClick={handleLogout}
+                          className='font-medium py-[10px] block w-full text-left'
+                        >
+                          Logout
+                        </Link>
+                      </Dropdown.Item>
+                    </Dropdown>
+                  )}
                 </div>
               </div>
             )}

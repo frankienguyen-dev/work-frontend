@@ -1,5 +1,6 @@
 import { Role } from './role.type.ts';
 import { BelongToCompany } from './company.type.ts';
+import { Job } from './job.type.ts';
 
 export interface ByUser {
   id: string;
@@ -16,6 +17,7 @@ export interface User {
   title: string | null;
   age: number | null;
   roles: Role | null;
+  jobs: Job[] | [];
   company: BelongToCompany | null;
   createdBy: ByUser | null;
   createdAt: string | null;
