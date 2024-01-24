@@ -1,15 +1,18 @@
-import { Dispatch, SetStateAction } from 'react';
+// import { Dispatch, SetStateAction } from 'react';
 import classNames from 'classnames';
+import { QueryConfig } from '../../hooks/useQueryConfig.tsx';
+import { createSearchParams, Link } from 'react-router-dom';
 
 interface Props {
-  currentPage: number;
-  setPage: Dispatch<SetStateAction<number>>;
-  pageSize: number;
+  queryConfig: QueryConfig;
+  totalPages: number;
+  pathname: string;
 }
 
 const RANGE = 2;
 
-export default function Pagination({ currentPage, pageSize, setPage }: Props) {
+export default function Pagination({ queryConfig, totalPages, pathname }: Props) {
+  const pageNo = Number(queryConfig.pageNo);
   const renderPagination = () => {
     let dotAfter = false;
     let dotBefore = false;
@@ -44,102 +47,184 @@ export default function Pagination({ currentPage, pageSize, setPage }: Props) {
       }
       return null;
     };
-    return Array(pageSize)
+    return Array(totalPages)
       .fill(0)
       .map((_, index) => {
         const pageNumber = index + 1;
         if (
-          currentPage <= RANGE * 2 + 1 &&
-          pageNumber > currentPage + RANGE &&
-          pageNumber < pageSize - RANGE + 1
+          pageNo <= RANGE * 2 + 1 &&
+          pageNumber > pageNo + RANGE &&
+          pageNumber < totalPages - RANGE + 1
         ) {
           return renderDotAfter(index);
-        } else if (currentPage > RANGE * 2 + 1 && currentPage < pageSize - RANGE * 2) {
-          if (pageNumber < currentPage - RANGE && pageNumber > RANGE) {
+        } else if (pageNo > RANGE * 2 + 1 && pageNo < totalPages - RANGE * 2) {
+          if (pageNumber < pageNo - RANGE && pageNumber > RANGE) {
             return renderDotBefore(index);
-          } else if (pageNumber > currentPage + RANGE && pageNumber < pageSize - RANGE + 1) {
+          } else if (pageNumber > pageNo + RANGE && pageNumber < totalPages - RANGE + 1) {
             return renderDotAfter(index);
           }
-        } else if (
-          currentPage >= RANGE * 2 &&
-          pageNumber > RANGE &&
-          pageNumber < currentPage - RANGE
-        ) {
+        } else if (pageNo >= RANGE * 2 && pageNumber > RANGE && pageNumber < pageNo - RANGE) {
           return renderDotBefore(index);
         }
         return (
-          <button
+          <Link
+            onClick={() => {
+              scrollTo(0, 0);
+            }}
+            to={{
+              pathname: pathname,
+              search: createSearchParams({
+                ...queryConfig,
+                pageNo: pageNumber.toString()
+              }).toString()
+            }}
             className={classNames(
-              'w-[48px] h-[48px] rounded-[50px] text-[14px] leading-5 ' + ' font-medium',
+              'w-[48px] h-[48px] rounded-[50px] text-[14px] leading-5 flex items-center justify-center' +
+                ' font-medium',
 
               {
                 'bg-[#0b65cc] text-white hover:bg-[#0b65cc] hover:text-white':
-                  currentPage === pageNumber,
+                  pageNo === pageNumber,
                 'bg-white hover:bg-[#f1f2f4] hover:text-[#18191c] text-[#18191c]':
-                  currentPage !== pageNumber
+                  pageNo !== pageNumber
               }
             )}
             key={index}
-            onClick={() => setPage(pageNumber)}
           >
             {pageNumber}
-          </button>
+          </Link>
         );
       });
   };
   return (
     <div className='flex flex-wrap items-center justify-center'>
-      <button className='p-[12px] w-[48px] h-[48px] hover:bg-[#e7f0fa] rounded-[84px] group mr-[8px]'>
-        <svg
-          className='text-[#99C2FF] group-hover:text-[#0A65CC]'
-          width='24'
-          height='24'
-          viewBox='0 0 24 24'
-          fill='none'
-          xmlns='http://www.w3.org/2000/svg'
+      {pageNo === 1 ? (
+        <span className=' p-[12px] w-[48px] h-[48px] rounded-[84px] group ml-[8px]'>
+          <svg
+            className='text-[#99C2FF]'
+            width='24'
+            height='24'
+            viewBox='0 0 24 24'
+            fill='none'
+            xmlns='http://www.w3.org/2000/svg'
+          >
+            <path
+              d='M19 12H5'
+              stroke='currentColor'
+              strokeWidth='1.5'
+              strokeLinecap='round'
+              strokeLinejoin='round'
+            />
+            <path
+              d='M12 5L5 12L12 19'
+              stroke='currentColor'
+              strokeWidth='1.5'
+              strokeLinecap='round'
+              strokeLinejoin='round'
+            />
+          </svg>
+        </span>
+      ) : (
+        <Link
+          onClick={() => scrollTo(0, 0)}
+          to={{
+            pathname: pathname,
+            search: createSearchParams({
+              ...queryConfig,
+              pageNo: (pageNo - 1).toString()
+            }).toString()
+          }}
+          className='p-[12px] w-[48px] h-[48px] hover:bg-[#e7f0fa] rounded-[84px] group mr-[8px]'
         >
-          <path
-            d='M19 12H5'
-            stroke='currentColor'
-            strokeWidth='1.5'
-            strokeLinecap='round'
-            strokeLinejoin='round'
-          />
-          <path
-            d='M12 5L5 12L12 19'
-            stroke='currentColor'
-            strokeWidth='1.5'
-            strokeLinecap='round'
-            strokeLinejoin='round'
-          />
-        </svg>
-      </button>
+          <svg
+            className='text-[#99C2FF] group-hover:text-[#0A65CC]'
+            width='24'
+            height='24'
+            viewBox='0 0 24 24'
+            fill='none'
+            xmlns='http://www.w3.org/2000/svg'
+          >
+            <path
+              d='M19 12H5'
+              stroke='currentColor'
+              strokeWidth='1.5'
+              strokeLinecap='round'
+              strokeLinejoin='round'
+            />
+            <path
+              d='M12 5L5 12L12 19'
+              stroke='currentColor'
+              strokeWidth='1.5'
+              strokeLinecap='round'
+              strokeLinejoin='round'
+            />
+          </svg>
+        </Link>
+      )}
       {renderPagination()}
-      <button className='p-[12px] w-[48px] h-[48px] hover:bg-[#e7f0fa] rounded-[84px] group ml-[8px]'>
-        <svg
-          className='text-[#99C2FF] group-hover:text-[#0A65CC]'
-          width='24'
-          height='24'
-          viewBox='0 0 24 24'
-          fill='none'
-          xmlns='http://www.w3.org/2000/svg'
+      {pageNo === totalPages ? (
+        <span className=' p-[12px] w-[48px] h-[48px] rounded-[84px] group ml-[8px]'>
+          <svg
+            className='text-[#99C2FF]'
+            width='24'
+            height='24'
+            viewBox='0 0 24 24'
+            fill='none'
+            xmlns='http://www.w3.org/2000/svg'
+          >
+            <path
+              d='M5 12H19'
+              stroke='currentColor'
+              strokeWidth='1.5'
+              strokeLinecap='round'
+              strokeLinejoin='round'
+            />
+            <path
+              d='M12 5L19 12L12 19'
+              stroke='currentColor'
+              strokeWidth='1.5'
+              strokeLinecap='round'
+              strokeLinejoin='round'
+            />
+          </svg>
+        </span>
+      ) : (
+        <Link
+          onClick={() => scrollTo(0, 0)}
+          to={{
+            pathname: pathname,
+            search: createSearchParams({
+              ...queryConfig,
+              pageNo: (pageNo + 1).toString()
+            }).toString()
+          }}
+          className='p-[12px] w-[48px] h-[48px] hover:bg-[#e7f0fa] rounded-[84px] group ml-[8px]'
         >
-          <path
-            d='M5 12H19'
-            stroke='currentColor'
-            strokeWidth='1.5'
-            strokeLinecap='round'
-            strokeLinejoin='round'
-          />
-          <path
-            d='M12 5L19 12L12 19'
-            stroke='currentColor'
-            strokeWidth='1.5'
-            strokeLinecap='round'
-            strokeLinejoin='round'
-          />
-        </svg>
-      </button>
+          <svg
+            className='text-[#99C2FF] group-hover:text-[#0A65CC]'
+            width='24'
+            height='24'
+            viewBox='0 0 24 24'
+            fill='none'
+            xmlns='http://www.w3.org/2000/svg'
+          >
+            <path
+              d='M5 12H19'
+              stroke='currentColor'
+              strokeWidth='1.5'
+              strokeLinecap='round'
+              strokeLinejoin='round'
+            />
+            <path
+              d='M12 5L19 12L12 19'
+              stroke='currentColor'
+              strokeWidth='1.5'
+              strokeLinecap='round'
+              strokeLinejoin='round'
+            />
+          </svg>
+        </Link>
+      )}
     </div>
   );
 }

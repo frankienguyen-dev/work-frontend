@@ -6,9 +6,11 @@ import useQueryConfig from '../../hooks/useQueryConfig.tsx';
 import { sortByJob, sortDirJob } from '../../constants/sort.ts';
 import { JobListConfig } from '../../types/job.type.ts';
 import { omit } from 'lodash';
+import Pagination from '../../components/Pagination';
 
 export default function AllJobs() {
   const queryConfig = useQueryConfig();
+  const page = Number(queryConfig.pageNo);
   const { data: allJobsData } = useQuery({
     queryKey: ['allJobs', queryConfig],
     queryFn: () => jobApi.getAllJobs(queryConfig)
@@ -30,7 +32,10 @@ export default function AllJobs() {
       ).toString()
     });
   };
-  console.log('all job data: ', allJobsData);
+
+  const metaData = allJobsData?.data.data.meta;
+  console.log(metaData);
+
   return (
     <div className='mt-[138px] min-h-[1900px]'>
       <div className='h-[76px] bg-[#f1f2f4]'>
@@ -123,7 +128,9 @@ export default function AllJobs() {
       </div>
       <div className='container'>
         <div className='flex justify-end gap-[16px] items-center my-[18px]'>
-          <div className='text-[16px] font-semibold text-[#18191c]'>Page 1/12</div>
+          <div className='text-[16px] font-semibold text-[#18191c]'>
+            Page {page} / {metaData?.totalPages}
+          </div>
           <div>
             <select
               name='filter_time'
@@ -407,6 +414,13 @@ export default function AllJobs() {
               </Link>
             ))}
         </div>
+      </div>
+      <div className='container'>
+        <Pagination
+          queryConfig={queryConfig}
+          totalPages={metaData?.totalPages as number}
+          pathname='/jobs'
+        />
       </div>
     </div>
   );
