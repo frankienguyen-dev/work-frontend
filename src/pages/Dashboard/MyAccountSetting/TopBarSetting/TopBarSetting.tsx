@@ -1,17 +1,30 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import classNames from 'classnames';
 
 export default function TopBarSetting() {
+  const location = useLocation();
+  console.log('check location top bar: ', location);
   return (
     <div className='mt-[16px] flex items-center gap-[12px]'>
       <div className='group'>
         <Link
           to=''
-          className='flex items-center gap-[8px] py-[12px] px-[20px] border-b-[3px]
-          group-hover:border-b-[#0b65cc] border-b-transparent transition-transform transform
-          hover:translate-y-0 group-hover:text-[#0A65CC] text-[#767F8C]'
+          className={classNames(
+            'flex items-center gap-[8px] py-[12px] px-[20px] border-b-[3px]\n' +
+              ' group-hover:border-b-[#0b65cc] border-b-transparent transition-transform transform\n' +
+              ' hover:translate-y-0 group-hover:text-[#0A65CC] text-[#767F8C]',
+            {
+              'border-b-[#0b65cc]': location.pathname === '/dashboard/my-account-setting',
+              '': location.pathname !== '/dashboard/my-account-setting'
+            }
+          )}
         >
           <div>
             <svg
+              className={classNames('group-hover:stroke-[#0b65cc]', {
+                'text-[#0b65cc]': location.pathname === '/dashboard/my-account-setting',
+                '': location.pathname !== '/dashboard/my-account-setting'
+              })}
               width='24'
               height='24'
               viewBox='0 0 24 24'
@@ -33,18 +46,38 @@ export default function TopBarSetting() {
               />
             </svg>
           </div>
-          <div className='text-[14px] font-semibold leading-5 text-[currentColor] '>Personal</div>
+          <div
+            className={classNames(
+              'text-[14px] font-semibold leading-5 group-hover:text-[currentTextColor]',
+              {
+                'text-[#0b65cc]': location.pathname === '/dashboard/my-account-setting',
+                'text-[currentColor]': location.pathname !== '/dashboard/my-account-setting'
+              }
+            )}
+          >
+            Personal
+          </div>
         </Link>
       </div>
       <div className='group'>
         <Link
           to='profile'
-          className='flex items-center gap-[8px] py-[12px] px-[20px] border-b-[3px]
-          group-hover:border-b-[#0b65cc] border-b-transparent transition-transform transform
-          hover:translate-y-0 group-hover:text-[#0A65CC] text-[#767F8C]'
+          className={classNames(
+            'flex items-center gap-[8px] py-[12px] px-[20px] border-b-[3px]\n' +
+              ' group-hover:border-b-[#0b65cc] border-b-transparent transition-transform transform\n' +
+              ' hover:translate-y-0 group-hover:text-[#0A65CC] text-[#767F8C]',
+            {
+              'border-b-[#0b65cc]': location.pathname === '/dashboard/my-account-setting/profile',
+              '': location.pathname !== '/dashboard/my-account-setting/profile'
+            }
+          )}
         >
           <div>
             <svg
+              className={classNames('group-hover:stroke-[#0b65cc]', {
+                'text-[#0b65cc]': location.pathname === '/dashboard/my-account-setting/profile',
+                '': location.pathname !== '/dashboard/my-account-setting/profile'
+              })}
               width='24'
               height='24'
               viewBox='0 0 24 24'
@@ -72,18 +105,40 @@ export default function TopBarSetting() {
               />
             </svg>
           </div>
-          <div className='text-[14px] font-semibold leading-5 text-[currentColor] '>Profile</div>
+          <div
+            className={classNames(
+              'text-[14px] font-semibold leading-5 group-hover:text-[currentTextColor]',
+              {
+                'text-[#0b65cc]': location.pathname === '/dashboard/my-account-setting/profile',
+                'text-[currentColor]': location.pathname !== '/dashboard/my-account-setting/profile'
+              }
+            )}
+          >
+            Profile
+          </div>
         </Link>
       </div>
       <div className='group'>
         <Link
           to='account-setting'
-          className='flex items-center gap-[8px] py-[12px] px-[20px] border-b-[3px]
-          group-hover:border-b-[#0b65cc] border-b-transparent transition-transform transform
-          hover:translate-y-0 group-hover:text-[#0A65CC] text-[#767F8C]'
+          className={classNames(
+            'flex items-center gap-[8px] py-[12px] px-[20px] border-b-[3px]\n' +
+              ' group-hover:border-b-[#0b65cc] border-b-transparent transition-transform transform\n' +
+              ' hover:translate-y-0 group-hover:text-[#0A65CC] text-[#767F8C]',
+            {
+              'border-b-[#0b65cc]':
+                location.pathname === '/dashboard/my-account-setting/account-setting',
+              '': location.pathname !== '/dashboard/my-account-setting/account-setting'
+            }
+          )}
         >
           <div>
             <svg
+              className={classNames('group-hover:stroke-[#0b65cc]', {
+                'text-[#0b65cc]':
+                  location.pathname === '/dashboard/my-account-setting/profile/account-setting',
+                '': location.pathname !== '/dashboard/my-account-setting/profile/account-setting'
+              })}
               width='24'
               height='24'
               viewBox='0 0 24 24'
@@ -108,7 +163,17 @@ export default function TopBarSetting() {
               />
             </svg>
           </div>
-          <div className='text-[14px] font-semibold leading-5 text-[currentColor] '>
+          <div
+            className={classNames(
+              'text-[14px] font-semibold leading-5 group-hover:text-[currentTextColor]',
+              {
+                'text-[#0b65cc]':
+                  location.pathname === '/dashboard/my-account-setting/profile/account-setting',
+                'text-[currentColor]':
+                  location.pathname !== '/dashboard/my-account-setting/profile/account-setting'
+              }
+            )}
+          >
             Account Setting
           </div>
         </Link>

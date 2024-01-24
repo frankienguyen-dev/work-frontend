@@ -1,6 +1,9 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import classNames from 'classnames';
 
 export default function SidebarDashboard() {
+  const location = useLocation();
+  console.log(location);
   return (
     <div className='hidden 2xl:flex flex-col justify-between min-h-screen'>
       <div className='fixed lg:w-[294px] border-r min-h-screen solid border-r-[#e4e5e8] overflow-auto'>
@@ -11,14 +14,23 @@ export default function SidebarDashboard() {
           <div className='group'>
             <Link
               to=''
-              className='flex items-center gap-[16px] pl-[20px] py-[16px] group-hover:bg-[#E7F0FA]
-              group-hover:cursor-pointer text-[#9199a3] group-hover:text-[#0b65cc] border-l-[3px]
-              border-l-transparent group-hover:border-l-[#0b65cc]  transition-transform transform
-              group-hover:translate-y-0'
+              className={classNames(
+                'flex items-center gap-[16px] pl-[20px] py-[16px] group-hover:bg-[#E7F0FA]\n' +
+                  ' group-hover:cursor-pointer  group-hover:text-[#0b65cc] text-[#9199a3] border-l-[3px]\n' +
+                  ' border-l-transparent group-hover:border-l-[#0b65cc]  transition-transform transform\n' +
+                  ' group-hover:translate-y-0',
+                {
+                  'border-l-[#0b65cc] bg-[#E7F0FA] ': location.pathname === '/dashboard',
+                  '': location.pathname !== '/dashboard'
+                }
+              )}
             >
               <div>
                 <svg
-                  className='group-hover:stroke-[#0b65cc]'
+                  className={classNames('group-hover:stroke-[#0b65cc]', {
+                    'text-[#0b65cc]': location.pathname === '/dashboard',
+                    '': location.pathname !== '/dashboard'
+                  })}
                   width='24'
                   height='24'
                   viewBox='0 0 24 24'
@@ -48,20 +60,40 @@ export default function SidebarDashboard() {
                   />
                 </svg>
               </div>
-              <div className='text-[16px] font-medium text-[currentTextColor]'>Overview</div>
+              <div
+                className={classNames(
+                  'text-[16px] font-medium group-hover:text-[currentTextColor]',
+                  {
+                    'text-[#0b65cc]': location.pathname === '/dashboard',
+                    'text-[currentColor]': location.pathname !== '/dashboard'
+                  }
+                )}
+              >
+                Overview
+              </div>
             </Link>
           </div>
           <div className='group'>
             <Link
               to='applied-job'
-              className='flex items-center gap-[16px] pl-[20px] py-[16px] group-hover:bg-[#E7F0FA]
-              group-hover:cursor-pointer text-[#9199a3] group-hover:text-[#0b65cc] border-l-[3px]
-              border-l-transparent group-hover:border-l-[#0b65cc]  transition-transform transform
-              group-hover:translate-y-0'
+              className={classNames(
+                'flex items-center gap-[16px] pl-[20px] py-[16px] group-hover:bg-[#E7F0FA]\n' +
+                  ' group-hover:cursor-pointer  group-hover:text-[#0b65cc] text-[#9199a3] border-l-[3px]\n' +
+                  ' border-l-transparent group-hover:border-l-[#0b65cc]  transition-transform transform\n' +
+                  ' group-hover:translate-y-0',
+                {
+                  'border-l-[#0b65cc] bg-[#E7F0FA] ':
+                    location.pathname === '/dashboard/applied-job',
+                  '': location.pathname !== '/dashboard/applied-job'
+                }
+              )}
             >
               <div>
                 <svg
-                  className=' group-hover:stroke-[#0b65cc]'
+                  className={classNames('group-hover:stroke-[#0b65cc]', {
+                    'text-[#0b65cc]': location.pathname === '/dashboard/applied-job',
+                    '': location.pathname !== '/dashboard/applied-job'
+                  })}
                   width='24'
                   height='24'
                   viewBox='0 0 24 24'
@@ -98,20 +130,40 @@ export default function SidebarDashboard() {
                   />
                 </svg>
               </div>
-              <div className='text-[16px] font-medium text-[currentTextColor]'>Applied Job</div>
+              <div
+                className={classNames(
+                  'text-[16px] font-medium group-hover:text-[currentTextColor]',
+                  {
+                    'text-[#0b65cc]': location.pathname === '/dashboard/applied-job',
+                    'text-[currentColor]': location.pathname !== '/dashboard/applied-job'
+                  }
+                )}
+              >
+                Applied Job
+              </div>
             </Link>
           </div>
           <div className='group'>
             <Link
               to='favorite-job'
-              className='flex items-center gap-[16px] pl-[20px] py-[16px] group-hover:bg-[#E7F0FA]
-              group-hover:cursor-pointer text-[#9199a3] group-hover:text-[#0b65cc] border-l-[3px]
-              border-l-transparent group-hover:border-l-[#0b65cc]  transition-transform transform
-              group-hover:translate-y-0'
+              className={classNames(
+                'flex items-center gap-[16px] pl-[20px] py-[16px] group-hover:bg-[#E7F0FA]\n' +
+                  ' group-hover:cursor-pointer  group-hover:text-[#0b65cc] text-[#9199a3] border-l-[3px]\n' +
+                  ' border-l-transparent group-hover:border-l-[#0b65cc]  transition-transform transform\n' +
+                  ' group-hover:translate-y-0',
+                {
+                  'border-l-[#0b65cc] bg-[#E7F0FA]':
+                    location.pathname === '/dashboard/favorite-job',
+                  '': location.pathname !== '/dashboard/favorite-job'
+                }
+              )}
             >
               <div>
                 <svg
-                  className='group-hover:stroke-[#0b65cc]'
+                  className={classNames('group-hover:stroke-[#0b65cc]', {
+                    'text-[#0b65cc]': location.pathname === '/dashboard/favorite-job',
+                    '': location.pathname !== '/dashboard/favorite-job'
+                  })}
                   width='24'
                   height='24'
                   viewBox='0 0 24 24'
@@ -127,20 +179,40 @@ export default function SidebarDashboard() {
                   />
                 </svg>
               </div>
-              <div className='text-[16px] font-medium text-[currentTextColor]'>Favorite Jobs</div>
+              <div
+                className={classNames(
+                  'text-[16px] font-medium group-hover:text-[currentTextColor]',
+                  {
+                    'text-[#0b65cc]': location.pathname === '/dashboard/favorite-job',
+                    'text-[currentColor]': location.pathname !== '/dashboard/favorite-job'
+                  }
+                )}
+              >
+                Favorite Jobs
+              </div>
             </Link>
           </div>
 
           <div className='group'>
             <Link
               to='post-job'
-              className='flex items-center gap-[16px] pl-[20px] py-[16px] group-hover:bg-[#E7F0FA]
-              group-hover:cursor-pointer text-[#9199a3] group-hover:text-[#0b65cc] border-l-[3px]
-              border-l-transparent group-hover:border-l-[#0b65cc]  transition-transform transform
-              group-hover:translate-y-0'
+              className={classNames(
+                'flex items-center gap-[16px] pl-[20px] py-[16px] group-hover:bg-[#E7F0FA]\n' +
+                  ' group-hover:cursor-pointer  group-hover:text-[#0b65cc] text-[#9199a3] border-l-[3px]\n' +
+                  ' border-l-transparent group-hover:border-l-[#0b65cc]  transition-transform transform\n' +
+                  ' group-hover:translate-y-0',
+                {
+                  'border-l-[#0b65cc] bg-[#E7F0FA]': location.pathname === '/dashboard/post-job',
+                  '': location.pathname !== '/dashboard/post-job'
+                }
+              )}
             >
               <div>
                 <svg
+                  className={classNames('group-hover:stroke-[#0b65cc]', {
+                    'text-[#0b65cc]': location.pathname === '/dashboard/post-job',
+                    '': location.pathname !== '/dashboard/post-job'
+                  })}
                   width='24'
                   height='24'
                   viewBox='0 0 24 24'
@@ -169,19 +241,39 @@ export default function SidebarDashboard() {
                   />
                 </svg>
               </div>
-              <div className='text-[16px] font-medium text-[currentTextColor]'>Post A Job</div>
+              <div
+                className={classNames(
+                  'text-[16px] font-medium group-hover:text-[currentTextColor]',
+                  {
+                    'text-[#0b65cc]': location.pathname === '/dashboard/post-job',
+                    'text-[currentColor]': location.pathname !== '/dashboard/post-job'
+                  }
+                )}
+              >
+                Post A Job
+              </div>
             </Link>
           </div>
           <div className='group'>
             <Link
               to='my-jobs'
-              className='flex items-center gap-[16px] pl-[20px] py-[16px] group-hover:bg-[#E7F0FA]
-              group-hover:cursor-pointer text-[#9199a3] group-hover:text-[#0b65cc] border-l-[3px]
-              border-l-transparent group-hover:border-l-[#0b65cc]  transition-transform transform
-              group-hover:translate-y-0'
+              className={classNames(
+                'flex items-center gap-[16px] pl-[20px] py-[16px] group-hover:bg-[#E7F0FA]\n' +
+                  ' group-hover:cursor-pointer  group-hover:text-[#0b65cc] text-[#9199a3] border-l-[3px]\n' +
+                  ' border-l-transparent group-hover:border-l-[#0b65cc]  transition-transform transform\n' +
+                  ' group-hover:translate-y-0',
+                {
+                  'border-l-[#0b65cc] bg-[#E7F0FA]': location.pathname === '/dashboard/my-jobs',
+                  '': location.pathname !== '/dashboard/my-jobs'
+                }
+              )}
             >
               <div>
                 <svg
+                  className={classNames('group-hover:stroke-[#0b65cc]', {
+                    'text-[#0b65cc]': location.pathname === '/dashboard/my-jobs',
+                    '': location.pathname !== '/dashboard/my-jobs'
+                  })}
                   width='24'
                   height='24'
                   viewBox='0 0 24 24'
@@ -218,20 +310,41 @@ export default function SidebarDashboard() {
                   />
                 </svg>
               </div>
-              <div className='text-[16px] font-medium text-[currentTextColor]'>My Jobs</div>
+              <div
+                className={classNames(
+                  'text-[16px] font-medium group-hover:text-[currentTextColor]',
+                  {
+                    'text-[#0b65cc]': location.pathname === '/dashboard/my-jobs',
+                    'text-[currentColor]': location.pathname !== '/dashboard/my-jobs'
+                  }
+                )}
+              >
+                My Jobs
+              </div>
             </Link>
           </div>
           <div className='group'>
             <Link
               to='my-account-setting'
-              className='flex items-center gap-[16px] pl-[20px] py-[16px] group-hover:bg-[#E7F0FA]
-              group-hover:cursor-pointer text-[#9199a3] group-hover:text-[#0b65cc] border-l-[3px]
-              border-l-transparent group-hover:border-l-[#0b65cc]  transition-transform transform
-              group-hover:translate-y-0'
+              className={classNames(
+                'flex items-center gap-[16px] pl-[20px] py-[16px] group-hover:bg-[#E7F0FA]\n' +
+                  ' group-hover:cursor-pointer  group-hover:text-[#0b65cc] text-[#9199a3] border-l-[3px]\n' +
+                  ' border-l-transparent group-hover:border-l-[#0b65cc]  transition-transform transform\n' +
+                  ' group-hover:translate-y-0',
+                {
+                  'border-l-[#0b65cc] bg-[#E7F0FA]': location.pathname.includes(
+                    '/dashboard/my-account-setting'
+                  ),
+                  '': !location.pathname.includes('/dashboard/my-account-setting')
+                }
+              )}
             >
               <div>
                 <svg
-                  className=' group-hover:stroke-[#0b65cc]'
+                  className={classNames('group-hover:stroke-[#0b65cc]', {
+                    'text-[#0b65cc]': location.pathname.includes('/dashboard/my-account-setting'),
+                    '': !location.pathname.includes('/dashboard/my-account-setting')
+                  })}
                   width='24'
                   height='24'
                   viewBox='0 0 24 24'
@@ -254,7 +367,17 @@ export default function SidebarDashboard() {
                   />
                 </svg>
               </div>
-              <div className='text-[16px] font-medium text-[currentTextColor]'>
+              <div
+                className={classNames(
+                  'text-[16px] font-medium group-hover:text-[currentTextColor]',
+                  {
+                    'text-[#0b65cc]': location.pathname.includes('/dashboard/my-account-setting'),
+                    'text-[currentColor]': !location.pathname.includes(
+                      '/dashboard/my-account-setting'
+                    )
+                  }
+                )}
+              >
                 My Account Setting
               </div>
             </Link>
