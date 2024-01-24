@@ -63,4 +63,7 @@ export interface CompanyConfig {
   pageSize?: number | string;
   sortBy?: number | string;
   sortDir?: number | string;
+  // lastPage?: boolean;
+  // totalPages?: number | string;
+  // totalElements?: number | string;
 }

@@ -1,5 +1,4 @@
 import Pagination from '../../components/Pagination';
-import { useState } from 'react';
 import useQueryParams from '../../hooks/useQueryPrams.tsx';
 import { useQuery } from '@tanstack/react-query';
 import jobApi from '../../apis/job.api.ts';
@@ -15,8 +14,9 @@ type FormData = Pick<Schema, 'name' | 'location'>;
 const searchPageSchema = schema.pick(['name', 'location']);
 
 export default function SearchPage() {
-  const [page, setPage] = useState(1);
   const queryConfig = useQueryConfig();
+  const pageNo = Number(queryConfig.pageNo);
+  console.log('check pageNo search page: ', pageNo);
   const { register, handleSubmit } = useForm<FormData>({
     defaultValues: {
       name: '',
@@ -31,6 +31,8 @@ export default function SearchPage() {
       return jobApi.searchJob(queryParams);
     }
   });
+  console.log('check: ', searchJobData);
+  const metaData = searchJobData?.data.data.meta;
   const navigate = useNavigate();
   const onSubmitSearch = handleSubmit((data) => {
     console.log('check search page: ', data);
@@ -142,7 +144,9 @@ export default function SearchPage() {
       </div>
       <div className='container'>
         <div className='flex justify-end gap-[16px] items-center my-[18px]'>
-          <div className='text-[16px] font-semibold text-[#18191c]'>Page 1 / 12</div>
+          <div className='text-[16px] font-semibold text-[#18191c]'>
+            Page {pageNo} / {metaData?.totalPages}
+          </div>
           <div>
             <select
               name='filter_time'
@@ -415,7 +419,11 @@ export default function SearchPage() {
             ))}
         </div>
         <div className='mb-[100px]'>
-          <Pagination currentPage={page} setPage={setPage} pageSize={4} />
+          <Pagination
+            queryConfig={queryConfig}
+            totalPages={metaData?.totalPages as number}
+            pathname='/job/search'
+          />
         </div>
       </div>
     </div>
