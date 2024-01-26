@@ -32,7 +32,7 @@ export default function MyJobs() {
           <div className='text-[20px] font-medium leading-8 text-[#18191c]'>My Jobs</div>
           {profileData && (
             <div className='text-[20px] font-medium leading-8 text-[#9199a3]'>
-              ({profileData.data.data.jobs.length})
+              {/*({profileData.data.data.jobs.length})*/}3
             </div>
           )}
         </div>
@@ -63,7 +63,7 @@ export default function MyJobs() {
               <div
                 key={job.id}
                 className='grid grid-cols-12 p-[20px] group items-center h-[92px] hover:cursor-pointer
-         hover:outline hover:outline-[#0b65cc] hover:rounded-[8px] border-b border-b-[#e4e5e8] solid'
+          hover:outline hover:outline-[#0b65cc] hover:rounded-[8px] border-b border-b-[#e4e5e8] solid'
               >
                 <div className='col-span-4'>
                   <div className='text-[16px] font-medium leading-6 text-[#18191c]'>{job.name}</div>
@@ -192,9 +192,9 @@ export default function MyJobs() {
                       <Link
                         to=''
                         className='w-[188px] h-[48px] bg-[#f1f2f4] rounded-[3px] text-[16px]
-                  font-semibold leading-6 text-[#5e6670] py-[12px] px-[24px] hover:cursor-pointer
-                  group-hover:bg-[#0b65cc] group-hover:text-white block transition duration-[0.25s]
-                  ease-in-out'
+                   font-semibold leading-6 text-[#5e6670] py-[12px] px-[24px] hover:cursor-pointer
+                   group-hover:bg-[#0b65cc] group-hover:text-white block transition duration-[0.25s]
+                   ease-in-out'
                       >
                         View Applications
                       </Link>
@@ -208,8 +208,8 @@ export default function MyJobs() {
                         renderTrigger={() => (
                           <div
                             className='w-[48px] h-[48px] group-hover:bg-[#f1f2f4] rounded-[5px]
-                  hover:cursor-pointer transition duration-[0.25s] ease-in-out flex items-center
-                  justify-center'
+                   hover:cursor-pointer transition duration-[0.25s] ease-in-out flex items-center
+                   justify-center'
                           >
                             <svg
                               width='24'
@@ -238,7 +238,13 @@ export default function MyJobs() {
                         )}
                       >
                         <Dropdown.Item>
-                          <Link to={`/job/${job.id}`} className='flex items-center gap-[8px]'>
+                          <Link
+                            onClick={() => {
+                              scrollTo(0, 0);
+                            }}
+                            to={`/job/${job.id}`}
+                            className='flex items-center w-full gap-[8px]'
+                          >
                             <div>
                               <svg
                                 className='font-medium'

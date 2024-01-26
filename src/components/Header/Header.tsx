@@ -6,8 +6,8 @@ import { AppContext } from '../../contexts/app.context.tsx';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import authApi from '../../apis/auth.api.ts';
 import { isAccessTokenExpired, clearAccessTokenFromLocalStorage } from '../../utils/auth.ts';
-import avatar from 'src/assets/images/tiktok.png';
 import userApi from '../../apis/user.api.ts';
+import { getLogoUrl } from '../../utils/utils.ts';
 
 export default function Header() {
   const { isAuthenticated, setIsAuthenticated, isRole } = useContext(AppContext);
@@ -94,15 +94,7 @@ export default function Header() {
               </div>
             </Link>
             {!isAuthenticated && (
-              <div className='flex gap-3 items-center'>
-                <Link
-                  to='/signin'
-                  className='w-[101px] border border-[#CEE0F5] flex items-center justify-center
-                rounded-[3px] text-[16px] font-semibold text-[#0A65CC] h-[48px]'
-                  color='light'
-                >
-                  Sign In
-                </Link>
+              <div className='flex gap-3 items-center justify-end'>
                 <Link
                   to='/dashboard/post-job'
                   className='w-[140px] border bg-[#0A65CC] border-[#CEE0F5] flex items-center justify-center
@@ -110,6 +102,14 @@ export default function Header() {
                   color='blue'
                 >
                   Post A Job
+                </Link>
+                <Link
+                  to='/signin'
+                  className='w-[101px] border border-[#CEE0F5] flex items-center justify-center
+                rounded-[3px] text-[16px] font-semibold text-[#0A65CC] h-[48px]'
+                  color='light'
+                >
+                  Sign In
                 </Link>
               </div>
             )}
@@ -136,7 +136,7 @@ export default function Header() {
                       label={
                         <img
                           // src='src/assets/images/tiktok.png'
-                          src={avatar}
+                          src={getLogoUrl(profile.logo)}
                           alt=''
                           className='w-[48px] h-[48px]
                     object-cover rounded-full flex items-center'

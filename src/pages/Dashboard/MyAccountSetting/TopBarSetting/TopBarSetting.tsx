@@ -3,7 +3,6 @@ import classNames from 'classnames';
 
 export default function TopBarSetting() {
   const location = useLocation();
-  console.log('check location top bar: ', location);
   return (
     <div className='mt-[16px] flex items-center gap-[12px]'>
       <div className='group'>
@@ -11,11 +10,11 @@ export default function TopBarSetting() {
           to=''
           className={classNames(
             'flex items-center gap-[8px] py-[12px] px-[20px] border-b-[3px]\n' +
-              ' group-hover:border-b-[#0b65cc] border-b-transparent transition-transform transform\n' +
+              ' group-hover:border-b-[#0b65cc] transition-transform transform\n' +
               ' hover:translate-y-0 group-hover:text-[#0A65CC] text-[#767F8C]',
             {
               'border-b-[#0b65cc]': location.pathname === '/dashboard/my-account-setting',
-              '': location.pathname !== '/dashboard/my-account-setting'
+              'border-b-transparent': location.pathname !== '/dashboard/my-account-setting'
             }
           )}
         >
@@ -64,11 +63,11 @@ export default function TopBarSetting() {
           to='profile'
           className={classNames(
             'flex items-center gap-[8px] py-[12px] px-[20px] border-b-[3px]\n' +
-              ' group-hover:border-b-[#0b65cc] border-b-transparent transition-transform transform\n' +
+              ' group-hover:border-b-[#0b65cc] transition-transform transform\n' +
               ' hover:translate-y-0 group-hover:text-[#0A65CC] text-[#767F8C]',
             {
               'border-b-[#0b65cc]': location.pathname === '/dashboard/my-account-setting/profile',
-              '': location.pathname !== '/dashboard/my-account-setting/profile'
+              'border-b-transparent': location.pathname !== '/dashboard/my-account-setting/profile'
             }
           )}
         >
@@ -123,12 +122,13 @@ export default function TopBarSetting() {
           to='account-setting'
           className={classNames(
             'flex items-center gap-[8px] py-[12px] px-[20px] border-b-[3px]\n' +
-              ' group-hover:border-b-[#0b65cc] border-b-transparent transition-transform transform\n' +
+              ' group-hover:border-b-[#0b65cc] transition-transform transform\n' +
               ' hover:translate-y-0 group-hover:text-[#0A65CC] text-[#767F8C]',
             {
-              'border-b-[#0b65cc]':
+              'border-b-[#0b65cc] border-b-[3px]':
                 location.pathname === '/dashboard/my-account-setting/account-setting',
-              '': location.pathname !== '/dashboard/my-account-setting/account-setting'
+              'border-b-transparent':
+                location.pathname !== '/dashboard/my-account-setting/account-setting'
             }
           )}
         >
@@ -136,8 +136,8 @@ export default function TopBarSetting() {
             <svg
               className={classNames('group-hover:stroke-[#0b65cc]', {
                 'text-[#0b65cc]':
-                  location.pathname === '/dashboard/my-account-setting/profile/account-setting',
-                '': location.pathname !== '/dashboard/my-account-setting/profile/account-setting'
+                  location.pathname === '/dashboard/my-account-setting/account-setting',
+                '': location.pathname !== '/dashboard/my-account-setting/account-setting'
               })}
               width='24'
               height='24'
@@ -168,9 +168,9 @@ export default function TopBarSetting() {
               'text-[14px] font-semibold leading-5 group-hover:text-[currentTextColor]',
               {
                 'text-[#0b65cc]':
-                  location.pathname === '/dashboard/my-account-setting/profile/account-setting',
+                  location.pathname === '/dashboard/my-account-setting/account-setting',
                 'text-[currentColor]':
-                  location.pathname !== '/dashboard/my-account-setting/profile/account-setting'
+                  location.pathname !== '/dashboard/my-account-setting/account-setting'
               }
             )}
           >

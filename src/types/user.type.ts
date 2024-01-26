@@ -12,11 +12,12 @@ export interface User {
   fullName: string | null;
   address: string | null;
   email: string;
+  logo?: string;
   phoneNumber: string | null;
   gender: string | null;
   title: string | null;
   age: number | null;
-  roles: Role | null;
+  roles: Role[] | [];
   jobs: Job[] | [];
   company: BelongToCompany | null;
   createdBy: ByUser | null;

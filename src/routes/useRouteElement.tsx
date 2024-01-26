@@ -17,6 +17,7 @@ import SearchPage from '../pages/SearchPage';
 import JobDetails from '../pages/JobDetails';
 import CompanyDetails from '../pages/CompanyDetails';
 import AllJobs from '../pages/AllJobs';
+import MyCompanyInfo from '../pages/Dashboard/MyCompanyInfo';
 
 function ProtectedRoute() {
   const { isAuthenticated } = useContext(AppContext);
@@ -65,6 +66,10 @@ export default function useRouteElement() {
             {
               path: 'my-account-setting',
               element: <MyAccountSetting />
+            },
+            {
+              path: 'my-company',
+              element: <MyCompanyInfo />
             }
           ]
         }

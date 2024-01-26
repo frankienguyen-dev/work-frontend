@@ -1,14 +1,19 @@
 import { Link, useLocation } from 'react-router-dom';
 import classNames from 'classnames';
+// import { useContext } from 'react';
+// import { AppContext } from '../../../contexts/app.context.tsx';
 
 export default function SidebarDashboard() {
+  // const { isRole } = useContext(AppContext);
   const location = useLocation();
-  console.log(location);
   return (
     <div className='hidden 2xl:flex flex-col justify-between min-h-screen'>
       <div className='fixed lg:w-[294px] border-r min-h-screen solid border-r-[#e4e5e8] overflow-auto'>
         <div className='pt-[24px] px-[20px]'>
-          <h1 className='text-[14px] font-medium leading-5 text-[#9199a3]'>CANDIDATE DASHBOARD</h1>
+          <h1 className='text-[14px] font-medium leading-5 text-[#9199a3]'>
+            {/*{isRole === 'ROLE_USER' ? 'CANDIDATE DASHBOARD' : 'HUMAN RESOURCE DASHBOARD'}*/}
+            DASHBOARD
+          </h1>
         </div>
         <div className='mt-[12px]'>
           <div className='group'>
@@ -17,11 +22,11 @@ export default function SidebarDashboard() {
               className={classNames(
                 'flex items-center gap-[16px] pl-[20px] py-[16px] group-hover:bg-[#E7F0FA]\n' +
                   ' group-hover:cursor-pointer  group-hover:text-[#0b65cc] text-[#9199a3] border-l-[3px]\n' +
-                  ' border-l-transparent group-hover:border-l-[#0b65cc]  transition-transform transform\n' +
+                  ' group-hover:border-l-[#0b65cc]  transition-transform transform\n' +
                   ' group-hover:translate-y-0',
                 {
                   'border-l-[#0b65cc] bg-[#E7F0FA] ': location.pathname === '/dashboard',
-                  '': location.pathname !== '/dashboard'
+                  'border-l-transparent': location.pathname !== '/dashboard'
                 }
               )}
             >
@@ -79,12 +84,12 @@ export default function SidebarDashboard() {
               className={classNames(
                 'flex items-center gap-[16px] pl-[20px] py-[16px] group-hover:bg-[#E7F0FA]\n' +
                   ' group-hover:cursor-pointer  group-hover:text-[#0b65cc] text-[#9199a3] border-l-[3px]\n' +
-                  ' border-l-transparent group-hover:border-l-[#0b65cc]  transition-transform transform\n' +
+                  ' group-hover:border-l-[#0b65cc]  transition-transform transform\n' +
                   ' group-hover:translate-y-0',
                 {
                   'border-l-[#0b65cc] bg-[#E7F0FA] ':
                     location.pathname === '/dashboard/applied-job',
-                  '': location.pathname !== '/dashboard/applied-job'
+                  'border-l-transparent': location.pathname !== '/dashboard/applied-job'
                 }
               )}
             >
@@ -149,12 +154,12 @@ export default function SidebarDashboard() {
               className={classNames(
                 'flex items-center gap-[16px] pl-[20px] py-[16px] group-hover:bg-[#E7F0FA]\n' +
                   ' group-hover:cursor-pointer  group-hover:text-[#0b65cc] text-[#9199a3] border-l-[3px]\n' +
-                  ' border-l-transparent group-hover:border-l-[#0b65cc]  transition-transform transform\n' +
+                  ' group-hover:border-l-[#0b65cc]  transition-transform transform\n' +
                   ' group-hover:translate-y-0',
                 {
                   'border-l-[#0b65cc] bg-[#E7F0FA]':
                     location.pathname === '/dashboard/favorite-job',
-                  '': location.pathname !== '/dashboard/favorite-job'
+                  'border-l-transparent': location.pathname !== '/dashboard/favorite-job'
                 }
               )}
             >
@@ -199,11 +204,11 @@ export default function SidebarDashboard() {
               className={classNames(
                 'flex items-center gap-[16px] pl-[20px] py-[16px] group-hover:bg-[#E7F0FA]\n' +
                   ' group-hover:cursor-pointer  group-hover:text-[#0b65cc] text-[#9199a3] border-l-[3px]\n' +
-                  ' border-l-transparent group-hover:border-l-[#0b65cc]  transition-transform transform\n' +
+                  ' group-hover:border-l-[#0b65cc]  transition-transform transform\n' +
                   ' group-hover:translate-y-0',
                 {
                   'border-l-[#0b65cc] bg-[#E7F0FA]': location.pathname === '/dashboard/post-job',
-                  '': location.pathname !== '/dashboard/post-job'
+                  'border-l-transparent': location.pathname !== '/dashboard/post-job'
                 }
               )}
             >
@@ -256,15 +261,113 @@ export default function SidebarDashboard() {
           </div>
           <div className='group'>
             <Link
+              to='my-company'
+              className={classNames(
+                'flex items-center gap-[16px] pl-[20px] py-[16px] group-hover:bg-[#E7F0FA]\n' +
+                  ' group-hover:cursor-pointer  group-hover:text-[#0b65cc] text-[#9199a3] border-l-[3px]\n' +
+                  ' group-hover:border-l-[#0b65cc]  transition-transform transform\n' +
+                  ' group-hover:translate-y-0',
+                {
+                  'border-l-[#0b65cc] bg-[#E7F0FA]':
+                    location.pathname.includes('/dashboard/my-company'),
+                  'border-l-transparent': !location.pathname.includes('/dashboard/my-company')
+                }
+              )}
+            >
+              <div>
+                <svg
+                  className={classNames('group-hover:stroke-[#0b65cc]', {
+                    'text-[#0b65cc]': location.pathname.includes('/dashboard/my-company'),
+                    '': !location.pathname.includes('/dashboard/my-company')
+                  })}
+                  width='24'
+                  height='24'
+                  viewBox='0 0 24 24'
+                  fill='none'
+                  xmlns='http://www.w3.org/2000/svg'
+                >
+                  <path
+                    d='M1.5 20.2484H22.5'
+                    stroke='currentColor'
+                    strokeWidth='1.5'
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                  />
+                  <path
+                    d='M13.4995 20.2484V3.74841C13.4995 3.5495 13.4204 3.35874 13.2798 3.21808C13.1391 3.07743 12.9484 2.99841 12.7495 2.99841H3.74945C3.55054 2.99841 3.35977 3.07743 3.21912 3.21808C3.07847 3.35874 2.99945 3.5495 2.99945 3.74841V20.2484'
+                    stroke='currentColor'
+                    strokeWidth='1.5'
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                  />
+                  <path
+                    d='M20.9995 20.2484V9.74841C20.9995 9.5495 20.9204 9.35874 20.7798 9.21808C20.6391 9.07743 20.4484 8.99841 20.2495 8.99841H13.4995'
+                    stroke='currentColor'
+                    strokeWidth='1.5'
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                  />
+                  <path
+                    d='M5.99945 6.74841H8.99945'
+                    stroke='currentColor'
+                    strokeWidth='1.5'
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                  />
+                  <path
+                    d='M7.49945 12.7484H10.4995'
+                    stroke='currentColor'
+                    strokeWidth='1.5'
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                  />
+                  <path
+                    d='M5.99945 16.4984H8.99945'
+                    stroke='currentColor'
+                    strokeWidth='1.5'
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                  />
+                  <path
+                    d='M16.4995 16.4984H17.9995'
+                    stroke='currentColor'
+                    strokeWidth='1.5'
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                  />
+                  <path
+                    d='M16.4995 12.7484H17.9995'
+                    stroke='currentColor'
+                    strokeWidth='1.5'
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                  />
+                </svg>
+              </div>
+              <div
+                className={classNames(
+                  'text-[16px] font-medium group-hover:text-[currentTextColor]',
+                  {
+                    'text-[#0b65cc]': location.pathname.includes('/dashboard/my-company'),
+                    'text-[currentColor]': !location.pathname.includes('/dashboard/my-company')
+                  }
+                )}
+              >
+                My Company
+              </div>
+            </Link>
+          </div>
+          <div className='group'>
+            <Link
               to='my-jobs'
               className={classNames(
                 'flex items-center gap-[16px] pl-[20px] py-[16px] group-hover:bg-[#E7F0FA]\n' +
                   ' group-hover:cursor-pointer  group-hover:text-[#0b65cc] text-[#9199a3] border-l-[3px]\n' +
-                  ' border-l-transparent group-hover:border-l-[#0b65cc]  transition-transform transform\n' +
+                  ' group-hover:border-l-[#0b65cc]  transition-transform transform\n' +
                   ' group-hover:translate-y-0',
                 {
                   'border-l-[#0b65cc] bg-[#E7F0FA]': location.pathname === '/dashboard/my-jobs',
-                  '': location.pathname !== '/dashboard/my-jobs'
+                  'border-l-transparent': location.pathname !== '/dashboard/my-jobs'
                 }
               )}
             >
@@ -329,13 +432,15 @@ export default function SidebarDashboard() {
               className={classNames(
                 'flex items-center gap-[16px] pl-[20px] py-[16px] group-hover:bg-[#E7F0FA]\n' +
                   ' group-hover:cursor-pointer  group-hover:text-[#0b65cc] text-[#9199a3] border-l-[3px]\n' +
-                  ' border-l-transparent group-hover:border-l-[#0b65cc]  transition-transform transform\n' +
+                  ' group-hover:border-l-[#0b65cc]  transition-transform transform\n' +
                   ' group-hover:translate-y-0',
                 {
                   'border-l-[#0b65cc] bg-[#E7F0FA]': location.pathname.includes(
                     '/dashboard/my-account-setting'
                   ),
-                  '': !location.pathname.includes('/dashboard/my-account-setting')
+                  'border-l-transparent': !location.pathname.includes(
+                    '/dashboard/my-account-setting'
+                  )
                 }
               )}
             >

@@ -1,3 +1,5 @@
+import { User } from '../types/user.type.ts';
+
 export const saveAccessTokenFromLocalStorage = (accessToken: string) => {
   localStorage.setItem('access_token', accessToken);
 };
@@ -29,4 +31,17 @@ export const getRoleToLocalStorage = () => {
 
 export const clearRoleToLocalStorage = () => {
   return localStorage.removeItem('isRole');
+};
+
+export const getProfileToLocalStorage = () => {
+  const result = localStorage.getItem('profile');
+  return result ? JSON.parse(result) : null;
+};
+
+export const setProfileToLocalStorage = (profile: User) => {
+  return localStorage.setItem('profile', JSON.stringify(profile));
+};
+
+export const clearProfileToLocalStorage = () => {
+  return localStorage.removeItem('profile');
 };
