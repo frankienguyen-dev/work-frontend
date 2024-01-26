@@ -10,6 +10,9 @@ import ProfileSetting from './MyAccountSetting/ProfileSetting';
 import AccountSetting from './MyAccountSetting/AccountSetting';
 import PostAJob from './PostAJob';
 import MyJobs from './MyJobs';
+import MyCompanyInfo from './MyCompanyInfo';
+import CompanyInfo from './MyCompanyInfo/CompanyInfo';
+import FoundingInformation from './MyCompanyInfo/FoundingInformation';
 
 export default function Dashboard() {
   return (
@@ -28,6 +31,10 @@ export default function Dashboard() {
               <Route path='/favorite-job' element={<FavoriteJob />} />
               <Route path='/post-job' element={<PostAJob />} />
               <Route path='/my-jobs' element={<MyJobs />} />
+              <Route path='/my-company' element={<MyCompanyInfo />}>
+                <Route path='' element={<CompanyInfo />} />
+                <Route path='founding-info' element={<FoundingInformation />} />
+              </Route>
               <Route path='/my-account-setting' element={<MyAccountSetting />}>
                 <Route path='' element={<Personal />} />
                 <Route path='profile' element={<ProfileSetting />} />

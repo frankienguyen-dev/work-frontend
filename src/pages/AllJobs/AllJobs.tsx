@@ -37,7 +37,7 @@ export default function AllJobs() {
   console.log(metaData);
 
   return (
-    <div className='mt-[138px] min-h-[1900px]'>
+    <div className='mt-[138px] min-h-screen'>
       <div className='h-[76px] bg-[#f1f2f4]'>
         <div className='container py-[24px]'>
           <div className='text-[18px] leading-7 font-medium text-[#18191c]'>All Jobs</div>
@@ -126,6 +126,7 @@ export default function AllJobs() {
           </form>
         </div>
       </div>
+
       <div className='container'>
         <div className='flex justify-end gap-[16px] items-center my-[18px]'>
           <div className='text-[16px] font-semibold text-[#18191c]'>
@@ -415,7 +416,7 @@ export default function AllJobs() {
             ))}
         </div>
       </div>
-      <div className='container'>
+      <div className='container mb-[100px]'>
         <Pagination
           queryConfig={queryConfig}
           totalPages={metaData?.totalPages as number}
