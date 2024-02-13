@@ -30,13 +30,28 @@ export default function TopBarMyCompany() {
               xmlns='http://www.w3.org/2000/svg'
             >
               <path
-                d='M12 15C15.3137 15 18 12.3137 18 9C18 5.68629 15.3137 3 12 3C8.68629 3 6 5.68629 6 9C6 12.3137 8.68629 15 12 15Z'
+                d='M3 20.25V5.25C3 5.05109 3.07902 4.86032 3.21967 4.71967C3.36032 4.57902 3.55109 4.5 3.75 4.5H20.25C20.4489 4.5 20.6397 4.57902 20.7803 4.71967C20.921 4.86032 21 5.05109 21 5.25V20.25L18 18.75L15 20.25L12 18.75L9 20.25L6 18.75L3 20.25Z'
                 stroke='currentColor'
                 strokeWidth='1.5'
-                strokeMiterlimit='10'
+                strokeLinecap='round'
+                strokeLinejoin='round'
               />
               <path
-                d='M2.90527 20.2491C3.82736 18.6531 5.15322 17.3278 6.74966 16.4064C8.34611 15.485 10.1569 15 12.0002 15C13.8434 15 15.6542 15.4851 17.2506 16.4065C18.8471 17.3279 20.1729 18.6533 21.0949 20.2493'
+                d='M13.5 10.5H18'
+                stroke='currentColor'
+                strokeWidth='1.5'
+                strokeLinecap='round'
+                strokeLinejoin='round'
+              />
+              <path
+                d='M13.5 13.5H18'
+                stroke='currentColor'
+                strokeWidth='1.5'
+                strokeLinecap='round'
+                strokeLinejoin='round'
+              />
+              <path
+                d='M10.5 9H6V15H10.5V9Z'
                 stroke='currentColor'
                 strokeWidth='1.5'
                 strokeLinecap='round'
@@ -83,13 +98,28 @@ export default function TopBarMyCompany() {
               xmlns='http://www.w3.org/2000/svg'
             >
               <path
-                d='M12 15C15.3137 15 18 12.3137 18 9C18 5.68629 15.3137 3 12 3C8.68629 3 6 5.68629 6 9C6 12.3137 8.68629 15 12 15Z'
+                d='M3 18.75V5.25C3 5.05109 3.07902 4.86032 3.21967 4.71967C3.36032 4.57902 3.55109 4.5 3.75 4.5H20.25C20.4489 4.5 20.6397 4.57902 20.7803 4.71967C20.921 4.86032 21 5.05109 21 5.25V18.75'
                 stroke='currentColor'
                 strokeWidth='1.5'
-                strokeMiterlimit='10'
+                strokeLinecap='round'
+                strokeLinejoin='round'
               />
               <path
-                d='M2.90527 20.2491C3.82736 18.6531 5.15322 17.3278 6.74966 16.4064C8.34611 15.485 10.1569 15 12.0002 15C13.8434 15 15.6542 15.4851 17.2506 16.4065C18.8471 17.3279 20.1729 18.6533 21.0949 20.2493'
+                d='M1.5 18.75H22.5'
+                stroke='currentColor'
+                strokeWidth='1.5'
+                strokeLinecap='round'
+                strokeLinejoin='round'
+              />
+              <path
+                d='M11.25 18.75V15.75H18V18.75'
+                stroke='currentColor'
+                strokeWidth='1.5'
+                strokeLinecap='round'
+                strokeLinejoin='round'
+              />
+              <path
+                d='M6 18.75V7.5H18V12.75'
                 stroke='currentColor'
                 strokeWidth='1.5'
                 strokeLinecap='round'

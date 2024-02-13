@@ -1,7 +1,7 @@
 import { CustomFlowbiteTheme, Datepicker, Flowbite } from 'flowbite-react';
 import { RegisterOptions, UseFormRegister, UseFormSetValue } from 'react-hook-form';
 import { useEffect, useState } from 'react';
-import { formatISO } from 'date-fns';
+import moment from 'moment';
 
 const custom: CustomFlowbiteTheme = {
   datepicker: {
@@ -95,30 +95,41 @@ interface Props {
   rules?: RegisterOptions;
   name: string;
   setValue: UseFormSetValue<any>;
+  foundedDate?: any;
 }
 
-export default function Calendar({ errorMessage, register, rules, name, setValue }: Props) {
-  const [date, setDate] = useState(new Date());
+export default function Calendar({
+  errorMessage,
+  register,
+  rules,
+  name,
+  setValue,
+  foundedDate
+}: Props) {
+  const [date, setDate] = useState<Date>(new Date());
+
+  const handleChangeDate = (editorState: Date) => {
+    const utcDate = moment.utc(editorState); // Convert to UTC moment
+    setValue(name, utcDate);
+  };
 
   useEffect(() => {
     register(name, rules);
   }, [register, name, rules]);
 
-  const handleChangeDate = (editorState: Date) => {
-    console.log('Selected Date:', editorState);
-    const isoDateString = formatISO(editorState);
-    console.log('ISO Date String:', isoDateString);
-    setValue(name, isoDateString);
-    console.log('Value after setValue:', isoDateString);
-    setDate(editorState);
-  };
-
+  useEffect(() => {
+    if (foundedDate) {
+      setDate(new Date(foundedDate));
+    } else {
+      setDate(new Date());
+    }
+  }, [foundedDate]);
   return (
     <div>
       <Flowbite theme={{ theme: custom }}>
         <Datepicker
-          minDate={new Date()}
           defaultDate={date}
+          key={date.getTime()}
           onSelectedDateChanged={handleChangeDate}
         />
       </Flowbite>

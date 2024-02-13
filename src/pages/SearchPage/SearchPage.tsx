@@ -1,6 +1,6 @@
 import Pagination from '../../components/Pagination';
 import useQueryParams from '../../hooks/useQueryPrams.tsx';
-import { useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import jobApi from '../../apis/job.api.ts';
 import { calcDayRemaining, formatSalary, getLogoUrl } from '../../utils/utils.ts';
 import { createSearchParams, Link, useNavigate } from 'react-router-dom';
@@ -9,6 +9,8 @@ import { useForm } from 'react-hook-form';
 import { schema, Schema } from '../../utils/rules.ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { omit } from 'lodash';
+import { JobListConfig } from '../../types/job.type.ts';
+import { sortByJob } from '../../constants/sort.ts';
 
 type FormData = Pick<Schema, 'name' | 'location'>;
 const searchPageSchema = schema.pick(['name', 'location']);
@@ -16,7 +18,6 @@ const searchPageSchema = schema.pick(['name', 'location']);
 export default function SearchPage() {
   const queryConfig = useQueryConfig();
   const pageNo = Number(queryConfig.pageNo);
-  console.log('check pageNo search page: ', pageNo);
   const { register, handleSubmit } = useForm<FormData>({
     defaultValues: {
       name: '',
@@ -29,13 +30,12 @@ export default function SearchPage() {
     queryKey: ['JobList', queryParams],
     queryFn: () => {
       return jobApi.searchJob(queryParams);
-    }
+    },
+    placeholderData: keepPreviousData
   });
-  console.log('check: ', searchJobData);
   const metaData = searchJobData?.data.data.meta;
   const navigate = useNavigate();
   const onSubmitSearch = handleSubmit((data) => {
-    console.log('check search page: ', data);
     navigate({
       pathname: '/job/search',
       search: createSearchParams(
@@ -50,6 +50,22 @@ export default function SearchPage() {
       ).toString()
     });
   });
+
+  const handleSelectSortDir = (sortDirValue: Exclude<JobListConfig['sortDir'], undefined>) => {
+    navigate({
+      pathname: '/jobs',
+      search: createSearchParams(
+        omit(
+          {
+            ...queryConfig,
+            sortDir: sortDirValue as string,
+            sortBy: sortByJob.startDate as string
+          },
+          ['location', 'name', 'salary']
+        )
+      ).toString()
+    });
+  };
   return (
     <div className='pt-[138px] min-h-[1900px]'>
       <div className='h-[76px] bg-[#f1f2f4]'>
@@ -90,7 +106,7 @@ export default function SearchPage() {
                   placeholder='Job tittle, Keyword...'
                   type='text'
                   className='w-full h-[56px] pl-[54px] border-none border-transparent
-                  focus:border-transparent focus:ring-0 leading-6 text-[16px] text-[]'
+                  focus:border-transparent focus:ring-0 leading-6 text-[16px] text-[#18191C]'
                   {...register('name')}
                 />
               </div>
@@ -154,7 +170,16 @@ export default function SearchPage() {
               className='w-[180px] h-[48px] rounded-[6px] border border-[#e4e5e8]
               text-[16px] leading-5 text-[#474d61] py-[14px] px-[18px] hover:cursor-pointer
               focus:outline-none focus:border-[#9099a3] focus:ring-0'
+              defaultValue='Filter sort...'
+              onChange={(event) =>
+                handleSelectSortDir(
+                  event.target.value as Exclude<JobListConfig['sortDir'], undefined>
+                )
+              }
             >
+              <option value='Filter sort...' disabled>
+                Filter sort...
+              </option>
               <option value='newest'>Newest</option>
               <option value='lasted'>Latest</option>
             </select>

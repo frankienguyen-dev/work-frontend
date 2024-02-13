@@ -40,6 +40,7 @@ export default function PostAJob() {
         company: {
           name: data.company
         },
+
         startDate: data.startDate.toISOString(),
         endDate: data.endDate.toISOString()
       };
@@ -272,7 +273,7 @@ export default function PostAJob() {
           </div>
         </div>
 
-        <div className='grid grid-cols-1 mt-[34px]'>
+        <div className='grid grid-cols-1 mt-[34px] mb-[100px]'>
           <button
             className='w-[175px] h-[56px] bg-[#0b65cc] rounded-[4px] text-white text-[16px]
                     leading-6 font-semibold'

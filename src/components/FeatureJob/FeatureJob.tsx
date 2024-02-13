@@ -64,7 +64,8 @@ export default function FeatureJob() {
                 }}
                 key={job.id}
                 className='flex justify-between items-center p-[32px] border border-[#EDEFF5] cursor-pointer
-             rounded-[12px] hover:shadow-2xl hover:transition hover:ease-in-out hover:duration-[0.25s] h-[132px]'
+             rounded-[12px] hover:shadow-2xl hover:transition hover:ease-in-out hover:duration-[0.25s] h-[132px]
+             group'
               >
                 <div className='flex items-center gap-[20px]'>
                   <img
@@ -194,8 +195,8 @@ export default function FeatureJob() {
                 </div>
                 <div>
                   <button
-                    className='flex items-center gap-[12px] bg-[#E7F0FA] px-6 py-3 rounded-[3px]
-              text-[16px] font-semibold text-[#0A65CC]'
+                    className='group flex items-center gap-[12px] bg-[#E7F0FA] px-6 py-3 rounded-[3px]
+              text-[16px] font-semibold text-[#0A65CC] group-hover:bg-[#0A65CC] group-hover:text-white'
                   >
                     Apply Now{' '}
                     <div>
@@ -208,14 +209,14 @@ export default function FeatureJob() {
                       >
                         <path
                           d='M5 12H19'
-                          stroke='#0A65CC'
+                          stroke='currentColor'
                           strokeWidth='1.5'
                           strokeLinecap='round'
                           strokeLinejoin='round'
                         />
                         <path
                           d='M12 5L19 12L12 19'
-                          stroke='#0A65CC'
+                          stroke='currentColor'
                           strokeWidth='1.5'
                           strokeLinecap='round'
                           strokeLinejoin='round'

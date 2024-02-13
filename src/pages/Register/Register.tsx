@@ -18,7 +18,6 @@ type FormError = {
 
 export default function Register() {
   const [isOpenModal, setIsOpenModal] = useState(false);
-
   const {
     register,
     handleSubmit,

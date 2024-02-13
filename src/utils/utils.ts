@@ -13,6 +13,12 @@ export function isAxiosConflictError<FormError>(error: unknown): error is AxiosE
   return isAxiosError(error) && error.response?.status === HttpStatusCode.Conflict;
 }
 
+export function isAxiosPayloadLargeError<PayloadLargeError>(
+  error: unknown
+): error is AxiosError<PayloadLargeError> {
+  return isAxiosError(error) && error.response?.status === HttpStatusCode.PayloadTooLarge;
+}
+
 export function isAxiosUnauthorizedError<UnauthorizedError>(
   error: unknown
 ): error is AxiosError<UnauthorizedError> {
