@@ -67,3 +67,43 @@ export interface CompanyConfig {
   // totalPages?: number | string;
   // totalElements?: number | string;
 }
+
+export interface CreateCompany {
+  name: string;
+  description: string;
+  address: string;
+  email: string;
+  phoneNumber: string;
+  website: string;
+  teamSize: number;
+  foundedDate: string;
+  companyBenefit: string;
+  companyVision: string;
+  companyType: string;
+  logo?: {
+    id: string | undefined;
+  };
+  banner?: {
+    id: string | undefined;
+  };
+}
+
+export interface UpdateCompany {
+  name: string;
+  description: string;
+  address: string;
+  email: string;
+  phoneNumber: string;
+  website: string;
+  teamSize: number;
+  foundedDate: string;
+  companyBenefit: string;
+  companyVision: string;
+  companyType: string;
+  logo?: {
+    id: string | undefined;
+  };
+  banner?: {
+    id: string | undefined;
+  };
+}

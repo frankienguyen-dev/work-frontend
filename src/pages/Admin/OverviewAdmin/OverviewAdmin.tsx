@@ -1,22 +1,9 @@
 import { Link } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
-import userApi from '../../../apis/user.api.ts';
 
-export default function Overview() {
-  const { data } = useQuery({
-    queryKey: ['profile'],
-    queryFn: () => userApi.getProfile()
-  });
-
-  const profile = data?.data.data;
+export default function OverviewAdmin() {
   return (
-    <div className='mt-[54px]'>
-      <h1 className='text-[18px] font-medium leading-7 text-[#18191c]'>
-        Hello, {profile?.fullName}
-      </h1>
-      <div className='mt-[8px] text-[14px] leading-5 text-[#767f8c]'>
-        Here is your daily activities and job alerts
-      </div>
+    <div className='my-[54px]'>
+      <div className='text-[#18191C] text-[18px] leading-7 font-medium'>Hello, Esther Howard</div>
       <div className='grid grid-cols-3 gap-[24px] mt-[24px]'>
         <div className='col-span-1'>
           <div
@@ -26,7 +13,7 @@ export default function Overview() {
           >
             <div className='min-w-[180px]'>
               <h1 className='font-semibold text-[24px] leading-8 text-[#28292c]'>589</h1>
-              <div className='mt-[4px] text-[14px] text-[#414448]'>Applied Jobs</div>
+              <div className='mt-[4px] text-[14px] text-[#414448]'>Jobs</div>
             </div>
             <div className='w-[64px] h-[64px] rounded-[5px] bg-white flex items-center justify-center'>
               <div>
@@ -90,7 +77,7 @@ export default function Overview() {
           >
             <div className='min-w-[180px]'>
               <h1 className='font-semibold text-[24px] leading-8 text-[#28292c]'>238</h1>
-              <div className='mt-[4px] text-[14px] text-[#414448]'>Favorite Jobs</div>
+              <div className='mt-[4px] text-[14px] text-[#414448]'>Companies</div>
             </div>
             <div className='w-[64px] h-[64px] rounded-[5px] bg-white flex items-center justify-center'>
               <div>
@@ -122,7 +109,7 @@ export default function Overview() {
           >
             <div className='min-w-[180px]'>
               <h1 className='font-semibold text-[24px] leading-8 text-[#28292c]'>574</h1>
-              <div className='mt-[4px] text-[14px] text-[#414448]'>Job Alerts</div>
+              <div className='mt-[4px] text-[14px] text-[#414448]'>Users</div>
             </div>
             <div className='w-[64px] h-[64px] rounded-[5px] bg-white flex items-center justify-center'>
               <div>
@@ -168,68 +155,6 @@ export default function Overview() {
           </div>
         </div>
       </div>
-      <div className='mt-[24px]'>
-        <div
-          className='flex items-center justify-between bg-[#e05150] p-[32px] rounded-[8px]
-         hover:cursor-pointer h-[128px]
-           hover:shadow-2xl hover:transition hover:ease-linear hover:duration-[0.25s] '
-        >
-          <div>
-            <div className='flex items-center gap-[24px]'>
-              <div>
-                <img
-                  src='src/assets/images/tiktok.png'
-                  alt=''
-                  className='w-[48px] h-[48px]
-             object-cover rounded-full flex items-center'
-                />
-              </div>
-              <div className='min-w-[384px]'>
-                <h1 className='text-[18px] font-medium text-white'>
-                  Your profile editing is not completed.
-                </h1>
-                <div className='mt-[8px] text-[14px] text-white'>
-                  Complete your profile editing & build your custom Resume
-                </div>
-              </div>
-            </div>
-          </div>
-          <div>
-            <Link
-              to='/dashboard/my-account-setting'
-              className='bg-white flex items-center py-[12px] px-[24px] justify-center
-                min-w-[168px] gap-[12px] rounded-[3px] text-[16px] font-semibold text-[#e05150] block'
-            >
-              Edit Profile
-              <div>
-                <svg
-                  width='24'
-                  height='24'
-                  viewBox='0 0 24 24'
-                  fill='none'
-                  xmlns='http://www.w3.org/2000/svg'
-                >
-                  <path
-                    d='M5 12H19'
-                    stroke='#E05151'
-                    strokeWidth='1.5'
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                  />
-                  <path
-                    d='M12 5L19 12L12 19'
-                    stroke='#E05151'
-                    strokeWidth='1.5'
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                  />
-                </svg>
-              </div>
-            </Link>
-          </div>
-        </div>
-      </div>
-
       <div className='mt-[24px] mb-[52px]'>
         <div className='pt-[8px] flex items-center justify-between'>
           <div className='text-[16px] font-medium leading-6 text-[#18191c]'>Recently Applied</div>

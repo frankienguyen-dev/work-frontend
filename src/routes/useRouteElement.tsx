@@ -4,7 +4,6 @@ import RegisterLayout from 'src/layouts/RegisterLayout';
 import HomePage from 'src/pages/HomePage';
 import SignIn from 'src/pages/SignIn';
 import Register from 'src/pages/Register';
-import Profile from '../pages/Profile';
 import { useContext } from 'react';
 import { AppContext } from '../contexts/app.context.tsx';
 import Dashboard from '../pages/Dashboard';
@@ -18,6 +17,10 @@ import JobDetails from '../pages/JobDetails';
 import CompanyDetails from '../pages/CompanyDetails';
 import AllJobs from '../pages/AllJobs';
 import MyCompanyInfo from '../pages/Dashboard/MyCompanyInfo';
+import Admin from '../pages/Admin';
+import CompanyAdmin from '../pages/Admin/CompanyAdmin';
+import UserAdmin from '../pages/Admin/UserAdmin';
+import JobAdmin from '../pages/Admin/JobAdmin';
 
 function ProtectedRoute() {
   const { isAuthenticated } = useContext(AppContext);
@@ -35,14 +38,6 @@ export default function useRouteElement() {
       path: '',
       element: <ProtectedRoute />,
       children: [
-        {
-          path: '/profile',
-          element: (
-            <MainLayout>
-              <Profile />
-            </MainLayout>
-          )
-        },
         {
           path: '/dashboard/*',
           element: <Dashboard />,
@@ -70,6 +65,24 @@ export default function useRouteElement() {
             {
               path: 'my-company',
               element: <MyCompanyInfo />
+            }
+          ]
+        },
+        {
+          path: '/admin/*',
+          element: <Admin />,
+          children: [
+            {
+              path: 'company',
+              element: <CompanyAdmin />
+            },
+            {
+              path: 'user',
+              element: <UserAdmin />
+            },
+            {
+              path: 'job',
+              element: <JobAdmin />
             }
           ]
         }

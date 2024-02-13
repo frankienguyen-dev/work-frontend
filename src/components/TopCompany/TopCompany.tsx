@@ -1,15 +1,15 @@
 import { Link } from 'react-router-dom';
-import useQueryParams from '../../hooks/useQueryPrams.tsx';
 import { useQuery } from '@tanstack/react-query';
 import companyApi from '../../apis/company.api.ts';
 import { getLogoUrl } from '../../utils/utils.ts';
+import useQueryConfig from '../../hooks/useQueryConfig.tsx';
 
 export default function TopCompany() {
-  const queryParams = useQueryParams();
+  const queryConfig = useQueryConfig();
   const { data: companyData } = useQuery({
-    queryKey: ['CompanyList', queryParams],
+    queryKey: ['CompanyList', queryConfig],
     queryFn: () => {
-      return companyApi.getAllCompanies(queryParams);
+      return companyApi.getAllCompanies(queryConfig);
     }
   });
   return (
@@ -101,7 +101,7 @@ export default function TopCompany() {
                       <div>
                         <div>
                           <h3 className='text-[18px] text-[#191F33] font-medium leading-7'>
-                            Tiktok
+                            {company.name}
                           </h3>
                         </div>
                         <div className='flex mt-[6px] gap-[6px] items-center'>

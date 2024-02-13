@@ -14,7 +14,7 @@ export default function Header() {
 
   const { data } = useQuery({
     queryKey: ['userData'],
-    queryFn: () => userApi.getProfile()
+    queryFn: () => (isAuthenticated ? userApi.getProfile() : null)
   });
 
   const profile = data?.data.data;
@@ -96,20 +96,22 @@ export default function Header() {
             {!isAuthenticated && (
               <div className='flex gap-3 items-center justify-end'>
                 <Link
-                  to='/dashboard/post-job'
-                  className='w-[140px] border bg-[#0A65CC] border-[#CEE0F5] flex items-center justify-center
-                rounded-[3px] text-[16px] font-semibold text-white h-[48px] '
-                  color='blue'
-                >
-                  Post A Job
-                </Link>
-                <Link
                   to='/signin'
+                  onClick={() => scrollTo(0, 0)}
                   className='w-[101px] border border-[#CEE0F5] flex items-center justify-center
                 rounded-[3px] text-[16px] font-semibold text-[#0A65CC] h-[48px]'
                   color='light'
                 >
                   Sign In
+                </Link>
+                <Link
+                  to='/dashboard/post-job'
+                  onClick={() => scrollTo(0, 0)}
+                  className='w-[140px] border bg-[#0A65CC] border-[#CEE0F5] flex items-center justify-center
+                rounded-[3px] text-[16px] font-semibold text-white h-[48px] '
+                  color='blue'
+                >
+                  Post A Job
                 </Link>
               </div>
             )}
@@ -118,6 +120,7 @@ export default function Header() {
               <div className='flex gap-3 items-center'>
                 {isRole !== 'ROLE_USER' && (
                   <Link
+                    onClick={() => scrollTo(0, 0)}
                     to={'/dashboard/post-job'}
                     className='w-[140px] border bg-[#0A65CC] border-[#CEE0F5] flex items-center justify-center
                 rounded-[3px] text-[16px] font-semibold text-white h-[48px] '
@@ -128,53 +131,66 @@ export default function Header() {
                 )}
 
                 <div className='ml-[20px]'>
-                  {profile && (
-                    <Dropdown
-                      className='w-[200px]'
-                      arrowIcon={false}
-                      inline
-                      label={
-                        <img
-                          // src='src/assets/images/tiktok.png'
-                          src={getLogoUrl(profile.logo)}
-                          alt=''
-                          className='w-[48px] h-[48px]
+                  <div
+                    className='w-[48px] h-[48px]
+                    object-cover rounded-full flex items-center bg-[#f7f7f8]'
+                  >
+                    {profile && (
+                      <Dropdown
+                        className='w-[200px]'
+                        arrowIcon={false}
+                        inline
+                        label={
+                          <img
+                            // src='src/assets/images/tiktok.png'
+                            src={getLogoUrl(profile.logo)}
+                            alt=''
+                            className='w-[48px] h-[48px]
                     object-cover rounded-full flex items-center'
-                        />
-                      }
-                    >
-                      <Dropdown.Header>
-                        <span className='block text-sm font-medium'>{profile.fullName}</span>
-                        <span className='block truncate text-sm font-medium'>{profile.email}</span>
-                      </Dropdown.Header>
-                      <Dropdown.Item>
-                        <Link
-                          to='/profile'
-                          className='font-medium py-[10px] block w-full text-left'
-                        >
-                          Profile
-                        </Link>
-                      </Dropdown.Item>
-                      <Dropdown.Item>
-                        <Link
-                          to='/dashboard'
-                          className='font-medium py-[10px] block w-full text-left'
-                        >
-                          Dashboard
-                        </Link>
-                      </Dropdown.Item>
-                      <Dropdown.Divider className='my-0' />
-                      <Dropdown.Item>
-                        <Link
-                          to=''
-                          onClick={handleLogout}
-                          className='font-medium py-[10px] block w-full text-left'
-                        >
-                          Logout
-                        </Link>
-                      </Dropdown.Item>
-                    </Dropdown>
-                  )}
+                          />
+                        }
+                      >
+                        <Dropdown.Header>
+                          <span className='block text-sm font-medium'>{profile.fullName}</span>
+                          <span className='block truncate text-sm font-medium'>
+                            {profile.email}
+                          </span>
+                        </Dropdown.Header>
+                        {isRole === 'ROLE_ADMIN' ? (
+                          <Dropdown.Item>
+                            <Link
+                              onClick={() => scrollTo(0, 0)}
+                              to='/admin'
+                              className='font-medium py-[10px] block w-full text-left'
+                            >
+                              Admin Dashboard
+                            </Link>
+                          </Dropdown.Item>
+                        ) : (
+                          <Dropdown.Item>
+                            <Link
+                              onClick={() => scrollTo(0, 0)}
+                              to='/dashboard'
+                              className='font-medium py-[10px] block w-full text-left'
+                            >
+                              Dashboard
+                            </Link>
+                          </Dropdown.Item>
+                        )}
+
+                        <Dropdown.Divider className='my-0' />
+                        <Dropdown.Item>
+                          <Link
+                            to=''
+                            onClick={handleLogout}
+                            className='font-medium py-[10px] block w-full text-left'
+                          >
+                            Logout
+                          </Link>
+                        </Dropdown.Item>
+                      </Dropdown>
+                    )}
+                  </div>
                 </div>
               </div>
             )}

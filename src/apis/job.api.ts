@@ -13,7 +13,7 @@ const jobApi = {
     return http.get<JobList>('/jobs/search', { params });
   },
   postJob: (body: PostJob) => {
-    return http.post('/jobs', body);
+    return http.post<JobResponse>('/jobs', body);
   }
 };
 export default jobApi;

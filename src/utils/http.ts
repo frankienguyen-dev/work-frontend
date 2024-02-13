@@ -14,6 +14,7 @@ import { URL_LOGIN, URL_LOGOUT } from '../apis/auth.api.ts';
 class Http {
   instance: AxiosInstance;
   private accessToken: string;
+
   // private refreshToken: string;
   // private refreshTokenRequest: Promise<string> | null;
 
@@ -54,7 +55,8 @@ class Http {
       (error: AxiosError) => {
         if (
           error.response?.status !== HttpStatusCode.Conflict &&
-          error.response?.status !== HttpStatusCode.Unauthorized
+          error.response?.status !== HttpStatusCode.Unauthorized &&
+          error.response?.status !== HttpStatusCode.PayloadTooLarge
         ) {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const data: any | undefined = error.response?.data;

@@ -13,6 +13,7 @@ interface Props {
   name: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   setValue: UseFormSetValue<any>;
+  valueFromServer?: string;
 }
 
 export default function TextArea({
@@ -21,17 +22,23 @@ export default function TextArea({
   errorMessage,
   setValue,
   register,
-  rules
+  rules,
+  valueFromServer
 }: Props) {
   const [value, setValueState] = useState('');
 
+  // useEffect(() => {}, [valueFromServer, setValueState]);
+
   useEffect(() => {
     register(name, rules);
-  }, [register, name, rules]);
+    if (valueFromServer) {
+      setValueState(valueFromServer);
+    }
+  }, [register, name, rules, valueFromServer, setValueState]);
 
-  const onEditorStateChange = (editorState: string) => {
-    setValue(name, editorState);
-    setValueState(editorState);
+  const onEditorStateChange = (content: string) => {
+    setValue(name, content);
+    setValueState(content); // Cập nhật giá trị trong useState khi người dùng thay đổi
   };
 
   return (
