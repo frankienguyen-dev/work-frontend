@@ -27,7 +27,11 @@ export const jobSchema = yup.object({
     .typeError('Quantity must be a number')
     .min(1, 'Quantity employer must be at least 1 employer')
     .required('Quantity is required'),
-  level: yup.string().trim().required('Level is required'),
+  level: yup
+    .string()
+    .trim()
+    .notOneOf(['Select...'], 'Level is required')
+    .required('Level is required'),
   salary: yup
     .number()
     .typeError('Quantity must be a number')
@@ -54,7 +58,10 @@ export const jobSchema = yup.object({
     .required('Skills is required')
     .min(1, 'The job requires at least 1 skill.')
     .max(4, 'The job allows adding a maximum of 4 skills.'),
-  company: yup.string().required('Company name is required')
+  company: yup
+    .string()
+    .notOneOf(['Select...'], 'Company name is required')
+    .required('Company name is required')
 });
 
 interface FileWithSize {
@@ -91,8 +98,43 @@ export const companySchema = yup.object({
   banner: yup.mixed<FileWithSize>()
 });
 
-export const uploadImage = yup.object({});
+export const userSchema = yup.object({
+  email: yup.string().trim().email('Invalid email address').required('Email is required'),
+  fullName: yup.string().trim().required('Full name is required'),
+  address: yup.string().trim().required('Address is required'),
+  age: yup.string().notOneOf(['Select...'], 'Age is required'),
+  phoneNumber: yup.string().trim().required('Phone is required'),
+  gender: yup
+    .string()
+    .trim()
+    .notOneOf(['Select...'], 'Gender is required')
+    .required('Gender is required'),
+  title: yup
+    .string()
+    .trim()
+    .notOneOf(['Select...'], 'Title is required')
+    .required('Title is required'),
+  avatar: yup.mixed<FileWithSize>(),
+  roles: yup.string().required('Role is required').notOneOf(['Select...'], 'Role is required'),
+  password: yup
+    .string()
+    .required('Password is required')
+    .min(6, 'Password must be at least 6 characters'),
+  confirm_password: yup
+    .string()
+    .required('Confirm password is required')
+    .min(6, 'Password must be at least 6 characters')
+    .oneOf([yup.ref('password')], "Password doesn't match"),
+  company: yup.string()
+});
 
+export const searchUserSchema = yup.object({
+  email: yup.string().trim()
+});
+
+export const uploadImage = yup.object({});
+export type searchSchema = yup.InferType<typeof searchUserSchema>;
+export type UserSchema = yup.InferType<typeof userSchema>;
 export type Schema = yup.InferType<typeof schema>;
 export type postJobSchema = yup.InferType<typeof jobSchema>;
 export type companySchema = yup.InferType<typeof companySchema>;

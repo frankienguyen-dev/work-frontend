@@ -50,7 +50,7 @@ export default function TextArea({
         onChange={onEditorStateChange}
       />
 
-      <div className='mt-1 min-h-[1.25rem] text-sm text-red-600 dark:text-red-500'>
+      <div className='mt-1 min-h-[1.25rem] text-[12px] text-red-600 dark:text-red-500'>
         <span className='font-medium'>{errorMessage}</span>
       </div>
     </div>

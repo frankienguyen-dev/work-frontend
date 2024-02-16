@@ -4,7 +4,7 @@ import companyApi from '../../../apis/company.api.ts';
 import moment from 'moment';
 import useQueryConfig from '../../../hooks/useQueryConfig.tsx';
 import ModalCreateCompany from './ModalCompany/ModalCreateCompany/ModalCreateCompany.tsx';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { AppContext } from '../../../contexts/app.context.tsx';
 import Loading from '../../../components/Loading/Loading.tsx';
 import { useForm } from 'react-hook-form';
@@ -21,7 +21,6 @@ export default function CompanyAdmin() {
   const [isOpenModalCreateCompany, setOpenModalCreateCompany] = useState<boolean>(false);
   const [isOpenModalUpdateCompany, setOpenModalUpdateCompany] = useState<boolean>(false);
   const [companyId, setCompanyId] = useState<string>('');
-  const [loadCompany, setLoadCompany] = useState<boolean>(false);
   const [isSearch, setSearch] = useState<boolean>(false);
   const { isAuthenticated } = useContext(AppContext);
   const queryParams = useQueryParams();
@@ -40,7 +39,7 @@ export default function CompanyAdmin() {
     },
     resolver: yupResolver(searchCompanyAdminSchema)
   });
-  const { data: searchCompanyAdmin } = useQuery({
+  const { data: searchCompanyAdmin, isLoading: loadingSearch } = useQuery({
     queryKey: ['CompanyListSearch', queryParams],
     queryFn: () => {
       return companyApi.searchCompany(queryParams);
@@ -48,15 +47,10 @@ export default function CompanyAdmin() {
     enabled: isSearch,
     placeholderData: keepPreviousData
   });
-
   const companyListSearchData = searchCompanyAdmin?.data.data.data;
   const metaDataSearch = searchCompanyAdmin?.data.data.meta;
   const totalPagesSearchData = Number(metaDataSearch?.totalPages);
-  const {
-    data: companyListData,
-    refetch,
-    isLoading
-  } = useQuery({
+  const { data: companyListData, isLoading: loadingCompanyList } = useQuery({
     queryKey: ['CompanyList', queryConfigCompanyAdmin],
     queryFn: () => (isAuthenticated ? companyApi.getAllCompanies(queryConfigCompanyAdmin) : null),
     placeholderData: keepPreviousData
@@ -87,14 +81,6 @@ export default function CompanyAdmin() {
     setCompanyId(companyId);
     event.preventDefault();
   };
-
-  useEffect(() => {
-    if (loadCompany) {
-      refetch().then(() => {
-        setLoadCompany(false);
-      });
-    }
-  }, [loadCompany, refetch, isSearch]);
 
   return (
     <div className='my-[54px]'>
@@ -178,12 +164,16 @@ export default function CompanyAdmin() {
         </div>
       </div>
       <div className='mt-2 h-[530px]'>
-        {isLoading || loadCompany ? (
-          <div className='h-[530px] flex items-center justify-center  '>
+        {loadingCompanyList ? (
+          <div className='h-[530px] flex items-center justify-center'>
             <Loading />
           </div>
         ) : isSearch ? (
-          companyListSearchData && companyListSearchData.length > 0 ? (
+          loadingSearch ? (
+            <div className='h-[530px] flex items-center justify-center'>
+              <Loading />
+            </div>
+          ) : companyListSearchData && companyListSearchData.length > 0 ? (
             companyListSearchData.map((company, index) => (
               <Link
                 to={`/company/${company.id}`}
@@ -243,7 +233,7 @@ export default function CompanyAdmin() {
                       />
                     </svg>
                   </button>
-                  <div className='group p-[6px] hover:bg-[#f1f2f4] rounded-[3px] hover:cursor-pointer'>
+                  <button className='group p-[6px] hover:bg-[#f1f2f4] rounded-[3px] hover:cursor-pointer'>
                     <svg
                       className='group-hover:text-[#E05151] text-[#939AAD]'
                       width='20'
@@ -288,7 +278,7 @@ export default function CompanyAdmin() {
                         strokeLinejoin='round'
                       />
                     </svg>
-                  </div>
+                  </button>
                 </div>
               </Link>
             ))
@@ -361,7 +351,7 @@ export default function CompanyAdmin() {
                     />
                   </svg>
                 </button>
-                <div className='group p-[6px] hover:bg-[#f1f2f4] rounded-[3px] hover:cursor-pointer'>
+                <button className='group p-[6px] hover:bg-[#f1f2f4] rounded-[3px] hover:cursor-pointer'>
                   <svg
                     className='group-hover:text-[#E05151] text-[#939AAD]'
                     width='20'
@@ -406,7 +396,7 @@ export default function CompanyAdmin() {
                       strokeLinejoin='round'
                     />
                   </svg>
-                </div>
+                </button>
               </div>
             </Link>
           ))
@@ -419,7 +409,7 @@ export default function CompanyAdmin() {
           </div>
         )}
       </div>
-      {isLoading ? (
+      {loadingCompanyList || loadingSearch ? (
         <div className='mt-[30px] flex items-center justify-end gap-x-[20px]'>
           <span className=''>Previous</span>
           <span className=''>Next</span>
@@ -504,25 +494,22 @@ export default function CompanyAdmin() {
               </div>
             </>
           )}
-          {isOpenModalCreateCompany && (
-            <ModalCreateCompany
-              setLoadCompany={setLoadCompany}
-              closeModal={() => {
-                setOpenModalCreateCompany(false);
-              }}
-            />
-          )}
-          {isOpenModalUpdateCompany && (
-            <ModalUpdateCompany
-              setLoadCompany={setLoadCompany}
-              setSearch={setSearch}
-              companyId={companyId}
-              closeModal={() => {
-                setOpenModalUpdateCompany(false);
-              }}
-            />
-          )}
         </div>
+      )}
+      {isOpenModalCreateCompany && (
+        <ModalCreateCompany
+          closeModal={() => {
+            setOpenModalCreateCompany(false);
+          }}
+        />
+      )}
+      {isOpenModalUpdateCompany && (
+        <ModalUpdateCompany
+          companyId={companyId}
+          closeModal={() => {
+            setOpenModalUpdateCompany(false);
+          }}
+        />
       )}
     </div>
   );
