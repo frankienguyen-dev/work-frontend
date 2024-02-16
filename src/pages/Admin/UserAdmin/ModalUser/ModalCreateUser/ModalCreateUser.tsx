@@ -1,23 +1,19 @@
 import { Button, CustomFlowbiteTheme, Flowbite, Modal } from 'flowbite-react';
-import Calendar from '../../../../../components/Calendar';
 import { useForm } from 'react-hook-form';
-import UploadFileInput from '../../../../../components/UploadFileInput';
-import TextArea from '../../../../../components/TextArea';
-import { companySchema } from '../../../../../utils/rules.ts';
+import { UserSchema, userSchema } from '../../../../../utils/rules.ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import companyApi from '../../../../../apis/company.api.ts';
-import { CreateCompany } from '../../../../../types/company.type.ts';
 import { useRef, useState } from 'react';
-import { isAxiosConflictError, isAxiosUnauthorizedError } from '../../../../../utils/utils.ts';
-import { ErrorResponse } from '../../../../../types/utils.type.ts';
 import {
   clearAccessTokenFromLocalStorage,
   clearRoleToLocalStorage
 } from '../../../../../utils/auth.ts';
 import ModalExpiredToken from '../../../../../components/ModalExpiredToken';
-import moment from 'moment';
-import useQueryParams from '../../../../../hooks/useQueryPrams.tsx';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import userApi from '../../../../../apis/user.api.ts';
+import { CreateUser } from '../../../../../types/user.type.ts';
+import AutoCompleteSearchInput from '../../../../../components/AutocompleteSearchInput';
+import { isAxiosConflictError, isAxiosUnauthorizedError } from '../../../../../utils/utils.ts';
+import { ErrorResponse } from '../../../../../types/utils.type.ts';
 
 const custom: CustomFlowbiteTheme = {
   modal: {
@@ -74,8 +70,12 @@ const custom: CustomFlowbiteTheme = {
     }
   }
 };
-export type FormCompanyData = companySchema;
+export type FormUserData = Omit<UserSchema, 'avatar'>;
+const createUserSchema = userSchema.omit(['avatar']);
 type UnauthorizedError = {
+  message: string;
+};
+type FormError = {
   message: string;
 };
 
@@ -83,50 +83,43 @@ interface Props {
   closeModal: () => void;
 }
 
-type FormError = {
-  message: string;
-};
-
-export default function ModalCreateCompany({ closeModal }: Props) {
+export default function ModalCreateUser({ closeModal }: Props) {
   const [isOpenModalUnauthorized, setIsOpenModalUnauthorized] = useState<boolean>(false);
-  const [imageLogoId, setImageLogoId] = useState<string>();
-  const [imageBannerId, setImageBannerId] = useState<string>();
-  console.log('check image logo id: ', imageLogoId);
-  console.log('check image banner id: ', imageBannerId);
+  const [companyName, setCompanyName] = useState({ name: '' });
   const {
     register,
-    setValue,
     handleSubmit,
     formState: { errors },
     setError
-  } = useForm<FormCompanyData>({
-    resolver: yupResolver(companySchema)
+  } = useForm<FormUserData>({
+    resolver: yupResolver(createUserSchema)
   });
   const queryClient = useQueryClient();
-  const queryParams = useQueryParams();
-  const createCompanyMutation = useMutation({
-    mutationFn: (body: CreateCompany) => {
-      return companyApi.createCompany(body);
-    }
-  });
   const submitFormRef = useRef<HTMLButtonElement>(null);
+  const createUserMutation = useMutation({
+    mutationFn: (body: CreateUser) => userApi.createUser(body)
+  });
+
   const onSubmit = handleSubmit((data) => {
-    const createCompanyData = {
+    const createUserData = {
       ...data,
-      foundedDate: moment.utc(data.foundedDate).local().format('YYYY-MM-DDTHH:mm:ss'),
-      logo: {
-        id: imageLogoId
-      },
-      banner: {
-        id: imageBannerId
+      age: Number(data.age),
+      roles: [
+        {
+          name: data.roles
+        }
+      ],
+      company: {
+        name: companyName.name
       }
     };
-    console.log('check data create: ', createCompanyData);
-    createCompanyMutation.mutate(createCompanyData, {
+    console.log('check data: ', data);
+    console.log('check data create: ', createUserData);
+    createUserMutation.mutate(createUserData, {
       onSuccess: (data) => {
         queryClient
           .invalidateQueries({
-            queryKey: ['CompanyList', queryParams]
+            queryKey: ['allUsersData']
           })
           .then();
         closeModal();
@@ -136,7 +129,7 @@ export default function ModalCreateCompany({ closeModal }: Props) {
         if (isAxiosConflictError<ErrorResponse<FormError>>(error)) {
           const formError = error.response?.data.data;
           if (formError) {
-            setError('name', {
+            setError('email', {
               message: formError.message
             });
           }
@@ -150,84 +143,26 @@ export default function ModalCreateCompany({ closeModal }: Props) {
     });
   });
 
-  const handleImageLogoUpload = (imageLogoId: string) => {
-    setImageLogoId(imageLogoId);
-  };
-  const handleImageBannerUpload = (imageBannerId: string) => {
-    setImageBannerId(imageBannerId);
-  };
   return (
     <>
       <Flowbite theme={{ theme: custom }}>
         <Modal size='7xl' show={true} position='center' onClose={closeModal}>
-          <Modal.Header>Create New Company</Modal.Header>
+          <Modal.Header>Create New User</Modal.Header>
           <Modal.Body>
             <form noValidate onSubmit={onSubmit}>
-              <div className='grid grid-cols-12 gap-x-[24px]'>
-                <div className='col-span-4'>
-                  <div className='text-[14px] leading-5 text-[#18191C] mb-2'>Upload Logo</div>
-                  <UploadFileInput
-                    setError={setError}
-                    errorMessage={errors.logo?.message}
-                    register={register}
-                    name='logo'
-                    setValue={setValue}
-                    onImageUpload={handleImageLogoUpload}
-                    // setImageLogoId={setImageLogoId}
-                  />
-                </div>
-                <div className='col-span-8'>
-                  <div className='text-[14px] leading-5 text-[#18191C] mb-2'>Upload Banner</div>
-                  <UploadFileInput
-                    setError={setError}
-                    errorMessage={errors.banner?.message}
-                    register={register}
-                    name='banner'
-                    setValue={setValue}
-                    onImageUpload={handleImageBannerUpload}
-
-                    // setImageBannerId={setImageBannerId}
-                  />
-                </div>
-              </div>
-              <div className='grid grid-cols-12 gap-x-[20px] mt-[30px]'>
+              <div className='grid grid-cols-12 gap-x-[20px] mt-[24px]'>
                 <div className='col-span-3 h-[76px]'>
-                  <div className='text-[14px] leading-5 text-[#18191C]'>Company Name</div>
+                  <div className='text-[14px] leading-5 text-[#18191C]'>Full Name</div>
                   <input
                     type='text'
-                    {...register('name')}
+                    {...register('fullName')}
                     className='w-full mt-2 h-[48px] rounded-[5px] border-[2px] border-[#e4e5e8] text-[16px]
                       leading-6 text-[#111827] focus:outline-none focus:border-[#9099a3] focus:ring-0 '
                   />
                   <div className='mt-1 min-h-[1.25rem] text-[12px] text-red-600 dark:text-red-500'>
-                    <span className='font-medium'>{errors.name?.message}</span>
+                    <span className='font-medium'>{errors.fullName?.message}</span>
                   </div>
                 </div>
-                <div className='col-span-3 h-[76px]'>
-                  <div className='text-[14px] leading-5 text-[#18191C]'>Industry Type</div>
-                  <input
-                    type='text'
-                    {...register('companyType')}
-                    className='w-full mt-2 h-[48px] rounded-[5px] border-[2px] border-[#e4e5e8] text-[16px]
-                      leading-6 text-[#111827] focus:outline-none focus:border-[#9099a3] focus:ring-0 '
-                  />
-                  <div className='mt-1 min-h-[1.25rem] text-[12px] text-red-600 dark:text-red-500'>
-                    <span className='font-medium'>{errors.companyType?.message}</span>
-                  </div>
-                </div>
-                <div className='col-span-3 h-[76px]'>
-                  <div className='text-[14px] leading-5 text-[#18191C]'>Team Size</div>
-                  <input
-                    type='text'
-                    {...register('teamSize')}
-                    className='w-full mt-2 h-[48px] rounded-[5px] border-[2px] border-[#e4e5e8] text-[16px]
-                      leading-6 text-[#111827] focus:outline-none focus:border-[#9099a3] focus:ring-0 '
-                  />
-                  <div className='mt-1 min-h-[1.25rem] text-[12px] text-red-600 dark:text-red-500'>
-                    <span className='font-medium'>{errors.teamSize?.message}</span>
-                  </div>
-                </div>
-
                 <div className='col-span-3 h-[76px]'>
                   <div className='text-[14px] leading-5 text-[#18191C]'>Email</div>
                   <input
@@ -240,8 +175,8 @@ export default function ModalCreateCompany({ closeModal }: Props) {
                     <span className='font-medium'>{errors.email?.message}</span>
                   </div>
                 </div>
-                <div className='col-span-3 mt-[30px] h-[76px]'>
-                  <div className='text-[14px] leading-5 text-[#18191C]'>Location</div>
+                <div className='col-span-3 h-[76px]'>
+                  <div className='text-[14px] leading-5 text-[#18191C]'>Address</div>
                   <input
                     type='text'
                     {...register('address')}
@@ -252,7 +187,8 @@ export default function ModalCreateCompany({ closeModal }: Props) {
                     <span className='font-medium'>{errors.address?.message}</span>
                   </div>
                 </div>
-                <div className='col-span-3 mt-[30px] h-[76px]'>
+
+                <div className='col-span-3 h-[76px]'>
                   <div className='text-[14px] leading-5 text-[#18191C]'>Phone Number</div>
                   <input
                     type='text'
@@ -264,63 +200,126 @@ export default function ModalCreateCompany({ closeModal }: Props) {
                     <span className='font-medium'>{errors.phoneNumber?.message}</span>
                   </div>
                 </div>
-                <div className='col-span-3 mt-[30px] h-[76px]'>
-                  <div className='text-[14px] leading-5 text-[#18191C]'>Company Website</div>
+                <div className='col-span-3 h-[76px] mt-[36px]'>
+                  <div className='text-[14px] leading-5 text-[#18191C]'>Password</div>
                   <input
-                    type='text'
-                    {...register('website')}
+                    type='password'
+                    {...register('password')}
                     className='w-full mt-2 h-[48px] rounded-[5px] border-[2px] border-[#e4e5e8] text-[16px]
                       leading-6 text-[#111827] focus:outline-none focus:border-[#9099a3] focus:ring-0 '
                   />
                   <div className='mt-1 min-h-[1.25rem] text-[12px] text-red-600 dark:text-red-500'>
-                    <span className='font-medium'>{errors.website?.message}</span>
+                    <span className='font-medium'>{errors.password?.message}</span>
                   </div>
                 </div>
-                <div className='col-span-3 mt-[30px] h-[76px]'>
-                  <div className='text-[14px] leading-5 text-[#18191C] mb-2'>
-                    Year of Establishment
+                <div className='col-span-3 h-[76px] mt-[36px]'>
+                  <div className='text-[14px] leading-5 text-[#18191C]'>Confirm Password</div>
+                  <input
+                    type='password'
+                    {...register('confirm_password')}
+                    className='w-full mt-2 h-[48px] rounded-[5px] border-[2px] border-[#e4e5e8] text-[16px]
+                      leading-6 text-[#111827] focus:outline-none focus:border-[#9099a3] focus:ring-0 '
+                  />
+                  <div className='mt-1 min-h-[1.25rem] text-[12px] text-red-600 dark:text-red-500'>
+                    <span className='font-medium'>{errors.confirm_password?.message}</span>
                   </div>
-                  <Calendar
+                </div>
+
+                <div className='col-span-3 mt-[36px] h-[76px]'>
+                  <div className='text-[14px] leading-5 text-[#18191C]'>Age</div>
+                  <select
+                    id='age'
+                    defaultValue='Select...'
+                    {...register('age')}
+                    className='w-full mt-2 h-[48px] rounded-[5px] border-[2px] border-[#e4e5e8] text-[16px]
+                      leading-6 text-[#111827] focus:outline-none focus:border-[#9099a3] focus:ring-0 hover:cursor-pointer '
+                  >
+                    <option disabled value='Select...'>
+                      Select...
+                    </option>
+                    {Array(100)
+                      .fill(0)
+                      .map((_, index) => (
+                        <option value={index} key={index}>
+                          {index + 1}
+                        </option>
+                      ))}
+                  </select>
+                  <div className='mt-1 min-h-[1.25rem] text-[12px] text-red-600 dark:text-red-500'>
+                    <span className='font-medium'>{errors.age?.message}</span>
+                  </div>
+                </div>
+                <div className='col-span-3 mt-[36px] h-[76px]'>
+                  <div className='text-[14px] leading-5 text-[#18191C]'>Title</div>
+                  <select
+                    id='title'
+                    className='w-full mt-2 h-[48px] rounded-[5px] border-[2px] border-[#e4e5e8] text-[16px]
+                      leading-6 text-[#111827] focus:outline-none focus:border-[#9099a3] focus:ring-0 hover:cursor-pointer '
+                    {...register('title')}
+                    defaultValue='Select...'
+                  >
+                    <option disabled value='Select...'>
+                      Select...
+                    </option>
+                    <option value='Intern'>Intern</option>
+                    <option value='Fresher'>Fresher</option>
+                    <option value='Junior'>Junior</option>
+                    <option value='Middle'>Middle</option>
+                    <option value='Senior'>Senior</option>
+                  </select>
+                  <div className='mt-1 min-h-[1.25rem] text-[12px] text-red-600 dark:text-red-500'>
+                    <span className='font-medium'>{errors.title?.message}</span>
+                  </div>
+                </div>
+                <div className='col-span-3 mt-[36px] h-[76px]'>
+                  <div className='text-[14px] leading-5 text-[#18191C]'>Role</div>
+                  <select
+                    id='role'
+                    className='w-full mt-2 h-[48px] rounded-[5px] border-[2px] border-[#e4e5e8] text-[16px]
+                      leading-6 text-[#111827] focus:outline-none focus:border-[#9099a3] focus:ring-0 hover:cursor-pointer '
+                    {...register('roles')}
+                    defaultValue='Select...'
+                  >
+                    <option disabled value='Select...'>
+                      Select...
+                    </option>
+                    <option value='ROLE_ADMIN'>Role Admin</option>
+                    <option value='ROLE_HR'>Role HR</option>
+                    <option value='ROLE_USER'>Role User</option>
+                  </select>
+                  <div className='mt-1 min-h-[1.25rem] text-[12px] text-red-600 dark:text-red-500'>
+                    <span className='font-medium'>{errors.roles?.message}</span>
+                  </div>
+                </div>
+                <div className='col-span-3 mt-[36px] h-[76px]'>
+                  <div className='text-[14px] leading-5 text-[#18191C]'>Company</div>
+                  <AutoCompleteSearchInput
+                    errorMessage={errors.company?.message}
+                    name='company'
                     register={register}
-                    errorMessage={errors.foundedDate?.message}
-                    name='foundedDate'
-                    setValue={setValue}
+                    setCompany={setCompanyName}
                   />
                 </div>
-              </div>
-              <div className='mt-[50px]'>
-                <div className='text-[14px] leading-5 text-[#18191C]'>About Us</div>
-                <div className='mt-2'>
-                  <TextArea
-                    placeholder='Write down about your company here. Let the candidate know who we are...'
-                    register={register}
-                    name='description'
-                    setValue={setValue}
-                    errorMessage={errors.description?.message}
-                  />
+                <div className='col-span-3 mt-[36px] h-[76px]'>
+                  <div className='text-[14px] leading-5 text-[#18191C]'>Gender</div>
+                  <select
+                    id='gender'
+                    className='w-full mt-2 h-[48px] rounded-[5px] border-[2px] border-[#e4e5e8] text-[16px]
+                      leading-6 text-[#111827] focus:outline-none focus:border-[#9099a3] focus:ring-0 hover:cursor-pointer '
+                    {...register('gender')}
+                    defaultValue='Select...'
+                  >
+                    <option disabled value='Select...'>
+                      Select...
+                    </option>
+                    <option value='Male'>Male</option>
+                    <option value='Female'>Female</option>
+                    <option value='Other'>Other</option>
+                  </select>
+                  <div className='mt-1 min-h-[1.25rem] text-[12px] text-red-600 dark:text-red-500'>
+                    <span className='font-medium'>{errors.gender?.message}</span>
+                  </div>
                 </div>
-              </div>
-              <div className='mt-[20px]'>
-                <div className='text-[14px] leading-5 text-[#18191C] mb-2'>Company Vision</div>
-                <TextArea
-                  placeholder='Tell us about your company vision...'
-                  register={register}
-                  name='companyVision'
-                  setValue={setValue}
-                  errorMessage={errors.companyVision?.message}
-                />
-              </div>
-              <div>
-                <div className='text-[14px] leading-5 text-[#18191C] mt-[20px] mb-2'>
-                  Company Benefit
-                </div>
-                <TextArea
-                  placeholder='Tell us about your company benefit...'
-                  register={register}
-                  name='companyBenefit'
-                  setValue={setValue}
-                  errorMessage={errors.companyBenefit?.message}
-                />
               </div>
               <div className=' mt-[20px] hidden'>
                 <button
@@ -336,7 +335,7 @@ export default function ModalCreateCompany({ closeModal }: Props) {
               </div>
             </form>
           </Modal.Body>
-          <Modal.Footer>
+          <Modal.Footer className='mt-3'>
             <Button
               className='rounded-[4px]'
               type='submit'

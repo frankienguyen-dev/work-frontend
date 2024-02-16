@@ -16,7 +16,8 @@ export default function useQueryConfig() {
       sortDir: queryParams.sortDir,
       location: queryParams.location,
       name: queryParams.name,
-      salary: queryParams.salary
+      salary: queryParams.salary,
+      email: queryParams.email
     },
     isUndefined
   );

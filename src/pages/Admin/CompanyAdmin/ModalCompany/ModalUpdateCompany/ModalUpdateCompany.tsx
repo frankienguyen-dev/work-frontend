@@ -7,7 +7,7 @@ import {
   clearAccessTokenFromLocalStorage,
   clearRoleToLocalStorage
 } from '../../../../../utils/auth.ts';
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { companySchema } from '../../../../../utils/rules.ts';
@@ -15,15 +15,13 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import companyApi from '../../../../../apis/company.api.ts';
 import { UpdateCompany } from '../../../../../types/company.type.ts';
 import moment from 'moment/moment';
-import { isAxiosUnauthorizedError } from '../../../../../utils/utils.ts';
+import { isAxiosConflictError, isAxiosUnauthorizedError } from '../../../../../utils/utils.ts';
 import { ErrorResponse } from '../../../../../types/utils.type.ts';
 import useQueryParams from '../../../../../hooks/useQueryPrams.tsx';
 
 interface Props {
   closeModal: () => void;
-  setLoadCompany: React.Dispatch<React.SetStateAction<boolean>>;
   companyId: string;
-  setSearch: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export type FormCompanyData = companySchema;
@@ -94,17 +92,14 @@ const custom: CustomFlowbiteTheme = {
     }
   }
 };
-export default function ModalUpdateCompany({
-  closeModal,
-  companyId,
-  setLoadCompany,
-  setSearch
-}: Props) {
+
+type FormError = {
+  message: string;
+};
+export default function ModalUpdateCompany({ closeModal, companyId }: Props) {
   const [isOpenModalUnauthorized, setIsOpenModalUnauthorized] = useState<boolean>(false);
   const [imageLogoId, setImageLogoId] = useState<string>();
   const [imageBannerId, setImageBannerId] = useState<string>();
-  console.log('check logo id: ', imageLogoId);
-  console.log('check banner id: ', imageBannerId);
   const queryClient = useQueryClient();
   const queryParams = useQueryParams();
   const {
@@ -155,17 +150,30 @@ export default function ModalUpdateCompany({
     };
     updateCompanyMutation.mutate(updateCompanyData, {
       onSuccess: (data) => {
-        setLoadCompany(true);
-        setSearch(true);
         queryClient
           .invalidateQueries({
             queryKey: ['CompanyListSearch', queryParams]
+          })
+          .then();
+        queryClient
+          .invalidateQueries({
+            queryKey: ['CompanyList', queryParams]
           })
           .then();
         closeModal();
         console.log('check success data: ', data);
       },
       onError: (error) => {
+        if (isAxiosConflictError<ErrorResponse<FormError>>(error)) {
+          const formError = error.response?.data.data;
+          if (formError) {
+            setError('name', {
+              message: formError.message
+            });
+          }
+          console.log('check error server: ', error);
+        }
+
         if (isAxiosUnauthorizedError<ErrorResponse<UnauthorizedError>>(error)) {
           clearAccessTokenFromLocalStorage();
           setIsOpenModalUnauthorized(true);
@@ -244,7 +252,7 @@ export default function ModalUpdateCompany({
                     className='w-full mt-2 h-[48px] rounded-[5px] border-[2px] border-[#e4e5e8] text-[16px]
                       leading-6 text-[#111827] focus:outline-none focus:border-[#9099a3] focus:ring-0 '
                   />
-                  <div className='mt-1 min-h-[1.25rem] text-sm text-red-600 dark:text-red-500'>
+                  <div className='mt-1 min-h-[1.25rem] text-[12px] text-red-600 dark:text-red-500'>
                     <span className='font-medium'>{errors.name?.message}</span>
                   </div>
                 </div>
@@ -256,7 +264,7 @@ export default function ModalUpdateCompany({
                     className='w-full mt-2 h-[48px] rounded-[5px] border-[2px] border-[#e4e5e8] text-[16px]
                       leading-6 text-[#111827] focus:outline-none focus:border-[#9099a3] focus:ring-0 '
                   />
-                  <div className='mt-1 min-h-[1.25rem] text-sm text-red-600 dark:text-red-500'>
+                  <div className='mt-1 min-h-[1.25rem] text-[12px] text-red-600 dark:text-red-500'>
                     <span className='font-medium'>{errors.companyType?.message}</span>
                   </div>
                 </div>
@@ -268,7 +276,7 @@ export default function ModalUpdateCompany({
                     className='w-full mt-2 h-[48px] rounded-[5px] border-[2px] border-[#e4e5e8] text-[16px]
                       leading-6 text-[#111827] focus:outline-none focus:border-[#9099a3] focus:ring-0 '
                   />
-                  <div className='mt-1 min-h-[1.25rem] text-sm text-red-600 dark:text-red-500'>
+                  <div className='mt-1 min-h-[1.25rem] text-[12px] text-red-600 dark:text-red-500'>
                     <span className='font-medium'>{errors.teamSize?.message}</span>
                   </div>
                 </div>
@@ -281,7 +289,7 @@ export default function ModalUpdateCompany({
                     className='w-full mt-2 h-[48px] rounded-[5px] border-[2px] border-[#e4e5e8] text-[16px]
                       leading-6 text-[#111827] focus:outline-none focus:border-[#9099a3] focus:ring-0 '
                   />
-                  <div className='mt-1 min-h-[1.25rem] text-sm text-red-600 dark:text-red-500'>
+                  <div className='mt-1 min-h-[1.25rem] text-[12px] text-red-600 dark:text-red-500'>
                     <span className='font-medium'>{errors.email?.message}</span>
                   </div>
                 </div>
@@ -293,7 +301,7 @@ export default function ModalUpdateCompany({
                     className='w-full mt-2 h-[48px] rounded-[5px] border-[2px] border-[#e4e5e8] text-[16px]
                       leading-6 text-[#111827] focus:outline-none focus:border-[#9099a3] focus:ring-0 '
                   />
-                  <div className='mt-1 min-h-[1.25rem] text-sm text-red-600 dark:text-red-500'>
+                  <div className='mt-1 min-h-[1.25rem] text-[12px] text-red-600 dark:text-red-500'>
                     <span className='font-medium'>{errors.address?.message}</span>
                   </div>
                 </div>
@@ -305,7 +313,7 @@ export default function ModalUpdateCompany({
                     className='w-full mt-2 h-[48px] rounded-[5px] border-[2px] border-[#e4e5e8] text-[16px]
                       leading-6 text-[#111827] focus:outline-none focus:border-[#9099a3] focus:ring-0 '
                   />
-                  <div className='mt-1 min-h-[1.25rem] text-sm text-red-600 dark:text-red-500'>
+                  <div className='mt-1 min-h-[1.25rem] text-[12px] text-red-600 dark:text-red-500'>
                     <span className='font-medium'>{errors.phoneNumber?.message}</span>
                   </div>
                 </div>
@@ -317,7 +325,7 @@ export default function ModalUpdateCompany({
                     className='w-full mt-2 h-[48px] rounded-[5px] border-[2px] border-[#e4e5e8] text-[16px]
                       leading-6 text-[#111827] focus:outline-none focus:border-[#9099a3] focus:ring-0 '
                   />
-                  <div className='mt-1 min-h-[1.25rem] text-sm text-red-600 dark:text-red-500'>
+                  <div className='mt-1 min-h-[1.25rem] text-[12px] text-red-600 dark:text-red-500'>
                     <span className='font-medium'>{errors.website?.message}</span>
                   </div>
                 </div>

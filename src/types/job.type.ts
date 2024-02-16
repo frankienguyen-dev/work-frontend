@@ -52,6 +52,7 @@ export interface JobListConfig {
   name?: string;
   location?: string;
   salary?: number | string;
+  email?: string;
 }
 
 export interface PostJob {

@@ -31,8 +31,6 @@ export default function PostAJob() {
     mutationFn: (body: PostJob) => jobApi.postJob(body)
   });
 
-  console.log('Mutation Status: ', postJobMutation.status);
-
   const onSubmitPostJob = handleSubmit(
     (data) => {
       const postJobData = {
@@ -111,7 +109,11 @@ export default function PostAJob() {
           focus:outline-none focus:border-[#9099a3] focus:ring-0 py-[12px] px-[18px]
           text-[16px] leading-6 text-[#111827] mt-2 hover:cursor-pointer'
               {...register('level')}
+              defaultValue='Select...'
             >
+              <option disabled value='Select...'>
+                Select...
+              </option>
               <option value='Intern'>Intern</option>
               <option value='Fresher'>Fresher</option>
               <option value='Junior'>Junior</option>
