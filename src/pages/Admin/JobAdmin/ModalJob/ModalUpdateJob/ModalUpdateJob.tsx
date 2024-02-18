@@ -143,7 +143,7 @@ export default function ModalUpdateJob({ closeModal, jobId }: Props) {
       setValue('jobType', jobInfo.jobType);
       setValue('company', jobInfo.company.name);
       setValue('skills', jobInfo.skills);
-      console.log('check skills: ', getValues('skills'));
+      setValue('description', jobInfo.description);
     }
   }, [setValue, jobInfo, getValues]);
 
