@@ -2,7 +2,7 @@ import { Button, CustomFlowbiteTheme, Flowbite, Modal } from 'flowbite-react';
 import { useForm } from 'react-hook-form';
 import { UserSchema, userSchema } from '../../../../../utils/rules.ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   clearAccessTokenFromLocalStorage,
   clearRoleToLocalStorage
@@ -10,11 +10,11 @@ import {
 import ModalExpiredToken from '../../../../../components/ModalExpiredToken';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import userApi from '../../../../../apis/user.api.ts';
-import { CreateUser, UpdateUser } from '../../../../../types/user.type.ts';
-import useQueryParams from '../../../../../hooks/useQueryPrams.tsx';
+import { UpdateUser } from '../../../../../types/user.type.ts';
 import AutoCompleteSearchInput from '../../../../../components/AutocompleteSearchInput';
 import { isAxiosConflictError, isAxiosUnauthorizedError } from '../../../../../utils/utils.ts';
 import { ErrorResponse } from '../../../../../types/utils.type.ts';
+import useQueryConfig from '../../../../../hooks/useQueryConfig.tsx';
 
 const custom: CustomFlowbiteTheme = {
   modal: {
@@ -109,7 +109,13 @@ export default function ModalUpdateUser({ closeModal, userId }: Props) {
     }
   });
   const queryClient = useQueryClient();
-  const queryParams = useQueryParams();
+  const queryConfig = useQueryConfig();
+  const queryConfigUserAdmin = {
+    ...queryConfig,
+    sortBy: 'createdAt',
+    sortDir: 'desc',
+    pageSize: '10'
+  };
   const submitFormRef = useRef<HTMLButtonElement>(null);
 
   const { data: userInformation } = useQuery({
@@ -144,7 +150,7 @@ export default function ModalUpdateUser({ closeModal, userId }: Props) {
         onSuccess: (data) => {
           queryClient
             .invalidateQueries({
-              queryKey: ['allUsersData']
+              queryKey: ['allUsersData', queryConfigUserAdmin]
             })
             .then();
           closeModal();
@@ -318,6 +324,7 @@ export default function ModalUpdateUser({ closeModal, userId }: Props) {
                     name='company'
                     register={register}
                     setCompany={setCompanyName}
+                    companyNameFromServer={userInfo?.company?.name}
                   />
                 </div>
                 <div className='col-span-3 mt-[36px] h-[76px]'>

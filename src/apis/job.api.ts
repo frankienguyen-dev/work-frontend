@@ -14,6 +14,9 @@ const jobApi = {
   },
   postJob: (body: PostJob) => {
     return http.post<JobResponse>('/jobs', body);
+  },
+  updateJob: (id: string, body: PostJob) => {
+    return http.patch(`jobs/${id}`, body);
   }
 };
 export default jobApi;

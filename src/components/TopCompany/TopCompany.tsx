@@ -100,7 +100,7 @@ export default function TopCompany() {
                       />
                       <div>
                         <div>
-                          <h3 className='text-[18px] text-[#191F33] font-medium leading-7'>
+                          <h3 className='text-[18px] text-[#191F33] font-medium leading-7 truncate w-full'>
                             {company.name}
                           </h3>
                         </div>

@@ -47,6 +47,7 @@ export default function CompanyAdmin() {
     enabled: isSearch,
     placeholderData: keepPreviousData
   });
+  console.log('list search: ', searchCompanyAdmin?.data.data);
   const companyListSearchData = searchCompanyAdmin?.data.data.data;
   const metaDataSearch = searchCompanyAdmin?.data.data.meta;
   const totalPagesSearchData = Number(metaDataSearch?.totalPages);
@@ -71,6 +72,7 @@ export default function CompanyAdmin() {
         })
       ).toString()
     });
+    console.log('check handle submit company admin: ', data);
   });
 
   const handleButtonEditClicked = (
