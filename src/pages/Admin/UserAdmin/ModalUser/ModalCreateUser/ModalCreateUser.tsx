@@ -14,6 +14,7 @@ import { CreateUser } from '../../../../../types/user.type.ts';
 import AutoCompleteSearchInput from '../../../../../components/AutocompleteSearchInput';
 import { isAxiosConflictError, isAxiosUnauthorizedError } from '../../../../../utils/utils.ts';
 import { ErrorResponse } from '../../../../../types/utils.type.ts';
+import useQueryConfig from '../../../../../hooks/useQueryConfig.tsx';
 
 const custom: CustomFlowbiteTheme = {
   modal: {
@@ -94,6 +95,13 @@ export default function ModalCreateUser({ closeModal }: Props) {
   } = useForm<FormUserData>({
     resolver: yupResolver(createUserSchema)
   });
+  const queryConfig = useQueryConfig();
+  const queryConfigUserAdmin = {
+    ...queryConfig,
+    sortBy: 'createdAt',
+    sortDir: 'desc',
+    pageSize: '10'
+  };
   const queryClient = useQueryClient();
   const submitFormRef = useRef<HTMLButtonElement>(null);
   const createUserMutation = useMutation({
@@ -119,7 +127,7 @@ export default function ModalCreateUser({ closeModal }: Props) {
       onSuccess: (data) => {
         queryClient
           .invalidateQueries({
-            queryKey: ['allUsersData']
+            queryKey: ['allUsersData', queryConfigUserAdmin]
           })
           .then();
         closeModal();

@@ -132,8 +132,13 @@ export const searchUserSchema = yup.object({
   email: yup.string().trim()
 });
 
+export const searchJobSchema = yup.object({
+  name: yup.string().trim()
+});
+
 export const uploadImage = yup.object({});
-export type searchSchema = yup.InferType<typeof searchUserSchema>;
+export type searchSchemaJob = yup.InferType<typeof searchJobSchema>;
+export type searchSchemaUser = yup.InferType<typeof searchUserSchema>;
 export type UserSchema = yup.InferType<typeof userSchema>;
 export type Schema = yup.InferType<typeof schema>;
 export type postJobSchema = yup.InferType<typeof jobSchema>;

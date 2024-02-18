@@ -15,7 +15,7 @@ export default function CompanyInfo() {
         <div className='grid grid-cols-12 gap-x-[24px] mt-[15px]'>
           <div className='col-span-4'>
             <div className='text-[14px] leading-5 text-[#18191C] mb-2'>Upload Logo</div>
-            <UploadFileInput />
+            <UploadFileInput name='logo' setValue={setValue} />
           </div>
           <div className='col-span-8'>
             <div className='text-[14px] leading-5 text-[#18191C] mb-2'>Upload Banner</div>

@@ -12,6 +12,7 @@ interface Props {
   rules?: RegisterOptions;
   name: string;
   setCompany: React.Dispatch<React.SetStateAction<{ name: string }>>;
+  companyNameFromServer?: string;
 }
 
 export default function AutoCompleteSearchInput({
@@ -19,11 +20,13 @@ export default function AutoCompleteSearchInput({
   register,
   name,
   rules,
-  errorMessage
+  errorMessage,
+  companyNameFromServer
 }: Props) {
   const [companyName, setCompanyName] = useState({ name: '' });
   const [isSearch, setSearch] = useState<boolean>(false);
-  console.log('check is search: ', isSearch);
+  // console.log('check is search: ', isSearch);
+  console.log('check company name state: ', companyName);
   const queryParams = useQueryParams();
   const { data: searchCompanyData } = useQuery({
     queryKey: ['searchCompanyList', { ...queryParams, name: companyName, pageSize: '20' }],
@@ -31,8 +34,8 @@ export default function AutoCompleteSearchInput({
       companyApi.searchCompany({ ...queryParams, name: companyName.name, pageSize: '20' }),
     enabled: isSearch
   });
-  console.log('check company name state: ', companyName);
-  console.log('check search length: ', searchCompanyData?.data.data.data.length);
+  // console.log('check company name state: ', companyName);
+  // console.log('check search length: ', searchCompanyData?.data.data.data.length);
 
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(true);
@@ -47,10 +50,12 @@ export default function AutoCompleteSearchInput({
     <div>
       <div>
         <input
+          value={companyNameFromServer ? companyNameFromServer : companyName.name}
           {...register(name, rules)}
-          value={companyName.name}
           type='text'
+          autoComplete='off'
           onChange={onChange}
+          placeholder='Search company...'
           className='w-full mt-2 h-[48px] rounded-[5px] border-[2px] border-[#e4e5e8] text-[16px]
                       leading-6 text-[#111827] focus:outline-none focus:border-[#9099a3] focus:ring-0 '
         />

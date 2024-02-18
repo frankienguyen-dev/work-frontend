@@ -8,13 +8,14 @@ import Loading from '../../../components/Loading/Loading.tsx';
 import SvgOops from '../../../components/SvgOops';
 import moment from 'moment';
 import { useForm } from 'react-hook-form';
-import { searchSchema, searchUserSchema } from '../../../utils/rules.ts';
+import { searchSchemaUser, searchUserSchema } from '../../../utils/rules.ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { omit } from 'lodash';
 import ModalCreateUser from './ModalUser/ModalCreateUser';
 import ModalUpdateUser from './ModalUser/ModalUpdateUser';
+import useQueryParams from '../../../hooks/useQueryPrams.tsx';
 
-type FormData = Pick<searchSchema, 'email'>;
+type FormData = Pick<searchSchemaUser, 'email'>;
 const searchUserAdminSchema = searchUserSchema.pick(['email']);
 
 export default function UserAdmin() {
@@ -24,6 +25,7 @@ export default function UserAdmin() {
   const [userId, setUserId] = useState<string>('');
   const { isAuthenticated } = useContext(AppContext);
   const queryConfig = useQueryConfig();
+  const queryParams = useQueryParams();
   const navigate = useNavigate();
   const queryConfigUserAdmin = {
     ...queryConfig,
@@ -46,8 +48,8 @@ export default function UserAdmin() {
   });
   const totalPagesData = Number(listUserData?.data.data.meta.totalPages);
   const { data: listUserSearchData, isLoading: loadingSearch } = useQuery({
-    queryKey: ['allUsersSearchData', queryConfigUserAdmin],
-    queryFn: () => (isAuthenticated ? userApi.searchUser(queryConfigUserAdmin) : null),
+    queryKey: ['allUsersSearchData', queryParams],
+    queryFn: () => (isAuthenticated ? userApi.searchUser(queryParams) : null),
     enabled: isSearch,
     placeholderData: keepPreviousData
   });

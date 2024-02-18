@@ -100,18 +100,17 @@ interface Props {
   endDate?: any;
 }
 
-export default function Calendar({
+export default function CalendarJobAdmin({
   errorMessage,
   register,
   rules,
   name,
   setValue,
-  foundedDate,
   startDate,
   endDate
 }: Props) {
-  const [date, setDate] = useState<Date>(new Date());
-  console.log('check data state: ', date);
+  const [startDatePick, setStartDatePick] = useState<Date>(new Date());
+  const [endDatePick, setEndDatePick] = useState<Date>(new Date());
 
   const handleChangeDate = (editorState: Date) => {
     const utcDate = moment.utc(editorState); // Convert to UTC moment
@@ -124,19 +123,23 @@ export default function Calendar({
   }, [register, name, rules]);
 
   useEffect(() => {
-    if (foundedDate) {
-      console.log('hehe foundedDate');
-      setDate(new Date(foundedDate));
-    } else {
-      setDate(new Date());
+    if (endDate) {
+      setEndDatePick(new Date(endDate));
     }
-  }, [foundedDate, endDate, startDate]);
+    if (startDate) {
+      setStartDatePick(new Date(startDate));
+    }
+    // else {
+    //   setStartDatePick(new Date());
+    //   setEndDatePick(new Date());
+    // }
+  }, [endDate, startDate, setEndDatePick, setStartDatePick]);
   return (
     <div>
       <Flowbite theme={{ theme: custom }}>
         <Datepicker
-          defaultDate={date}
-          key={date.getTime()}
+          defaultDate={name === 'startDate' ? startDatePick : endDatePick}
+          key={name === 'startDate' ? startDatePick.getTime() : endDatePick.getTime()}
           onSelectedDateChanged={handleChangeDate}
         />
       </Flowbite>

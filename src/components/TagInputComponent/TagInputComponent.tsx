@@ -9,9 +9,10 @@ interface Props {
   rules?: RegisterOptions;
   name: string;
   setValue: UseFormSetValue<any>;
+  skillsFormServer: any;
 }
 
-const TagInputComponent = ({ register, rules, name, setValue }: Props) => {
+const TagInputComponent = ({ register, rules, name, setValue, skillsFormServer }: Props) => {
   const [inputTag, setInputTag] = useState<{ name: string }[]>([]);
   useEffect(() => {
     register(name, rules);
@@ -22,12 +23,22 @@ const TagInputComponent = ({ register, rules, name, setValue }: Props) => {
     setValue(name, tagsObjects);
     setInputTag(tagsObjects);
   };
-  console.log('input tag: ', inputTag);
-
+  // console.log('input tag: ', inputTag);
+  /*
+  * Implementing functionalities for adding and updating jobs,
+  * displaying a job list, and searching for jobs.
+  * Declare an interface for the returned response and write functions to call APIs for searching,
+  * creating, updating, getting all jobs, and getting a job by its ID.
+ 
+  * */
   return (
     <div>
       <TagsInput
-        value={inputTag.map((tag) => tag.name)}
+        value={
+          skillsFormServer
+            ? skillsFormServer.map((tag: any) => tag.name)
+            : inputTag.map((tag) => tag.name)
+        }
         onChange={handleChange}
         placeHolder='Job skills'
       />
