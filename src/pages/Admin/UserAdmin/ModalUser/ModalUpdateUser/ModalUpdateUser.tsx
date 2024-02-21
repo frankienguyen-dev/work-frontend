@@ -15,6 +15,7 @@ import AutoCompleteSearchInput from '../../../../../components/AutocompleteSearc
 import { isAxiosConflictError, isAxiosUnauthorizedError } from '../../../../../utils/utils.ts';
 import { ErrorResponse } from '../../../../../types/utils.type.ts';
 import useQueryConfig from '../../../../../hooks/useQueryConfig.tsx';
+import useQueryParams from '../../../../../hooks/useQueryPrams.tsx';
 
 const custom: CustomFlowbiteTheme = {
   modal: {
@@ -116,6 +117,7 @@ export default function ModalUpdateUser({ closeModal, userId }: Props) {
     sortDir: 'desc',
     pageSize: '10'
   };
+  const queryParams = useQueryParams();
   const submitFormRef = useRef<HTMLButtonElement>(null);
 
   const { data: userInformation } = useQuery({
@@ -151,6 +153,11 @@ export default function ModalUpdateUser({ closeModal, userId }: Props) {
           queryClient
             .invalidateQueries({
               queryKey: ['allUsersData', queryConfigUserAdmin]
+            })
+            .then();
+          queryClient
+            .invalidateQueries({
+              queryKey: ['allUsersSearchData', queryParams]
             })
             .then();
           closeModal();

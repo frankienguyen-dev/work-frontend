@@ -18,6 +18,7 @@ import moment from 'moment/moment';
 import { isAxiosConflictError, isAxiosUnauthorizedError } from '../../../../../utils/utils.ts';
 import { ErrorResponse } from '../../../../../types/utils.type.ts';
 import useQueryParams from '../../../../../hooks/useQueryPrams.tsx';
+import useQueryConfig from '../../../../../hooks/useQueryConfig.tsx';
 
 interface Props {
   closeModal: () => void;
@@ -127,6 +128,13 @@ export default function ModalUpdateCompany({ closeModal, companyId }: Props) {
       banner: {}
     }
   });
+  const queryConfig = useQueryConfig();
+  const queryConfigCompanyAdmin = {
+    ...queryConfig,
+    sortBy: 'createdAt',
+    sortDir: 'desc',
+    pageSize: '10'
+  };
   const submitFormRef = useRef<HTMLButtonElement>(null);
   const { data: companyInformation } = useQuery({
     queryKey: ['companyInformation', companyId],
@@ -134,7 +142,7 @@ export default function ModalUpdateCompany({ closeModal, companyId }: Props) {
   });
   const companyInfo = companyInformation?.data.data;
   const updateCompanyMutation = useMutation({
-    mutationFn: (body: UpdateCompany) => companyApi.updateCompany(body, companyInfo?.id as string)
+    mutationFn: (body: UpdateCompany) => companyApi.updateCompany(body, companyId)
   });
   const onSubmit = handleSubmit((data) => {
     console.log('data check: ', data);
@@ -157,7 +165,7 @@ export default function ModalUpdateCompany({ closeModal, companyId }: Props) {
           .then();
         queryClient
           .invalidateQueries({
-            queryKey: ['CompanyList', queryParams]
+            queryKey: ['CompanyList', queryConfigCompanyAdmin]
           })
           .then();
         closeModal();

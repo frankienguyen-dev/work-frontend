@@ -200,7 +200,10 @@ export default function JobAdmin() {
                   className='col-span-2 text-center text-[16px] text-[#535860] flex justify-center
           items-center gap-[6px]'
                 >
-                  <button className='group p-[6px] hover:bg-[#f1f2f4] rounded-[3px] hover:cursor-pointer'>
+                  <button
+                    onClick={(event) => handleClickButtonEdit(event, job.id)}
+                    className='group p-[6px] hover:bg-[#f1f2f4] rounded-[3px] hover:cursor-pointer'
+                  >
                     <svg
                       className='group-hover:text-[#FFA500] text-[#939AAD]'
                       width='20'
