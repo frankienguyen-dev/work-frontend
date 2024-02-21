@@ -15,30 +15,28 @@ interface Props {
 const TagInputComponent = ({ register, rules, name, setValue, skillsFormServer }: Props) => {
   const [inputTag, setInputTag] = useState<{ name: string }[]>([]);
   useEffect(() => {
+    if (skillsFormServer) {
+      const tagsObjects = skillsFormServer.map((tag: any) => ({ name: tag.name }));
+      setInputTag(tagsObjects);
+      setValue(name, tagsObjects);
+    }
     register(name, rules);
-  }, [register, name, rules]);
+  }, [register, name, rules, skillsFormServer, setValue]);
 
   const handleChange = (editorState: string[]) => {
     const tagsObjects = editorState.map((tag) => ({ name: tag }));
     setValue(name, tagsObjects);
     setInputTag(tagsObjects);
   };
-  // console.log('input tag: ', inputTag);
-  /*
-  * Implementing functionalities for adding and updating jobs,
-  * displaying a job list, and searching for jobs.
-  * Declare an interface for the returned response and write functions to call APIs for searching,
-  * creating, updating, getting all jobs, and getting a job by its ID.
- 
-  * */
   return (
     <div>
       <TagsInput
-        value={
-          skillsFormServer
-            ? skillsFormServer.map((tag: any) => tag.name)
-            : inputTag.map((tag) => tag.name)
-        }
+        // value={
+        //   skillsFormServer
+        //     ? skillsFormServer.map((tag: any) => tag.name)
+        //     : inputTag.map((tag) => tag.name)
+        // }
+        value={inputTag.map((tag) => tag.name)}
         onChange={handleChange}
         placeHolder='Job skills'
       />

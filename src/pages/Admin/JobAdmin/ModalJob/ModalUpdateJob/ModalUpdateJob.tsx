@@ -20,6 +20,8 @@ import useQueryConfig from '../../../../../hooks/useQueryConfig.tsx';
 import { isAxiosConflictError, isAxiosUnauthorizedError } from '../../../../../utils/utils.ts';
 import { ErrorResponse } from '../../../../../types/utils.type.ts';
 import CalendarJobAdmin from '../../CalendarJobAdmin/CalendarJobAdmin.tsx';
+import moment from 'moment';
+import useQueryParams from '../../../../../hooks/useQueryPrams.tsx';
 
 const custom: CustomFlowbiteTheme = {
   modal: {
@@ -121,13 +123,54 @@ export default function ModalUpdateJob({ closeModal, jobId }: Props) {
       responsibility: ''
     }
   });
-
+  const queryConfig = useQueryConfig();
+  const queryConfigJobAdmin = {
+    ...queryConfig,
+    sortBy: 'createdAt',
+    sortDir: 'desc',
+    pageSize: '10'
+  };
+  const queryParams = useQueryParams();
+  const queryClient = useQueryClient();
   const { data: jobInformation } = useQuery({
     queryKey: ['jobInformation', jobId],
     queryFn: () => jobApi.getJobDetail(jobId)
   });
   const jobInfo = jobInformation?.data.data;
   console.log('check job information: ', jobInformation);
+
+  const updateJobMutation = useMutation({
+    mutationFn: (body: PostJob) => jobApi.updateJob(jobId, body)
+  });
+
+  const onSubmit = handleSubmit((data) => {
+    console.log('check data submit: ', data);
+    const updateJobData = {
+      ...data,
+      endDate: moment.utc(data.endDate).local().format('YYYY-MM-DDTHH:mm:ss'),
+      startDate: moment.utc(data.startDate).local().format('YYYY-MM-DDTHH:mm:ss'),
+      company: {
+        name: companyName.name || data.company
+      }
+    };
+    updateJobMutation.mutate(updateJobData, {
+      onSuccess: (data) => {
+        queryClient
+          .invalidateQueries({
+            queryKey: ['listJobs', queryConfigJobAdmin]
+          })
+          .then();
+
+        queryClient
+          .invalidateQueries({
+            queryKey: ['listJobsSearch', queryParams]
+          })
+          .then();
+        closeModal();
+        console.log('check success: ', data);
+      }
+    });
+  });
 
   useEffect(() => {
     if (jobInfo) {
@@ -144,6 +187,7 @@ export default function ModalUpdateJob({ closeModal, jobId }: Props) {
       setValue('company', jobInfo.company.name);
       setValue('skills', jobInfo.skills);
       setValue('description', jobInfo.description);
+      setValue('responsibility', jobInfo.responsibility);
     }
   }, [setValue, jobInfo, getValues]);
 
@@ -153,7 +197,7 @@ export default function ModalUpdateJob({ closeModal, jobId }: Props) {
         <Modal size='7xl' show={true} position='center' onClose={closeModal}>
           <Modal.Header>Update Job</Modal.Header>
           <Modal.Body>
-            <form noValidate>
+            <form noValidate onSubmit={onSubmit}>
               <div className=' mt-[24px]'>
                 <div className='text-[14px] leading-5 text-[#18191c]'>Job Name</div>
                 <input
@@ -355,6 +399,7 @@ export default function ModalUpdateJob({ closeModal, jobId }: Props) {
                     setValue={setValue}
                     register={register}
                     placeholder='Add your description'
+                    valueFromServer={jobInfo?.description}
                   />
                 </div>
 
@@ -366,6 +411,7 @@ export default function ModalUpdateJob({ closeModal, jobId }: Props) {
                     setValue={setValue}
                     register={register}
                     placeholder='Add your responsibility'
+                    valueFromServer={jobInfo?.responsibility}
                   />
                 </div>
               </div>
