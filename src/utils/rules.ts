@@ -128,6 +128,30 @@ export const userSchema = yup.object({
   company: yup.string()
 });
 
+export const permissionSchema = yup.object({
+  name: yup.string().trim().required('Permission name is required'),
+  method: yup
+    .string()
+    .trim()
+    .notOneOf(['Select...'], 'Method is required')
+    .required('Method is required'),
+  module: yup
+    .string()
+    .trim()
+    .notOneOf(['Select...'], 'Module is required')
+    .required('Module is required'),
+  path: yup.string().trim().required('Path is required')
+});
+
+export const roleSchema = yup.object({
+  name: yup.string().trim().required('Role name is required'),
+  active: yup.bool()
+});
+
+export const searchRoleSchema = yup.object({
+  name: yup.string().trim()
+});
+
 export const searchUserSchema = yup.object({
   email: yup.string().trim()
 });
@@ -136,10 +160,18 @@ export const searchJobSchema = yup.object({
   name: yup.string().trim()
 });
 
+export const searchPermissionSchema = yup.object({
+  name: yup.string().trim()
+});
+
 export const uploadImage = yup.object({});
 export type searchSchemaJob = yup.InferType<typeof searchJobSchema>;
 export type searchSchemaUser = yup.InferType<typeof searchUserSchema>;
+export type searchSchemaRole = yup.InferType<typeof searchRoleSchema>;
+export type searchSchemaPermission = yup.InferType<typeof searchPermissionSchema>;
 export type UserSchema = yup.InferType<typeof userSchema>;
+export type RoleSchema = yup.InferType<typeof roleSchema>;
 export type Schema = yup.InferType<typeof schema>;
 export type postJobSchema = yup.InferType<typeof jobSchema>;
 export type companySchema = yup.InferType<typeof companySchema>;
+export type createPermissionSchema = yup.InferType<typeof permissionSchema>;

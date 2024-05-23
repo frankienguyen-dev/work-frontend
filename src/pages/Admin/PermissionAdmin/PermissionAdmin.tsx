@@ -1,88 +1,84 @@
 import { createSearchParams, Link, useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import Loading from '../../../components/Loading/Loading.tsx';
+import moment from 'moment/moment';
+import SvgOops from '../../../components/SvgOops';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import useQueryConfig from '../../../hooks/useQueryConfig.tsx';
-import jobApi from '../../../apis/job.api.ts';
 import useQueryParams from '../../../hooks/useQueryPrams.tsx';
-import React, { useContext, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { searchJobSchema, searchSchemaJob } from '../../../utils/rules.ts';
+import permissionApi from '../../../apis/permission.api.ts';
+import ModalCreatePermission from './ModalPermission/ModalCreatePermission';
+import { searchPermissionSchema, searchSchemaPermission } from '../../../utils/rules.ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { omit } from 'lodash';
-import { AppContext } from '../../../contexts/app.context.tsx';
-import Loading from '../../../components/Loading/Loading.tsx';
-import SvgOops from '../../../components/SvgOops';
-import { calcDayRemaining, formatSalary } from '../../../utils/utils.ts';
-import moment from 'moment';
-import ModalCreateJob from './ModalJob/ModalCreateJob';
-import ModalUpdateJob from './ModalJob/ModalUpdateJob';
+import ModalUpdatePermission from './ModalPermission/ModalUpdatePermission';
 
-type FormData = Pick<searchSchemaJob, 'name'>;
-const searchJobAdminSchema = searchJobSchema.pick(['name']);
+type FormData = Pick<searchSchemaPermission, 'name'>;
+const searchPermissionAdminSchema = searchPermissionSchema.pick(['name']);
 
-export default function JobAdmin() {
+export default function PermissionAdmin() {
   const [isSearch, setSearch] = useState<boolean>(false);
-  console.log('check search state: ', isSearch);
-  const [isOpenModalCreateJob, setOpenModalCreateJob] = useState<boolean>(false);
-  const [isOpenModalUpdateJob, setOpenModalUpdateJob] = useState<boolean>(false);
-  const [jobId, setJobId] = useState<string>('');
-  const { isAuthenticated } = useContext(AppContext);
-  const { register, handleSubmit, setValue } = useForm<FormData>({
-    resolver: yupResolver(searchJobAdminSchema),
+  const [isOpenModalCreatePermission, setOpenModalCreatePermission] = useState<boolean>(false);
+  const [isOpenModalUpdatePermssion, setOpenModalUpdatePermission] = useState<boolean>(false);
+  const [permissionId, setPermissionId] = useState<string>('');
+  const { register, setValue, handleSubmit } = useForm<FormData>({
+    resolver: yupResolver(searchPermissionAdminSchema),
     defaultValues: {
       name: ''
     }
   });
-  const navigate = useNavigate();
+
+  const queryParams = useQueryParams();
   const queryConfig = useQueryConfig();
-  const queryConfigJobAdmin = {
+  const queryPermissionAdminConfig = {
     ...queryConfig,
     sortBy: 'createdAt',
     sortDir: 'desc',
     pageSize: '10'
   };
-  const pageNo = Number(queryConfigJobAdmin.pageNo);
-  const pageSize = Number(queryConfigJobAdmin.pageSize);
-  const queryParams = useQueryParams();
-  const { data: listJobsData, isLoading: listJobLoading } = useQuery({
-    queryKey: ['listJobs', queryConfigJobAdmin],
-    queryFn: () => (isAuthenticated ? jobApi.getAllJobs(queryConfigJobAdmin) : null),
+  const navigate = useNavigate();
+  const pageNo = Number(queryPermissionAdminConfig.pageNo);
+  const pageSize = Number(queryPermissionAdminConfig.pageSize);
+  const { data: permissionListData, isLoading: permissionListLoading } = useQuery({
+    queryKey: ['permissionList', queryPermissionAdminConfig],
+    queryFn: () => permissionApi.getALlPermissions(queryPermissionAdminConfig),
     placeholderData: keepPreviousData
   });
-  const totalPagesListJobs = Number(listJobsData?.data.data.meta.totalPages);
-  const { data: listJobsSearchData, isLoading: listJobSearchLoading } = useQuery({
-    queryKey: ['listJobsSearch', queryParams],
-    queryFn: () => jobApi.searchJob(queryParams),
+  const totalPagesPermissionList = Number(permissionListData?.data.data.meta.totalPages);
+  const { data: permissionListSearchData, isLoading: permissionListSearchLoading } = useQuery({
+    queryKey: ['permissionListSearch', queryParams],
+    queryFn: () => permissionApi.searchPermission(queryParams),
     placeholderData: keepPreviousData,
     enabled: isSearch
   });
-  const totalPagesListJobsSearch = Number(listJobsSearchData?.data.data.meta.totalPages);
+  const totalPagesPermissionListSearch = Number(
+    permissionListSearchData?.data.data.meta.totalPages
+  );
+
   const onSubmit = handleSubmit((data) => {
     setSearch(true);
     navigate({
-      pathname: '/admin/job',
-      search: createSearchParams(
-        omit({
-          ...queryConfigJobAdmin,
-          name: data.name as string,
-          pageNo: '1'
-        })
-      ).toString()
+      pathname: '/admin/permission',
+      search: createSearchParams({
+        ...queryPermissionAdminConfig,
+        name: data.name as string,
+        pageNo: '1'
+      }).toString()
     });
-    console.log('check data search: ', data);
   });
 
   const handleClickButtonEdit = (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    jobId: string
+    permissionId: string
   ) => {
     event.preventDefault();
-    setJobId(jobId);
-    setOpenModalUpdateJob(true);
+    setPermissionId(permissionId);
+    setOpenModalUpdatePermission(true);
   };
 
   return (
     <div className='my-[54px]'>
-      <div className='text-[18px] leading-7 font-medium text-[#18191c]'>Jobs</div>
+      <div className='text-[18px] leading-7 font-medium text-[#18191c]'>Permissions</div>
       <div className='py-[18px]'>
         <div className='flex items-center justify-end gap-[16px]'>
           <div className='border-[2px] p-[2px] w-[300px] border-[#E4E5E8] rounded-[6px] h-[48px]'>
@@ -114,7 +110,7 @@ export default function JobAdmin() {
                 </div>
                 <input
                   type='text'
-                  placeholder='Search job'
+                  placeholder='Search permission'
                   className='w-full h-[40px] pl-[54px] border-none border-transparent
                   focus:border-transparent focus:ring-0 leading-5 text-[14px] text-[#18191C]'
                   {...register('name')}
@@ -124,22 +120,22 @@ export default function JobAdmin() {
           </div>
           <Link
             onClick={() => {
-              setOpenModalCreateJob(true);
+              setOpenModalCreatePermission(true);
             }}
             to=''
             className='bg-[#0A65CC] py-[14px] px-[18px] rounded-[6px] h-[48px] flex items-center
             justify-center text-[14px] leading-5 text-white font-semibold gap-[4px] group'
           >
-            Add Job
+            Add Permission
           </Link>
           <Link
             onClick={() => {
               setValue('name', '');
               setSearch(false);
               navigate({
-                pathname: '/admin/job',
+                pathname: '/admin/permission',
                 search: createSearchParams({
-                  ...queryConfigJobAdmin
+                  ...queryPermissionAdminConfig
                 }).toString()
               });
             }}
@@ -154,54 +150,48 @@ export default function JobAdmin() {
       <div className='mt-[24px]'>
         <div className='grid grid-cols-12 bg-[#f1f2f4] px-[20px] py-[10px] rounded-[4px]'>
           <div className='col-span-1 text-center text-[12px] text-[#535860]'>Index</div>
-          <div className='col-span-4  text-[12px] text-[#535860]'>Name</div>
-          <div className='col-span-1  text-[12px] text-[#535860]'>Salary</div>
-          <div className='col-span-1  text-[12px] text-[#535860]'>Level</div>
-          <div className='col-span-1  text-[12px] text-[#535860]'>Status</div>
-          <div className='col-span-2 text-center  text-[12px] text-[#535860]'>Created At</div>
-          <div className='col-span-2 text-center text-[12px] text-[#535860]'>Actions</div>
+          <div className='col-span-3 text-[12px] text-[#535860]'>Name</div>
+          <div className='col-span-2 text-[12px] text-[#535860]'>Path</div>
+          <div className='col-span-1 text-[12px] text-[#535860]'>Method</div>
+          <div className='col-span-2 text-[12px] text-[#535860]'>Module</div>
+          <div className='col-span-2 text-[12px] text-[#535860]'>Created At</div>
+          <div className='col-span-1 text-center text-[12px] text-[#535860]'>Actions</div>
         </div>
       </div>
       <div className='mt-2 h-[530px]'>
-        {listJobLoading ? (
+        {permissionListLoading ? (
           <div className='h-[530px] flex items-center justify-center  '>
             <Loading />
           </div>
         ) : isSearch ? (
-          listJobSearchLoading ? (
+          permissionListSearchLoading ? (
             <div className='h-[530px] flex items-center justify-center  '>
               <Loading />
             </div>
-          ) : listJobsSearchData?.data.data.data &&
-            listJobsSearchData?.data.data.data.length > 0 ? (
-            listJobsSearchData?.data.data.data.map((job, index) => (
-              <Link
-                to={`/job/${job.id}`}
-                onClick={() => scrollTo(0, 0)}
-                key={job.id}
+          ) : permissionListSearchData?.data.data.data &&
+            permissionListSearchData?.data.data.data.length > 0 ? (
+            permissionListSearchData?.data.data.data.map((permission, index) => (
+              <div
+                key={permission.id}
                 className='grid grid-cols-12 px-[20px] py-[10px] items-center border-b
         hover:cursor-pointer hover:outline outline-[#0b65cc] rounded-[8px]'
               >
                 <div className='col-span-1 text-center text-[16px] text-[#535860]'>
                   {(pageNo - 1) * pageSize + index + 1}
                 </div>
-                <div className='col-span-4  text-[16px] text-[#535860]'>{job.name}</div>
-                <div className='col-span-1  text-[16px] text-[#535860]'>
-                  {formatSalary(job.salary)}
-                </div>
-                <div className='col-span-1 text-[16px] text-[#535860]'>{job.level}</div>
-                <div className='col-span-1 text-[16px] text-[#535860]'>
-                  {calcDayRemaining(job.endDate) > 0 ? 'Active' : 'Expired'}
-                </div>
+                <div className='col-span-3 text-[16px] text-[#535860]'>{permission.name}</div>
+                <div className='col-span-2 text-[16px] text-[#535860]'>{permission.path}</div>
+                <div className='col-span-1 text-[16px] text-[#535860]'>{permission.method}</div>
+                <div className='col-span-2 text-[16px] text-[#535860]'>{permission.module}</div>
                 <div className='col-span-2 text-[16px] text-[#535860]'>
-                  {moment(job.createdAt).format('DD MMM, YYYY')}
+                  {moment(permission.createdAt).format('DD MMM, YYYY')}
                 </div>
                 <div
-                  className='col-span-2 text-center text-[16px] text-[#535860] flex justify-center
+                  className='col-span-1 text-center text-[16px] text-[#535860] flex justify-center
           items-center gap-[6px]'
                 >
                   <button
-                    onClick={(event) => handleClickButtonEdit(event, job.id)}
+                    onClick={(event) => handleClickButtonEdit(event, permission.id)}
                     className='group p-[6px] hover:bg-[#f1f2f4] rounded-[3px] hover:cursor-pointer'
                   >
                     <svg
@@ -282,44 +272,39 @@ export default function JobAdmin() {
                     </svg>
                   </button>
                 </div>
-              </Link>
+              </div>
             ))
           ) : (
             <div className='flex flex-col items-center justify-center'>
               <SvgOops />
-              <div className='font-medium text-[20px] leading-7'>Oops! The job does not exist.</div>
+              <div className='font-medium text-[20px] leading-7'>
+                Oops! The permission does not exist.
+              </div>
             </div>
           )
-        ) : listJobsData?.data.data.data && listJobsData?.data.data.data.length > 0 ? (
-          listJobsData?.data.data.data.map((job, index) => (
-            <Link
-              onClick={() => scrollTo(0, 0)}
-              to={`/job/${job.id}`}
-              key={job.id}
+        ) : permissionListData?.data.data.data && permissionListData?.data.data.data.length > 0 ? (
+          permissionListData?.data.data.data.map((permission, index) => (
+            <div
+              key={permission.id}
               className='grid grid-cols-12 px-[20px] py-[10px] items-center border-b
         hover:cursor-pointer hover:outline outline-[#0b65cc] rounded-[8px]'
             >
               <div className='col-span-1 text-center text-[16px] text-[#535860]'>
                 {(pageNo - 1) * pageSize + index + 1}
               </div>
-              <div className='col-span-4   text-[16px] text-[#535860]'>{job.name}</div>
-              <div className='col-span-1  text-[16px] text-[#535860]'>
-                {formatSalary(job.salary)}
-              </div>
-              <div className='col-span-1  text-[16px] text-[#535860]'>{job.level}</div>
-              <div className='col-span-1  text-[16px] text-[#535860]'>
-                {' '}
-                {calcDayRemaining(job.endDate) > 0 ? 'Active' : 'Expired'}
-              </div>
-              <div className='col-span-2 text-center text-[16px] text-[#535860]'>
-                {moment(job.createdAt).format('DD MMM, YYYY')}
+              <div className='col-span-3 text-[16px] text-[#535860]'>{permission.name}</div>
+              <div className='col-span-2 text-[16px] text-[#535860]'>{permission.path}</div>
+              <div className='col-span-1 text-[16px] text-[#535860]'>{permission.method}</div>
+              <div className='col-span-2 text-[16px] text-[#535860]'>{permission.module}</div>
+              <div className='col-span-2 text-[16px] text-[#535860]'>
+                {moment(permission.createdAt).format('DD MMM, YYYY')}
               </div>
               <div
-                className='col-span-2 text-center text-[16px] text-[#535860] flex justify-center
+                className='col-span-1 text-center text-[16px] text-[#535860] flex justify-center
           items-center gap-[6px]'
               >
                 <button
-                  onClick={(event) => handleClickButtonEdit(event, job.id)}
+                  onClick={(event) => handleClickButtonEdit(event, permission.id)}
                   className='group p-[6px] hover:bg-[#f1f2f4] rounded-[3px] hover:cursor-pointer'
                 >
                   <svg
@@ -400,16 +385,18 @@ export default function JobAdmin() {
                   </svg>
                 </button>
               </div>
-            </Link>
+            </div>
           ))
         ) : (
           <div className='flex flex-col items-center justify-center'>
             <SvgOops />
-            <div className='font-medium text-[20px] leading-7'>Oops! The job does not exist.</div>
+            <div className='font-medium text-[20px] leading-7'>
+              Oops! The permission does not exist.
+            </div>
           </div>
         )}
       </div>
-      {listJobSearchLoading || listJobLoading ? (
+      {permissionListLoading || permissionListSearchLoading ? (
         <div className='mt-[30px] flex items-center justify-end gap-x-[20px]'>
           <span className=''>Previous</span>
           <span className=''>Next</span>
@@ -425,9 +412,9 @@ export default function JobAdmin() {
                 <Link
                   className='text-[#0b65cc]'
                   to={{
-                    pathname: '/admin/job',
+                    pathname: '/admin/permission',
                     search: createSearchParams({
-                      ...queryConfigJobAdmin,
+                      ...queryPermissionAdminConfig,
                       pageNo: (pageNo - 1).toString()
                     }).toString()
                   }}
@@ -435,16 +422,16 @@ export default function JobAdmin() {
                   Previous
                 </Link>
               )}
-              {pageNo === totalPagesListJobsSearch ? (
+              {pageNo === totalPagesPermissionListSearch ? (
                 <span className=''>Next</span>
               ) : (
                 <Link
                   className='text-[#0b65cc]'
                   to={{
-                    pathname: '/admin/job',
+                    pathname: '/admin/permission',
                     search: createSearchParams({
-                      ...queryConfigJobAdmin,
-                      pageNo: (pageNo + 1).toString()
+                      ...queryPermissionAdminConfig,
+                      pageNo: (pageNo - 1).toString()
                     }).toString()
                   }}
                 >
@@ -452,7 +439,7 @@ export default function JobAdmin() {
                 </Link>
               )}
               <div className='w-[100px]'>
-                Page {pageNo} / {totalPagesListJobsSearch}
+                Page {pageNo} / {totalPagesPermissionListSearch}
               </div>
             </>
           ) : (
@@ -463,9 +450,9 @@ export default function JobAdmin() {
                 <Link
                   className='text-[#0b65cc]'
                   to={{
-                    pathname: '/admin/job',
+                    pathname: '/admin/permission',
                     search: createSearchParams({
-                      ...queryConfigJobAdmin,
+                      ...queryPermissionAdminConfig,
                       pageNo: (pageNo - 1).toString()
                     }).toString()
                   }}
@@ -473,16 +460,16 @@ export default function JobAdmin() {
                   Previous
                 </Link>
               )}
-              {pageNo === totalPagesListJobs ? (
+              {pageNo === totalPagesPermissionList ? (
                 <span className=''>Next</span>
               ) : (
                 <Link
                   className='text-[#0b65cc]'
                   to={{
-                    pathname: '/admin/job',
+                    pathname: '/admin/permission',
                     search: createSearchParams({
-                      ...queryConfigJobAdmin,
-                      pageNo: (pageNo + 1).toString()
+                      ...queryPermissionAdminConfig,
+                      pageNo: (pageNo - 1).toString()
                     }).toString()
                   }}
                 >
@@ -490,25 +477,19 @@ export default function JobAdmin() {
                 </Link>
               )}
               <div className='w-[100px]'>
-                Page {pageNo} / {totalPagesListJobs}
+                Page {pageNo} / {totalPagesPermissionList}
               </div>
             </>
           )}
         </div>
       )}
-      {isOpenModalCreateJob && (
-        <ModalCreateJob
-          closeModal={() => {
-            setOpenModalCreateJob(false);
-          }}
-        />
+      {isOpenModalCreatePermission && (
+        <ModalCreatePermission closeModal={() => setOpenModalCreatePermission(false)} />
       )}
-      {isOpenModalUpdateJob && (
-        <ModalUpdateJob
-          jobId={jobId}
-          closeModal={() => {
-            setOpenModalUpdateJob(false);
-          }}
+      {isOpenModalUpdatePermssion && (
+        <ModalUpdatePermission
+          closeModal={() => setOpenModalUpdatePermission(false)}
+          permissionId={permissionId}
         />
       )}
     </div>

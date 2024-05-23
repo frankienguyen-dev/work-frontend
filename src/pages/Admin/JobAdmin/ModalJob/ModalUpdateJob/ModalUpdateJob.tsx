@@ -17,7 +17,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import jobApi from '../../../../../apis/job.api.ts';
 import { PostJob } from '../../../../../types/job.type.ts';
 import useQueryConfig from '../../../../../hooks/useQueryConfig.tsx';
-import { isAxiosConflictError, isAxiosUnauthorizedError } from '../../../../../utils/utils.ts';
+import { isAxiosUnauthorizedError } from '../../../../../utils/utils.ts';
 import { ErrorResponse } from '../../../../../types/utils.type.ts';
 import CalendarJobAdmin from '../../CalendarJobAdmin/CalendarJobAdmin.tsx';
 import moment from 'moment';
@@ -77,10 +77,6 @@ const custom: CustomFlowbiteTheme = {
       popup: 'border-t'
     }
   }
-};
-
-type FormError = {
-  message: string;
 };
 
 interface Props {
@@ -168,6 +164,12 @@ export default function ModalUpdateJob({ closeModal, jobId }: Props) {
           .then();
         closeModal();
         console.log('check success: ', data);
+      },
+      onError: (error) => {
+        if (isAxiosUnauthorizedError<ErrorResponse<UnauthorizedError>>(error)) {
+          clearAccessTokenFromLocalStorage();
+          setIsOpenModalUnauthorized(true);
+        }
       }
     });
   });

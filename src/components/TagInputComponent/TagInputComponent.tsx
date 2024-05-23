@@ -9,7 +9,7 @@ interface Props {
   rules?: RegisterOptions;
   name: string;
   setValue: UseFormSetValue<any>;
-  skillsFormServer: any;
+  skillsFormServer?: any;
 }
 
 const TagInputComponent = ({ register, rules, name, setValue, skillsFormServer }: Props) => {
