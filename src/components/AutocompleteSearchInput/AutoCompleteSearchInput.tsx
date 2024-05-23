@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import useQueryParams from '../../hooks/useQueryPrams.tsx';
 import companyApi from '../../apis/company.api.ts';
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { RegisterOptions, UseFormRegister } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 
@@ -25,9 +25,6 @@ export default function AutoCompleteSearchInput({
 }: Props) {
   const [companyName, setCompanyName] = useState({ name: companyNameFromServer || '' });
   const [isSearch, setSearch] = useState<boolean>(false);
-  // const [isSearchInput, setIsSearchInput] = useState<boolean>(false);
-  // console.log('check is search: ', isSearch);
-  console.log('check company name state: ', companyName);
   const queryParams = useQueryParams();
   // const inputRef = useRef<HTMLInputElement>(null);
   const { data: searchCompanyData } = useQuery({
@@ -36,9 +33,6 @@ export default function AutoCompleteSearchInput({
       companyApi.searchCompany({ ...queryParams, name: companyName.name, pageSize: '20' }),
     enabled: isSearch
   });
-  // console.log('check company name state: ', companyName);
-  // console.log('check search length: ', searchCompanyData?.data.data.data.length);
-
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(true);
     setCompanyName({ name: event.target.value });

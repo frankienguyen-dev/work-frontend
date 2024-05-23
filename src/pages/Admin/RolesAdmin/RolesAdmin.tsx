@@ -1,88 +1,71 @@
 import { createSearchParams, Link, useNavigate } from 'react-router-dom';
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
-import useQueryConfig from '../../../hooks/useQueryConfig.tsx';
-import jobApi from '../../../apis/job.api.ts';
-import useQueryParams from '../../../hooks/useQueryPrams.tsx';
-import React, { useContext, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { searchJobSchema, searchSchemaJob } from '../../../utils/rules.ts';
+import { searchRoleSchema, searchSchemaRole } from '../../../utils/rules.ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { omit } from 'lodash';
-import { AppContext } from '../../../contexts/app.context.tsx';
+import { useQuery } from '@tanstack/react-query';
+import useQueryConfig from '../../../hooks/useQueryConfig.tsx';
+import useQueryParams from '../../../hooks/useQueryPrams.tsx';
+import roleApi from '../../../apis/role.api.ts';
 import Loading from '../../../components/Loading/Loading.tsx';
+import moment from 'moment/moment';
 import SvgOops from '../../../components/SvgOops';
-import { calcDayRemaining, formatSalary } from '../../../utils/utils.ts';
-import moment from 'moment';
-import ModalCreateJob from './ModalJob/ModalCreateJob';
-import ModalUpdateJob from './ModalJob/ModalUpdateJob';
+import { useState } from 'react';
+import ModalCreateRole from './ModalRole/ModalCreateRole';
 
-type FormData = Pick<searchSchemaJob, 'name'>;
-const searchJobAdminSchema = searchJobSchema.pick(['name']);
+type FormData = Pick<searchSchemaRole, 'name'>;
+const searchRole = searchRoleSchema.pick(['name']);
 
-export default function JobAdmin() {
+export default function RolesAdmin() {
   const [isSearch, setSearch] = useState<boolean>(false);
-  console.log('check search state: ', isSearch);
-  const [isOpenModalCreateJob, setOpenModalCreateJob] = useState<boolean>(false);
-  const [isOpenModalUpdateJob, setOpenModalUpdateJob] = useState<boolean>(false);
-  const [jobId, setJobId] = useState<string>('');
-  const { isAuthenticated } = useContext(AppContext);
+  const [isOpenCreateModal, setOpenCreateModal] = useState<boolean>(false);
+  const [isOpenUpdateModal, setOpenUpdateModal] = useState<boolean>(false);
   const { register, handleSubmit, setValue } = useForm<FormData>({
-    resolver: yupResolver(searchJobAdminSchema),
+    resolver: yupResolver(searchRole),
     defaultValues: {
       name: ''
     }
   });
+
   const navigate = useNavigate();
   const queryConfig = useQueryConfig();
-  const queryConfigJobAdmin = {
+  const queryConfigRoleAdmin = {
     ...queryConfig,
     sortBy: 'createdAt',
     sortDir: 'desc',
     pageSize: '10'
   };
-  const pageNo = Number(queryConfigJobAdmin.pageNo);
-  const pageSize = Number(queryConfigJobAdmin.pageSize);
-  const queryParams = useQueryParams();
-  const { data: listJobsData, isLoading: listJobLoading } = useQuery({
-    queryKey: ['listJobs', queryConfigJobAdmin],
-    queryFn: () => (isAuthenticated ? jobApi.getAllJobs(queryConfigJobAdmin) : null),
-    placeholderData: keepPreviousData
+
+  const pageNo = Number(queryConfigRoleAdmin.pageNo);
+  const pageSize = Number(queryConfigRoleAdmin.pageSize);
+
+  const { data: listRoleData, isLoading: listRoleLoading } = useQuery({
+    queryKey: ['roleList', queryConfigRoleAdmin],
+    queryFn: () => roleApi.getAllRoles(queryConfigRoleAdmin)
   });
-  const totalPagesListJobs = Number(listJobsData?.data.data.meta.totalPages);
-  const { data: listJobsSearchData, isLoading: listJobSearchLoading } = useQuery({
-    queryKey: ['listJobsSearch', queryParams],
-    queryFn: () => jobApi.searchJob(queryParams),
-    placeholderData: keepPreviousData,
-    enabled: isSearch
+  const totalPagesListRole = Number(listRoleData?.data.data.meta.totalPages);
+  console.log('check role: ', listRoleData?.data.data.data);
+  const { data: listRoleSearchData, isLoading: listRoleSearchLoading } = useQuery({
+    queryKey: ['roleListSearch', queryConfigRoleAdmin],
+    queryFn: () => roleApi.searchRole(queryConfigRoleAdmin)
   });
-  const totalPagesListJobsSearch = Number(listJobsSearchData?.data.data.meta.totalPages);
+
+  const totalPagesListRoleSearch = Number(listRoleSearchData?.data.data.meta.totalPages);
+
   const onSubmit = handleSubmit((data) => {
     setSearch(true);
     navigate({
-      pathname: '/admin/job',
-      search: createSearchParams(
-        omit({
-          ...queryConfigJobAdmin,
-          name: data.name as string,
-          pageNo: '1'
-        })
-      ).toString()
+      pathname: '/admin/role',
+      search: createSearchParams({
+        ...queryConfigRoleAdmin,
+        name: data.name as string,
+        pageNo: '1'
+      }).toString()
     });
-    console.log('check data search: ', data);
   });
-
-  const handleClickButtonEdit = (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    jobId: string
-  ) => {
-    event.preventDefault();
-    setJobId(jobId);
-    setOpenModalUpdateJob(true);
-  };
 
   return (
     <div className='my-[54px]'>
-      <div className='text-[18px] leading-7 font-medium text-[#18191c]'>Jobs</div>
+      <div className='text-[18px] leading-7 font-medium text-[#18191c]'>Roles</div>
       <div className='py-[18px]'>
         <div className='flex items-center justify-end gap-[16px]'>
           <div className='border-[2px] p-[2px] w-[300px] border-[#E4E5E8] rounded-[6px] h-[48px]'>
@@ -114,7 +97,7 @@ export default function JobAdmin() {
                 </div>
                 <input
                   type='text'
-                  placeholder='Search job'
+                  placeholder='Search role'
                   className='w-full h-[40px] pl-[54px] border-none border-transparent
                   focus:border-transparent focus:ring-0 leading-5 text-[14px] text-[#18191C]'
                   {...register('name')}
@@ -124,22 +107,22 @@ export default function JobAdmin() {
           </div>
           <Link
             onClick={() => {
-              setOpenModalCreateJob(true);
+              setOpenCreateModal(true);
             }}
             to=''
             className='bg-[#0A65CC] py-[14px] px-[18px] rounded-[6px] h-[48px] flex items-center
             justify-center text-[14px] leading-5 text-white font-semibold gap-[4px] group'
           >
-            Add Job
+            Add Role
           </Link>
           <Link
             onClick={() => {
               setValue('name', '');
               setSearch(false);
               navigate({
-                pathname: '/admin/job',
+                pathname: '/admin/role',
                 search: createSearchParams({
-                  ...queryConfigJobAdmin
+                  ...queryConfigRoleAdmin
                 }).toString()
               });
             }}
@@ -154,56 +137,49 @@ export default function JobAdmin() {
       <div className='mt-[24px]'>
         <div className='grid grid-cols-12 bg-[#f1f2f4] px-[20px] py-[10px] rounded-[4px]'>
           <div className='col-span-1 text-center text-[12px] text-[#535860]'>Index</div>
-          <div className='col-span-4  text-[12px] text-[#535860]'>Name</div>
-          <div className='col-span-1  text-[12px] text-[#535860]'>Salary</div>
-          <div className='col-span-1  text-[12px] text-[#535860]'>Level</div>
-          <div className='col-span-1  text-[12px] text-[#535860]'>Status</div>
-          <div className='col-span-2 text-center  text-[12px] text-[#535860]'>Created At</div>
-          <div className='col-span-2 text-center text-[12px] text-[#535860]'>Actions</div>
+          <div className='col-span-3 text-[12px] text-[#535860]'>Name</div>
+          <div className='col-span-1 text-[12px] text-[#535860]'>Status</div>
+          <div className='col-span-3 text-[12px] text-[#535860]'>Created At</div>
+          <div className='col-span-3 text-[12px] text-[#535860]'>Updated At</div>
+          <div className='col-span-1 text-center text-[12px] text-[#535860]'>Actions</div>
         </div>
       </div>
       <div className='mt-2 h-[530px]'>
-        {listJobLoading ? (
+        {listRoleLoading ? (
           <div className='h-[530px] flex items-center justify-center  '>
             <Loading />
           </div>
         ) : isSearch ? (
-          listJobSearchLoading ? (
+          listRoleSearchLoading ? (
             <div className='h-[530px] flex items-center justify-center  '>
               <Loading />
             </div>
-          ) : listJobsSearchData?.data.data.data &&
-            listJobsSearchData?.data.data.data.length > 0 ? (
-            listJobsSearchData?.data.data.data.map((job, index) => (
-              <Link
-                to={`/job/${job.id}`}
-                onClick={() => scrollTo(0, 0)}
-                key={job.id}
+          ) : listRoleSearchData?.data.data.data &&
+            listRoleSearchData?.data.data.data.length > 0 ? (
+            listRoleSearchData?.data.data.data.map((role, index) => (
+              <div
+                key={role.id}
                 className='grid grid-cols-12 px-[20px] py-[10px] items-center border-b
         hover:cursor-pointer hover:outline outline-[#0b65cc] rounded-[8px]'
               >
                 <div className='col-span-1 text-center text-[16px] text-[#535860]'>
                   {(pageNo - 1) * pageSize + index + 1}
                 </div>
-                <div className='col-span-4  text-[16px] text-[#535860]'>{job.name}</div>
+                <div className='col-span-3  text-[16px] text-[#535860]'>{role.name}</div>
                 <div className='col-span-1  text-[16px] text-[#535860]'>
-                  {formatSalary(job.salary)}
+                  {role.active ? 'Active' : 'Disable'}
                 </div>
-                <div className='col-span-1 text-[16px] text-[#535860]'>{job.level}</div>
-                <div className='col-span-1 text-[16px] text-[#535860]'>
-                  {calcDayRemaining(job.endDate) > 0 ? 'Active' : 'Expired'}
+                <div className='col-span-3 text-[16px] text-[#535860]'>
+                  {moment(role.createdAt).format('DD MMM, YYYY')}
                 </div>
-                <div className='col-span-2 text-[16px] text-[#535860]'>
-                  {moment(job.createdAt).format('DD MMM, YYYY')}
+                <div className='col-span-3 text-[16px] text-[#535860]'>
+                  {moment(role.updatedAt).format('DD MMMM, YYYY')}
                 </div>
                 <div
-                  className='col-span-2 text-center text-[16px] text-[#535860] flex justify-center
+                  className='col-span-1 text-center text-[16px] text-[#535860] flex justify-center
           items-center gap-[6px]'
                 >
-                  <button
-                    onClick={(event) => handleClickButtonEdit(event, job.id)}
-                    className='group p-[6px] hover:bg-[#f1f2f4] rounded-[3px] hover:cursor-pointer'
-                  >
+                  <button className='group p-[6px] hover:bg-[#f1f2f4] rounded-[3px] hover:cursor-pointer'>
                     <svg
                       className='group-hover:text-[#FFA500] text-[#939AAD]'
                       width='20'
@@ -282,7 +258,7 @@ export default function JobAdmin() {
                     </svg>
                   </button>
                 </div>
-              </Link>
+              </div>
             ))
           ) : (
             <div className='flex flex-col items-center justify-center'>
@@ -290,38 +266,31 @@ export default function JobAdmin() {
               <div className='font-medium text-[20px] leading-7'>Oops! The job does not exist.</div>
             </div>
           )
-        ) : listJobsData?.data.data.data && listJobsData?.data.data.data.length > 0 ? (
-          listJobsData?.data.data.data.map((job, index) => (
-            <Link
-              onClick={() => scrollTo(0, 0)}
-              to={`/job/${job.id}`}
-              key={job.id}
+        ) : listRoleData?.data.data.data && listRoleData?.data.data.data.length > 0 ? (
+          listRoleData?.data.data.data.map((role, index) => (
+            <div
+              key={role.id}
               className='grid grid-cols-12 px-[20px] py-[10px] items-center border-b
         hover:cursor-pointer hover:outline outline-[#0b65cc] rounded-[8px]'
             >
               <div className='col-span-1 text-center text-[16px] text-[#535860]'>
                 {(pageNo - 1) * pageSize + index + 1}
               </div>
-              <div className='col-span-4   text-[16px] text-[#535860]'>{job.name}</div>
-              <div className='col-span-1  text-[16px] text-[#535860]'>
-                {formatSalary(job.salary)}
+              <div className='col-span-3 text-[16px] text-[#535860]'>{role.name}</div>
+              <div className='col-span-1 text-[16px] text-[#535860]'>
+                {role.active ? 'Active' : 'Disable'}
               </div>
-              <div className='col-span-1  text-[16px] text-[#535860]'>{job.level}</div>
-              <div className='col-span-1  text-[16px] text-[#535860]'>
-                {' '}
-                {calcDayRemaining(job.endDate) > 0 ? 'Active' : 'Expired'}
+              <div className='col-span-3 text-[16px] text-[#535860]'>
+                {moment(role.createdAt).format('DD MMMM, YYYY')}
               </div>
-              <div className='col-span-2 text-center text-[16px] text-[#535860]'>
-                {moment(job.createdAt).format('DD MMM, YYYY')}
+              <div className='col-span-3 text-[16px] text-[#535860]'>
+                {moment(role.updatedAt).format('DD MMMM, YYYY')}
               </div>
               <div
-                className='col-span-2 text-center text-[16px] text-[#535860] flex justify-center
+                className='col-span-1 text-center text-[16px] text-[#535860] flex justify-center
           items-center gap-[6px]'
               >
-                <button
-                  onClick={(event) => handleClickButtonEdit(event, job.id)}
-                  className='group p-[6px] hover:bg-[#f1f2f4] rounded-[3px] hover:cursor-pointer'
-                >
+                <button className='group p-[6px] hover:bg-[#f1f2f4] rounded-[3px] hover:cursor-pointer'>
                   <svg
                     className='group-hover:text-[#FFA500] text-[#939AAD]'
                     width='20'
@@ -400,7 +369,7 @@ export default function JobAdmin() {
                   </svg>
                 </button>
               </div>
-            </Link>
+            </div>
           ))
         ) : (
           <div className='flex flex-col items-center justify-center'>
@@ -409,7 +378,7 @@ export default function JobAdmin() {
           </div>
         )}
       </div>
-      {listJobSearchLoading || listJobLoading ? (
+      {listRoleLoading || listRoleSearchLoading ? (
         <div className='mt-[30px] flex items-center justify-end gap-x-[20px]'>
           <span className=''>Previous</span>
           <span className=''>Next</span>
@@ -425,9 +394,9 @@ export default function JobAdmin() {
                 <Link
                   className='text-[#0b65cc]'
                   to={{
-                    pathname: '/admin/job',
+                    pathname: '/admin/role',
                     search: createSearchParams({
-                      ...queryConfigJobAdmin,
+                      ...queryConfigRoleAdmin,
                       pageNo: (pageNo - 1).toString()
                     }).toString()
                   }}
@@ -435,16 +404,16 @@ export default function JobAdmin() {
                   Previous
                 </Link>
               )}
-              {pageNo === totalPagesListJobsSearch ? (
+              {pageNo === totalPagesListRoleSearch ? (
                 <span className=''>Next</span>
               ) : (
                 <Link
                   className='text-[#0b65cc]'
                   to={{
-                    pathname: '/admin/job',
+                    pathname: '/admin/role',
                     search: createSearchParams({
-                      ...queryConfigJobAdmin,
-                      pageNo: (pageNo + 1).toString()
+                      ...queryConfigRoleAdmin,
+                      pageNo: (pageNo - 1).toString()
                     }).toString()
                   }}
                 >
@@ -452,7 +421,7 @@ export default function JobAdmin() {
                 </Link>
               )}
               <div className='w-[100px]'>
-                Page {pageNo} / {totalPagesListJobsSearch}
+                Page {pageNo} / {totalPagesListRoleSearch}
               </div>
             </>
           ) : (
@@ -463,9 +432,9 @@ export default function JobAdmin() {
                 <Link
                   className='text-[#0b65cc]'
                   to={{
-                    pathname: '/admin/job',
+                    pathname: '/admin/role',
                     search: createSearchParams({
-                      ...queryConfigJobAdmin,
+                      ...queryConfigRoleAdmin,
                       pageNo: (pageNo - 1).toString()
                     }).toString()
                   }}
@@ -473,16 +442,16 @@ export default function JobAdmin() {
                   Previous
                 </Link>
               )}
-              {pageNo === totalPagesListJobs ? (
+              {pageNo === totalPagesListRole ? (
                 <span className=''>Next</span>
               ) : (
                 <Link
                   className='text-[#0b65cc]'
                   to={{
-                    pathname: '/admin/job',
+                    pathname: '/admin/role',
                     search: createSearchParams({
-                      ...queryConfigJobAdmin,
-                      pageNo: (pageNo + 1).toString()
+                      ...queryConfigRoleAdmin,
+                      pageNo: (pageNo - 1).toString()
                     }).toString()
                   }}
                 >
@@ -490,27 +459,13 @@ export default function JobAdmin() {
                 </Link>
               )}
               <div className='w-[100px]'>
-                Page {pageNo} / {totalPagesListJobs}
+                Page {pageNo} / {totalPagesListRole}
               </div>
             </>
           )}
         </div>
       )}
-      {isOpenModalCreateJob && (
-        <ModalCreateJob
-          closeModal={() => {
-            setOpenModalCreateJob(false);
-          }}
-        />
-      )}
-      {isOpenModalUpdateJob && (
-        <ModalUpdateJob
-          jobId={jobId}
-          closeModal={() => {
-            setOpenModalUpdateJob(false);
-          }}
-        />
-      )}
+      {isOpenCreateModal && <ModalCreateRole closeModal={() => setOpenCreateModal(false)} />}
     </div>
   );
 }

@@ -1,5 +1,4 @@
 import { Button, CustomFlowbiteTheme, Flowbite, Modal } from 'flowbite-react';
-import Calendar from '../../../../../components/Calendar';
 import TextArea from '../../../../../components/TextArea';
 import ModalExpiredToken from '../../../../../components/ModalExpiredToken';
 
@@ -18,7 +17,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import jobApi from '../../../../../apis/job.api.ts';
 import { PostJob } from '../../../../../types/job.type.ts';
 import useQueryConfig from '../../../../../hooks/useQueryConfig.tsx';
-import { isAxiosConflictError, isAxiosUnauthorizedError } from '../../../../../utils/utils.ts';
+import { isAxiosUnauthorizedError } from '../../../../../utils/utils.ts';
 import { ErrorResponse } from '../../../../../types/utils.type.ts';
 import moment from 'moment';
 import CalendarJobAdmin from '../../CalendarJobAdmin/CalendarJobAdmin.tsx';
@@ -79,10 +78,6 @@ const custom: CustomFlowbiteTheme = {
   }
 };
 
-type FormError = {
-  message: string;
-};
-
 interface Props {
   closeModal: () => void;
 }
@@ -101,8 +96,7 @@ export default function ModalCreateJob({ closeModal }: Props) {
     register,
     handleSubmit,
     formState: { errors },
-    setValue,
-    setError
+    setValue
   } = useForm<FormData>({ resolver: yupResolver(formJobSchema) });
   const queryConfig = useQueryConfig();
   const queryConfigJobAdmin = {
@@ -138,15 +132,6 @@ export default function ModalCreateJob({ closeModal }: Props) {
         console.log('check success: ', data);
       },
       onError: (error) => {
-        if (isAxiosConflictError<ErrorResponse<FormError>>(error)) {
-          const formError = error.response?.data.data;
-          if (formError) {
-            setError('name', {
-              message: formError.message
-            });
-          }
-          console.log('check error server: ', error);
-        }
         if (isAxiosUnauthorizedError<ErrorResponse<UnauthorizedError>>(error)) {
           clearAccessTokenFromLocalStorage();
           setIsOpenModalUnauthorized(true);
