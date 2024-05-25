@@ -1,6 +1,5 @@
 import { CustomFlowbiteTheme, Flowbite, ToggleSwitch } from 'flowbite-react';
-import React, { useEffect, useState } from 'react';
-import { RegisterOptions, UseFormRegister, UseFormSetValue } from 'react-hook-form';
+import { useEffect, useState } from 'react';
 
 const custom: CustomFlowbiteTheme = {
   toggleSwitch: {
@@ -47,42 +46,57 @@ const custom: CustomFlowbiteTheme = {
   }
 };
 
-// interface Props {
-//   // errorMessage?: string;
-//   // // eslint-disable-next-line @typescript-eslint/no-explicit-any
-//   // register: UseFormRegister<any>;
-//   // rules?: RegisterOptions;
-//   // name: string;
-//   // // eslint-disable-next-line @typescript-eslint/no-explicit-any
-//   // setValue: UseFormSetValue<any>;
-//   // value?: string;
-//   // handleToggleChange: (value: string) => void;
-//   // handleSaveListPermissions: (value: any) => void;
-//   setSwitch: React.Dispatch<React.SetStateAction<boolean>>;
-// }
 interface ToggleSwitchComponentProps {
   name: string;
   onChangeToggle?: (name: string) => void;
   onChangeToggleActive?: (value: boolean) => void;
+  activeChecked?: boolean | undefined;
+  activePermissionChecked?: boolean | undefined;
+  type: string;
 }
 
 export default function ToggleSwitchComponent({
+  onChangeToggleActive,
+  activeChecked,
   name,
   onChangeToggle,
-  onChangeToggleActive
+  activePermissionChecked,
+  type
 }: ToggleSwitchComponentProps) {
-  const [isSwitch, setSwitch] = useState<boolean>(false);
-  console.log('check switch state: ', isSwitch);
+  const [activeSwitch, setActiveSwitch] = useState<boolean>(false);
+  const [permissionSwitch, setPermissionSwitch] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (activeChecked !== undefined) {
+      setActiveSwitch(activeChecked);
+    }
+  }, [activeChecked]);
+
+  useEffect(() => {
+    if (activePermissionChecked !== undefined) {
+      setPermissionSwitch(activePermissionChecked);
+    }
+  }, [activePermissionChecked]);
+
   const handleChangeSwitch = () => {
-    const newValue = !isSwitch;
-    setSwitch(newValue);
-    if (onChangeToggle !== undefined) onChangeToggle(name);
-    if (onChangeToggleActive != undefined) onChangeToggleActive(newValue);
+    if (type === 'active_role') {
+      const newValue = !activeSwitch;
+      setActiveSwitch(newValue);
+      onChangeToggleActive && onChangeToggleActive(newValue);
+    } else if (type === 'permission') {
+      const newValue = !permissionSwitch;
+      setPermissionSwitch(newValue);
+      onChangeToggle && onChangeToggle(name);
+    }
   };
 
   return (
     <Flowbite theme={{ theme: custom }}>
-      <ToggleSwitch sizing='xl' checked={isSwitch} onChange={handleChangeSwitch} />
+      <ToggleSwitch
+        sizing='xl'
+        checked={type === 'active_role' ? activeSwitch : permissionSwitch}
+        onChange={handleChangeSwitch}
+      />
     </Flowbite>
   );
 }

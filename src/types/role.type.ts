@@ -1,11 +1,10 @@
-import { Permission } from './permission.type.ts';
 import { ByUser } from './user.type.ts';
 import { MetaData } from './meta.type.ts';
 
 export interface Role {
   id: string;
   name: string;
-  permissions: Permission | null;
+  permissions: { name: string }[] | [];
   createdBy: ByUser | null;
   createdAt: string | null;
   updatedBy: ByUser | null;

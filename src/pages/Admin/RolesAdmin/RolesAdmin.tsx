@@ -2,15 +2,15 @@ import { createSearchParams, Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { searchRoleSchema, searchSchemaRole } from '../../../utils/rules.ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import useQueryConfig from '../../../hooks/useQueryConfig.tsx';
-import useQueryParams from '../../../hooks/useQueryPrams.tsx';
 import roleApi from '../../../apis/role.api.ts';
 import Loading from '../../../components/Loading/Loading.tsx';
 import moment from 'moment/moment';
 import SvgOops from '../../../components/SvgOops';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import ModalCreateRole from './ModalRole/ModalCreateRole';
+import ModalUpdateRole from './ModalRole/ModalUpdateRole';
 
 type FormData = Pick<searchSchemaRole, 'name'>;
 const searchRole = searchRoleSchema.pick(['name']);
@@ -19,6 +19,7 @@ export default function RolesAdmin() {
   const [isSearch, setSearch] = useState<boolean>(false);
   const [isOpenCreateModal, setOpenCreateModal] = useState<boolean>(false);
   const [isOpenUpdateModal, setOpenUpdateModal] = useState<boolean>(false);
+  const [roleId, setRoleId] = useState<string>('');
   const { register, handleSubmit, setValue } = useForm<FormData>({
     resolver: yupResolver(searchRole),
     defaultValues: {
@@ -40,13 +41,15 @@ export default function RolesAdmin() {
 
   const { data: listRoleData, isLoading: listRoleLoading } = useQuery({
     queryKey: ['roleList', queryConfigRoleAdmin],
-    queryFn: () => roleApi.getAllRoles(queryConfigRoleAdmin)
+    queryFn: () => roleApi.getAllRoles(queryConfigRoleAdmin),
+    placeholderData: keepPreviousData
   });
   const totalPagesListRole = Number(listRoleData?.data.data.meta.totalPages);
-  console.log('check role: ', listRoleData?.data.data.data);
   const { data: listRoleSearchData, isLoading: listRoleSearchLoading } = useQuery({
     queryKey: ['roleListSearch', queryConfigRoleAdmin],
-    queryFn: () => roleApi.searchRole(queryConfigRoleAdmin)
+    queryFn: () => roleApi.searchRole(queryConfigRoleAdmin),
+    enabled: isSearch,
+    placeholderData: keepPreviousData
   });
 
   const totalPagesListRoleSearch = Number(listRoleSearchData?.data.data.meta.totalPages);
@@ -62,6 +65,15 @@ export default function RolesAdmin() {
       }).toString()
     });
   });
+
+  const handleClickButtonEdit = (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    roleId: string
+  ) => {
+    event.preventDefault();
+    setRoleId(roleId);
+    setOpenUpdateModal(true);
+  };
 
   return (
     <div className='my-[54px]'>
@@ -179,7 +191,10 @@ export default function RolesAdmin() {
                   className='col-span-1 text-center text-[16px] text-[#535860] flex justify-center
           items-center gap-[6px]'
                 >
-                  <button className='group p-[6px] hover:bg-[#f1f2f4] rounded-[3px] hover:cursor-pointer'>
+                  <button
+                    onClick={(event) => handleClickButtonEdit(event, role.id)}
+                    className='group p-[6px] hover:bg-[#f1f2f4] rounded-[3px] hover:cursor-pointer'
+                  >
                     <svg
                       className='group-hover:text-[#FFA500] text-[#939AAD]'
                       width='20'
@@ -290,7 +305,10 @@ export default function RolesAdmin() {
                 className='col-span-1 text-center text-[16px] text-[#535860] flex justify-center
           items-center gap-[6px]'
               >
-                <button className='group p-[6px] hover:bg-[#f1f2f4] rounded-[3px] hover:cursor-pointer'>
+                <button
+                  onClick={(event) => handleClickButtonEdit(event, role.id)}
+                  className='group p-[6px] hover:bg-[#f1f2f4] rounded-[3px] hover:cursor-pointer'
+                >
                   <svg
                     className='group-hover:text-[#FFA500] text-[#939AAD]'
                     width='20'
@@ -466,6 +484,9 @@ export default function RolesAdmin() {
         </div>
       )}
       {isOpenCreateModal && <ModalCreateRole closeModal={() => setOpenCreateModal(false)} />}
+      {isOpenUpdateModal && (
+        <ModalUpdateRole closeModal={() => setOpenUpdateModal(false)} roleId={roleId} />
+      )}
     </div>
   );
 }

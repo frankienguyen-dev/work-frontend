@@ -145,7 +145,8 @@ export const permissionSchema = yup.object({
 
 export const roleSchema = yup.object({
   name: yup.string().trim().required('Role name is required'),
-  active: yup.bool()
+  active: yup.bool(),
+  permissions: yup.array().of(yup.string().trim().required('Permission name is required'))
 });
 
 export const searchRoleSchema = yup.object({
