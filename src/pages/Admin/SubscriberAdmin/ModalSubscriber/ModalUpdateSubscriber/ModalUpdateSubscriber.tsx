@@ -1,21 +1,17 @@
 import { Button, CustomFlowbiteTheme, Flowbite, Modal } from 'flowbite-react';
+import TagInputComponent from '../../../../../components/TagInputComponent';
+import ModalExpiredToken from '../../../../../components/ModalExpiredToken';
+import { clearAccessTokenFromLocalStorage, clearRoleToLocalStorage } from '../../../../../utils/auth.ts';
 import { useEffect, useRef, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { roleSchema, RoleSchema } from '../../../../../utils/rules.ts';
-import { yupResolver } from '@hookform/resolvers/yup';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import useQueryConfig from '../../../../../hooks/useQueryConfig.tsx';
-import {
-  clearAccessTokenFromLocalStorage,
-  clearRoleToLocalStorage
-} from '../../../../../utils/auth.ts';
-import ModalExpiredToken from '../../../../../components/ModalExpiredToken';
-import AccordionComponent from '../../../../../components/AccordionComponent';
-import roleApi from '../../../../../apis/role.api.ts';
-import { UpdateRole } from '../../../../../types/role.type.ts';
+import { createSubscriberSchema, subscriberSchema } from '../../../../../utils/rules.ts';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import subscriberApi from '../../../../../apis/subscriber.api.ts';
+import { UpdateSubscriber } from '../../../../../types/subscriber.type.ts';
 import { isAxiosConflictError, isAxiosUnauthorizedError } from '../../../../../utils/utils.ts';
 import { ErrorResponse } from '../../../../../types/utils.type.ts';
-import ToggleSwitchComponent from '../../../../../components/ToggleSwitchComponent';
 
 const custom: CustomFlowbiteTheme = {
   modal: {
@@ -72,30 +68,29 @@ const custom: CustomFlowbiteTheme = {
     }
   }
 };
-type UnauthorizedError = {
-  message: string;
-};
+
+interface Props {
+  closeModal: () => void;
+  subscriberId: string;
+}
+
 type FormError = {
   message: string;
 };
 
-type FormData = RoleSchema;
+type UnauthorizedError = {
+  message: string;
+};
 
-interface Props {
-  closeModal: () => void;
-  roleId: string;
-}
-
-export default function ModalUpdateRole({ closeModal, roleId }: Props) {
+type FormData = createSubscriberSchema;
+const formSubscriberSchema = subscriberSchema;
+export default function ModalUpdateSubscriber({ closeModal, subscriberId }: Props) {
   const [isOpenModalUnauthorized, setIsOpenModalUnauthorized] = useState<boolean>(false);
-  const [permission, setPermission] = useState<{ name: string }[]>([]);
-  const [isActive, setActive] = useState<boolean>(false);
   const submitFormRef = useRef<HTMLButtonElement>(null);
   const queryClient = useQueryClient();
   const queryConfig = useQueryConfig();
-  const queryConfigRoleAdmin = {
+  const queryConfigSubscriberAdmin = {
     ...queryConfig,
-    sortBy: 'createdAt',
     sortDir: 'desc',
     pageSize: '10'
   };
@@ -106,49 +101,47 @@ export default function ModalUpdateRole({ closeModal, roleId }: Props) {
     setError,
     setValue
   } = useForm<FormData>({
-    resolver: yupResolver(roleSchema),
+    resolver: yupResolver(formSubscriberSchema),
     defaultValues: {
+      email: '',
       name: '',
-      permissions: [],
-      active: false
+      skills: []
     }
   });
 
   const { data } = useQuery({
-    queryKey: ['permissionData', roleId],
-    queryFn: () => roleApi.getRoleById(roleId)
+    queryKey: ['subscriberById', subscriberId],
+    queryFn: () => subscriberApi.getSubscriberById(subscriberId)
   });
-  const roleByIdData = data?.data.data;
-  const updateRoleByIdMutation = useMutation({
-    mutationFn: (body: UpdateRole) => roleApi.updateRoleById(roleId, body)
+
+  const updateSubscriberMutation = useMutation({
+    mutationFn: (body: UpdateSubscriber) => subscriberApi.updateSubscriberById(subscriberId, body)
   });
+
+  const subscriberData = data?.data.data;
+
   const onSubmit = handleSubmit((data) => {
-    const formatPermission = permission.map((item) => ({ name: item.name }));
-    const updateRoleData = {
-      ...data,
-      permissions: formatPermission,
-      active: isActive
-    };
-    updateRoleByIdMutation.mutate(updateRoleData, {
+    console.log('check data submit: ', data);
+    updateSubscriberMutation.mutate(data, {
       onSuccess: (data) => {
         queryClient
           .invalidateQueries({
-            queryKey: ['roleList', queryConfigRoleAdmin]
+            queryKey: ['subscriberList', queryConfigSubscriberAdmin]
           })
           .then();
         queryClient
           .invalidateQueries({
-            queryKey: ['roleListSearch', queryConfigRoleAdmin]
+            queryKey: ['subscriberSearchList', queryConfigSubscriberAdmin]
           })
           .then();
         closeModal();
-        console.log('check data success: ', data);
+        console.log('check success data: ', data);
       },
       onError: (error) => {
         if (isAxiosConflictError<ErrorResponse<FormError>>(error)) {
           const formError = error.response?.data.data;
           if (formError) {
-            setError('name', {
+            setError('email', {
               message: formError.message
             });
           }
@@ -160,82 +153,61 @@ export default function ModalUpdateRole({ closeModal, roleId }: Props) {
       }
     });
   });
-  const handleToggleChange = (name: string) => {
-    const existingPermission = permission.some((item) => item.name === name);
-    if (existingPermission) {
-      setPermission((prevPermission) => prevPermission.filter((item) => item.name !== name));
-    } else {
-      setPermission((prevPermission) => [...prevPermission, { name }]);
-    }
-  };
-  console.log('check is active', isActive);
-  const handleToggleActive = (value: boolean) => {
-    setActive(value);
-  };
 
   useEffect(() => {
-    if (roleByIdData) {
-      setValue('name', roleByIdData.name);
-      setValue('active', roleByIdData.active);
-      const res = roleByIdData.permissions.map((item) => item.name);
-      setValue('permissions', res);
-      setPermission(roleByIdData.permissions);
-      setActive(roleByIdData.active);
-      setPermission((prevPermission) => {
-        const mergedPermissions = [
-          ...roleByIdData.permissions,
-          ...prevPermission.filter(
-            (item) => !roleByIdData.permissions.some((perm) => perm.name === item.name)
-          )
-        ];
-        console.log('check merge: ', mergedPermissions);
-        return mergedPermissions.map((item) => ({ name: item.name }));
-      });
+    if (subscriberData) {
+      setValue('name', subscriberData.name);
+      setValue('email', subscriberData.email);
+      setValue('skills', subscriberData.skills);
     }
-  }, [setValue, roleByIdData]);
+  }, [subscriberData, setValue]);
   return (
     <>
       <Flowbite theme={{ theme: custom }}>
         <Modal size='7xl' show={true} position='center' onClose={closeModal}>
-          <Modal.Header>Update Role</Modal.Header>
+          <Modal.Header>Update Subscriber</Modal.Header>
           <Modal.Body>
             <form noValidate onSubmit={onSubmit}>
-              <div className='grid grid-cols-12 gap-x-[40px] mt-[24px]'>
-                <div className='col-span-9 h-[76px]'>
-                  <div className='text-[14px] leading-5 text-[#18191C]'>Role Name</div>
+              <div className='grid grid-cols-12 gap-x-[20px] mt-[24px]'>
+                <div className='col-span-6 h-[76px]'>
+                  <div className='text-[14px] leading-5 text-[#18191C]'>Email</div>
+                  <input
+                    type='text'
+                    autoComplete='off'
+                    {...register('email')}
+                    className='w-full mt-2 h-[48px] rounded-[5px] border-[2px] border-[#e4e5e8] text-[16px]
+                      leading-6 text-[#111827] focus:outline-none focus:border-[#9099a3] focus:ring-0 '
+                  />
+                  <div className='mt-1 min-h-[1.25rem] text-[12px] text-red-600 dark:text-red-500'>
+                    <span className='font-medium'>{errors.email?.message}</span>
+                  </div>
+                </div>
+                <div className='col-span-6 h-[76px]'>
+                  <div className='text-[14px] leading-5 text-[#18191C]'>Full Name</div>
                   <input
                     type='text'
                     autoComplete='off'
                     {...register('name')}
                     className='w-full mt-2 h-[48px] rounded-[5px] border-[2px] border-[#e4e5e8] text-[16px]
-                      leading-6 text-[#111827] focus:outline-none focus:border-[#9099a3] focus:ring-0'
+                      leading-6 text-[#111827] focus:outline-none focus:border-[#9099a3] focus:ring-0 '
                   />
                   <div className='mt-1 min-h-[1.25rem] text-[12px] text-red-600 dark:text-red-500'>
                     <span className='font-medium'>{errors.name?.message}</span>
                   </div>
                 </div>
-                <div className='col-span-3 h-[76px]'>
-                  <div className='text-[14px] leading-5 text-[#18191C]'>Status</div>
-                  <div className='mt-4'>
-                    <ToggleSwitchComponent
-                      type='active_role'
-                      name='active'
-                      onChangeToggleActive={handleToggleActive}
-                      activeChecked={roleByIdData && roleByIdData.active}
-                    />
+                <div className='col-span-12 h-[76px] mt-[24px]'>
+                  <div className='text-[14px] leading-5 text-[#18191C] w-full mb-2'>Skills</div>
+                  <TagInputComponent
+                    register={register}
+                    name='skills'
+                    setValue={setValue}
+                    skillsFormServer={subscriberData?.skills}
+                  />
+                  <div className='mt-1 min-h-[1.25rem] text-[12px] text-red-600 dark:text-red-500'>
+                    <span className='font-medium'>{errors.skills?.message}</span>
                   </div>
                 </div>
               </div>
-              <div className='text-[16px] font-medium leading-5 text-[#18191C] mt-[30px]'>
-                Permissions
-              </div>
-              <div className='mt-[30px] min-h-[550px]'>
-                <AccordionComponent
-                  onToggleChange={handleToggleChange}
-                  permissionInfoFromServer={roleByIdData?.permissions}
-                />
-              </div>
-
               <div className=' mt-[20px] hidden'>
                 <button
                   className='rounded-[4px]'
@@ -277,13 +249,7 @@ export default function ModalUpdateRole({ closeModal, roleId }: Props) {
           heading='Credential session has expired, please sign in again.'
           textButtonYes='OK'
           icon={
-            <svg
-              width='50'
-              height='50'
-              viewBox='0 0 24 24'
-              fill='none'
-              xmlns='http://www.w3.org/2000/svg'
-            >
+            <svg width='50' height='50' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
               <path
                 d='M5.10571 18.8943C4.24283 18.0314 4.81514 16.2198 4.37595 15.1584C3.92066 14.058 2.25 13.1723 2.25 12C2.25 10.8276 3.92067 9.942 4.37595 8.84164C4.81515 7.78015 4.24283 5.96858 5.10571 5.10571C5.96858 4.24283 7.78016 4.81514 8.84165 4.37595C9.94203 3.92066 10.8277 2.25 12 2.25C13.1724 2.25 14.058 3.92067 15.1584 4.37595C16.2199 4.81515 18.0314 4.24283 18.8943 5.10571C19.7572 5.96858 19.1849 7.78016 19.6241 8.84165C20.0793 9.94203 21.75 10.8277 21.75 12C21.75 13.1724 20.0793 14.058 19.624 15.1584C19.1848 16.2199 19.7572 18.0314 18.8943 18.8943C18.0314 19.7572 16.2198 19.1849 15.1584 19.6241C14.058 20.0793 13.1723 21.75 12 21.75C10.8276 21.75 9.942 20.0793 8.84164 19.624C7.78015 19.1848 5.96858 19.7572 5.10571 18.8943Z'
                 stroke='#0d7490'

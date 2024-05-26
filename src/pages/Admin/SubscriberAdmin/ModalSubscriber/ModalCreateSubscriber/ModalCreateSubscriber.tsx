@@ -1,21 +1,20 @@
 import { Button, CustomFlowbiteTheme, Flowbite, Modal } from 'flowbite-react';
-import { useEffect, useRef, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { roleSchema, RoleSchema } from '../../../../../utils/rules.ts';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import useQueryConfig from '../../../../../hooks/useQueryConfig.tsx';
+import ModalExpiredToken from '../../../../../components/ModalExpiredToken';
 import {
   clearAccessTokenFromLocalStorage,
   clearRoleToLocalStorage
 } from '../../../../../utils/auth.ts';
-import ModalExpiredToken from '../../../../../components/ModalExpiredToken';
-import AccordionComponent from '../../../../../components/AccordionComponent';
-import roleApi from '../../../../../apis/role.api.ts';
-import { UpdateRole } from '../../../../../types/role.type.ts';
+import { useForm } from 'react-hook-form';
+import { useRef, useState } from 'react';
+import TagInputComponent from '../../../../../components/TagInputComponent';
+import { createSubscriberSchema, subscriberSchema } from '../../../../../utils/rules.ts';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { PostSubscriber } from '../../../../../types/subscriber.type.ts';
+import subscriberApi from '../../../../../apis/subscriber.api.ts';
+import useQueryConfig from '../../../../../hooks/useQueryConfig.tsx';
 import { isAxiosConflictError, isAxiosUnauthorizedError } from '../../../../../utils/utils.ts';
 import { ErrorResponse } from '../../../../../types/utils.type.ts';
-import ToggleSwitchComponent from '../../../../../components/ToggleSwitchComponent';
 
 const custom: CustomFlowbiteTheme = {
   modal: {
@@ -72,30 +71,28 @@ const custom: CustomFlowbiteTheme = {
     }
   }
 };
-type UnauthorizedError = {
-  message: string;
-};
+
+interface Props {
+  closeModal: () => void;
+}
+
 type FormError = {
   message: string;
 };
 
-type FormData = RoleSchema;
+type UnauthorizedError = {
+  message: string;
+};
 
-interface Props {
-  closeModal: () => void;
-  roleId: string;
-}
+type FormData = createSubscriberSchema;
+const formSubscriberSchema = subscriberSchema;
 
-export default function ModalUpdateRole({ closeModal, roleId }: Props) {
+export default function ModalCreateSubscriber({ closeModal }: Props) {
   const [isOpenModalUnauthorized, setIsOpenModalUnauthorized] = useState<boolean>(false);
-  const [permission, setPermission] = useState<{ name: string }[]>([]);
-  const [isActive, setActive] = useState<boolean>(false);
-  const submitFormRef = useRef<HTMLButtonElement>(null);
   const queryClient = useQueryClient();
   const queryConfig = useQueryConfig();
-  const queryConfigRoleAdmin = {
+  const queryConfigSubscriberAdmin = {
     ...queryConfig,
-    sortBy: 'createdAt',
     sortDir: 'desc',
     pageSize: '10'
   };
@@ -103,42 +100,23 @@ export default function ModalUpdateRole({ closeModal, roleId }: Props) {
     register,
     handleSubmit,
     formState: { errors },
-    setError,
-    setValue
+    setValue,
+    setError
   } = useForm<FormData>({
-    resolver: yupResolver(roleSchema),
-    defaultValues: {
-      name: '',
-      permissions: [],
-      active: false
-    }
+    resolver: yupResolver(formSubscriberSchema)
+  });
+  const submitFormRef = useRef<HTMLButtonElement>(null);
+
+  const createSubscriberMutation = useMutation({
+    mutationFn: (body: PostSubscriber) => subscriberApi.createSubscriber(body)
   });
 
-  const { data } = useQuery({
-    queryKey: ['permissionData', roleId],
-    queryFn: () => roleApi.getRoleById(roleId)
-  });
-  const roleByIdData = data?.data.data;
-  const updateRoleByIdMutation = useMutation({
-    mutationFn: (body: UpdateRole) => roleApi.updateRoleById(roleId, body)
-  });
   const onSubmit = handleSubmit((data) => {
-    const formatPermission = permission.map((item) => ({ name: item.name }));
-    const updateRoleData = {
-      ...data,
-      permissions: formatPermission,
-      active: isActive
-    };
-    updateRoleByIdMutation.mutate(updateRoleData, {
+    createSubscriberMutation.mutate(data, {
       onSuccess: (data) => {
         queryClient
           .invalidateQueries({
-            queryKey: ['roleList', queryConfigRoleAdmin]
-          })
-          .then();
-        queryClient
-          .invalidateQueries({
-            queryKey: ['roleListSearch', queryConfigRoleAdmin]
+            queryKey: ['subscriberList', queryConfigSubscriberAdmin]
           })
           .then();
         closeModal();
@@ -148,7 +126,7 @@ export default function ModalUpdateRole({ closeModal, roleId }: Props) {
         if (isAxiosConflictError<ErrorResponse<FormError>>(error)) {
           const formError = error.response?.data.data;
           if (formError) {
-            setError('name', {
+            setError('email', {
               message: formError.message
             });
           }
@@ -160,82 +138,49 @@ export default function ModalUpdateRole({ closeModal, roleId }: Props) {
       }
     });
   });
-  const handleToggleChange = (name: string) => {
-    const existingPermission = permission.some((item) => item.name === name);
-    if (existingPermission) {
-      setPermission((prevPermission) => prevPermission.filter((item) => item.name !== name));
-    } else {
-      setPermission((prevPermission) => [...prevPermission, { name }]);
-    }
-  };
-  console.log('check is active', isActive);
-  const handleToggleActive = (value: boolean) => {
-    setActive(value);
-  };
 
-  useEffect(() => {
-    if (roleByIdData) {
-      setValue('name', roleByIdData.name);
-      setValue('active', roleByIdData.active);
-      const res = roleByIdData.permissions.map((item) => item.name);
-      setValue('permissions', res);
-      setPermission(roleByIdData.permissions);
-      setActive(roleByIdData.active);
-      setPermission((prevPermission) => {
-        const mergedPermissions = [
-          ...roleByIdData.permissions,
-          ...prevPermission.filter(
-            (item) => !roleByIdData.permissions.some((perm) => perm.name === item.name)
-          )
-        ];
-        console.log('check merge: ', mergedPermissions);
-        return mergedPermissions.map((item) => ({ name: item.name }));
-      });
-    }
-  }, [setValue, roleByIdData]);
   return (
     <>
       <Flowbite theme={{ theme: custom }}>
         <Modal size='7xl' show={true} position='center' onClose={closeModal}>
-          <Modal.Header>Update Role</Modal.Header>
+          <Modal.Header>Create Subscriber</Modal.Header>
           <Modal.Body>
             <form noValidate onSubmit={onSubmit}>
-              <div className='grid grid-cols-12 gap-x-[40px] mt-[24px]'>
-                <div className='col-span-9 h-[76px]'>
-                  <div className='text-[14px] leading-5 text-[#18191C]'>Role Name</div>
+              <div className='grid grid-cols-12 gap-x-[20px] mt-[24px]'>
+                <div className='col-span-6 h-[76px]'>
+                  <div className='text-[14px] leading-5 text-[#18191C]'>Email</div>
+                  <input
+                    type='text'
+                    autoComplete='off'
+                    {...register('email')}
+                    className='w-full mt-2 h-[48px] rounded-[5px] border-[2px] border-[#e4e5e8] text-[16px]
+                      leading-6 text-[#111827] focus:outline-none focus:border-[#9099a3] focus:ring-0 '
+                  />
+                  <div className='mt-1 min-h-[1.25rem] text-[12px] text-red-600 dark:text-red-500'>
+                    <span className='font-medium'>{errors.email?.message}</span>
+                  </div>
+                </div>
+                <div className='col-span-6 h-[76px]'>
+                  <div className='text-[14px] leading-5 text-[#18191C]'>Full Name</div>
                   <input
                     type='text'
                     autoComplete='off'
                     {...register('name')}
                     className='w-full mt-2 h-[48px] rounded-[5px] border-[2px] border-[#e4e5e8] text-[16px]
-                      leading-6 text-[#111827] focus:outline-none focus:border-[#9099a3] focus:ring-0'
+                      leading-6 text-[#111827] focus:outline-none focus:border-[#9099a3] focus:ring-0 '
                   />
                   <div className='mt-1 min-h-[1.25rem] text-[12px] text-red-600 dark:text-red-500'>
                     <span className='font-medium'>{errors.name?.message}</span>
                   </div>
                 </div>
-                <div className='col-span-3 h-[76px]'>
-                  <div className='text-[14px] leading-5 text-[#18191C]'>Status</div>
-                  <div className='mt-4'>
-                    <ToggleSwitchComponent
-                      type='active_role'
-                      name='active'
-                      onChangeToggleActive={handleToggleActive}
-                      activeChecked={roleByIdData && roleByIdData.active}
-                    />
+                <div className='col-span-12 h-[76px] mt-[24px]'>
+                  <div className='text-[14px] leading-5 text-[#18191C] w-full mb-2'>Skills</div>
+                  <TagInputComponent register={register} name='skills' setValue={setValue} />
+                  <div className='mt-1 min-h-[1.25rem] text-[12px] text-red-600 dark:text-red-500'>
+                    <span className='font-medium'>{errors.skills?.message}</span>
                   </div>
                 </div>
               </div>
-              <div className='text-[16px] font-medium leading-5 text-[#18191C] mt-[30px]'>
-                Permissions
-              </div>
-              <div className='mt-[30px] min-h-[550px]'>
-                <AccordionComponent
-                  onToggleChange={handleToggleChange}
-                  permissionInfoFromServer={roleByIdData?.permissions}
-                />
-              </div>
-
               <div className=' mt-[20px] hidden'>
                 <button
                   className='rounded-[4px]'
@@ -259,7 +204,7 @@ export default function ModalUpdateRole({ closeModal, roleId }: Props) {
                 // closeModal();
               }}
             >
-              Save
+              Create
             </Button>
             <Button className='rounded-[4px]' color='gray' onClick={closeModal}>
               Cancel

@@ -165,14 +165,31 @@ export const searchPermissionSchema = yup.object({
   name: yup.string().trim()
 });
 
+export const subscriberSchema = yup.object({
+  name: yup.string().trim().required('Name is required'),
+  email: yup.string().trim().required('Email is required').email('Invalid email address'),
+  skills: yup
+    .array()
+    .required('Skills is required')
+    .min(1, 'The job requires at least 1 skill.')
+    .max(4, 'The job allows adding a maximum of 4 skills.')
+});
+
+export const searchSubscriberSchema = yup.object({
+  email: yup.string().trim()
+});
+
 export const uploadImage = yup.object({});
+
 export type searchSchemaJob = yup.InferType<typeof searchJobSchema>;
 export type searchSchemaUser = yup.InferType<typeof searchUserSchema>;
 export type searchSchemaRole = yup.InferType<typeof searchRoleSchema>;
 export type searchSchemaPermission = yup.InferType<typeof searchPermissionSchema>;
+export type searchSchemaSubscriber = yup.InferType<typeof searchSubscriberSchema>;
 export type UserSchema = yup.InferType<typeof userSchema>;
 export type RoleSchema = yup.InferType<typeof roleSchema>;
 export type Schema = yup.InferType<typeof schema>;
 export type postJobSchema = yup.InferType<typeof jobSchema>;
 export type companySchema = yup.InferType<typeof companySchema>;
 export type createPermissionSchema = yup.InferType<typeof permissionSchema>;
+export type createSubscriberSchema = yup.InferType<typeof subscriberSchema>;

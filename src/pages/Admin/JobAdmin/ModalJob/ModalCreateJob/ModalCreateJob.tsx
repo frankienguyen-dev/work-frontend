@@ -17,7 +17,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import jobApi from '../../../../../apis/job.api.ts';
 import { PostJob } from '../../../../../types/job.type.ts';
 import useQueryConfig from '../../../../../hooks/useQueryConfig.tsx';
-import { isAxiosUnauthorizedError } from '../../../../../utils/utils.ts';
+import { isAxiosConflictError, isAxiosUnauthorizedError } from '../../../../../utils/utils.ts';
 import { ErrorResponse } from '../../../../../types/utils.type.ts';
 import moment from 'moment';
 import CalendarJobAdmin from '../../CalendarJobAdmin/CalendarJobAdmin.tsx';
@@ -86,6 +86,10 @@ type UnauthorizedError = {
   message: string;
 };
 
+type FormError = {
+  message: string;
+};
+
 type FormData = postJobSchema;
 const formJobSchema = jobSchema;
 export default function ModalCreateJob({ closeModal }: Props) {
@@ -96,7 +100,8 @@ export default function ModalCreateJob({ closeModal }: Props) {
     register,
     handleSubmit,
     formState: { errors },
-    setValue
+    setValue,
+    setError
   } = useForm<FormData>({ resolver: yupResolver(formJobSchema) });
   const queryConfig = useQueryConfig();
   const queryConfigJobAdmin = {
@@ -132,6 +137,14 @@ export default function ModalCreateJob({ closeModal }: Props) {
         console.log('check success: ', data);
       },
       onError: (error) => {
+        if (isAxiosConflictError<ErrorResponse<FormError>>(error)) {
+          const formError = error.response?.data.data;
+          if (formError) {
+            setError('name', {
+              message: formError.message
+            });
+          }
+        }
         if (isAxiosUnauthorizedError<ErrorResponse<UnauthorizedError>>(error)) {
           clearAccessTokenFromLocalStorage();
           setIsOpenModalUnauthorized(true);

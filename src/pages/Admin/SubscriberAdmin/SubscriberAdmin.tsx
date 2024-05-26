@@ -1,96 +1,81 @@
-import { createSearchParams, Link, useNavigate } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
-import { searchRoleSchema, searchSchemaRole } from '../../../utils/rules.ts';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
-import useQueryConfig from '../../../hooks/useQueryConfig.tsx';
-import roleApi from '../../../apis/role.api.ts';
-import Loading from '../../../components/Loading/Loading.tsx';
-import moment from 'moment/moment';
-import SvgOops from '../../../components/SvgOops';
 import React, { useState } from 'react';
-import ModalCreateRole from './ModalRole/ModalCreateRole';
-import ModalUpdateRole from './ModalRole/ModalUpdateRole';
+import { createSearchParams, Link, useNavigate } from 'react-router-dom';
+import Loading from '../../../components/Loading/Loading.tsx';
+import SvgOops from '../../../components/SvgOops';
+import { useForm } from 'react-hook-form';
+import { searchSchemaSubscriber, searchSubscriberSchema } from '../../../utils/rules.ts';
+import { yupResolver } from '@hookform/resolvers/yup';
+import useQueryParams from '../../../hooks/useQueryPrams.tsx';
+import useQueryConfig from '../../../hooks/useQueryConfig.tsx';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import subscriberApi from '../../../apis/subscriber.api.ts';
+import ModalCreateSubscriber from './ModalSubscriber/ModalCreateSubscriber';
+import ModalUpdateSubscriber from './ModalSubscriber/ModalUpdateSubscriber';
 
-type FormData = Pick<searchSchemaRole, 'name'>;
-const searchRole = searchRoleSchema.pick(['name']);
-
-export default function RolesAdmin() {
+type FormData = Pick<searchSchemaSubscriber, 'email'>;
+const searchSubscriberAdminSchema = searchSubscriberSchema.pick(['email']);
+export default function SubscriberAdmin() {
   const [isSearch, setSearch] = useState<boolean>(false);
   const [isOpenCreateModal, setOpenCreateModal] = useState<boolean>(false);
   const [isOpenUpdateModal, setOpenUpdateModal] = useState<boolean>(false);
-  const [roleId, setRoleId] = useState<string>('');
+  const [subscriberId, setSubscriberId] = useState<string>('');
   const { register, handleSubmit, setValue } = useForm<FormData>({
-    resolver: yupResolver(searchRole),
-    defaultValues: {
-      name: ''
-    }
+    resolver: yupResolver(searchSubscriberAdminSchema)
   });
-
-  const navigate = useNavigate();
+  const queryParams = useQueryParams();
   const queryConfig = useQueryConfig();
-  const queryConfigRoleAdmin = {
+  const queryConfigSubscriberAdmin = {
     ...queryConfig,
-    sortBy: 'createdAt',
     sortDir: 'desc',
     pageSize: '10'
   };
 
-  const pageNo = Number(queryConfigRoleAdmin.pageNo);
-  const pageSize = Number(queryConfigRoleAdmin.pageSize);
+  const navigate = useNavigate();
+  const pageNo = Number(queryConfigSubscriberAdmin.pageNo);
+  const pageSize = Number(queryConfigSubscriberAdmin.pageSize);
 
-  const { data: listRoleData, isLoading: listRoleLoading } = useQuery({
-    queryKey: ['roleList', queryConfigRoleAdmin],
-    queryFn: () => roleApi.getAllRoles(queryConfigRoleAdmin),
+  const { data: listSubscriberData, isLoading: listSubscriberLoading } = useQuery({
+    queryKey: ['subscriberList', queryConfigSubscriberAdmin],
+    queryFn: () => subscriberApi.getAllSubscribers(queryConfigSubscriberAdmin),
     placeholderData: keepPreviousData
   });
-  const totalPagesListRole = Number(listRoleData?.data.data.meta.totalPages);
-  const { data: listRoleSearchData, isLoading: listRoleSearchLoading } = useQuery({
-    queryKey: ['roleListSearch', queryConfigRoleAdmin],
-    queryFn: () => roleApi.searchRole(queryConfigRoleAdmin),
-    enabled: isSearch,
-    placeholderData: keepPreviousData
+  const totalPagesListSubscriber = Number(listSubscriberData?.data.data.meta.totalPages);
+  const { data: listSubscriberSearchData, isLoading: listSubscriberSearchLoading } = useQuery({
+    queryKey: ['subscriberSearchList', queryParams],
+    queryFn: () => subscriberApi.searchSubscriberByEmail(queryParams),
+    placeholderData: keepPreviousData,
+    enabled: isSearch
   });
-
-  const totalPagesListRoleSearch = Number(listRoleSearchData?.data.data.meta.totalPages);
+  const totalPagesListSubscriberSearch = Number(listSubscriberSearchData?.data.data.meta.totalPages);
 
   const onSubmit = handleSubmit((data) => {
     setSearch(true);
     navigate({
-      pathname: '/admin/role',
+      pathname: '/admin/subscriber',
       search: createSearchParams({
-        ...queryConfigRoleAdmin,
-        name: data.name as string,
+        ...queryConfigSubscriberAdmin,
+        email: data.email as string,
         pageNo: '1'
       }).toString()
     });
   });
 
-  const handleClickButtonEdit = (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    roleId: string
-  ) => {
+  const handleClickButtonEdit = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, subscriberId: string) => {
     event.preventDefault();
-    setRoleId(roleId);
     setOpenUpdateModal(true);
+    setSubscriberId(subscriberId);
   };
 
   return (
     <div className='my-[54px]'>
-      <div className='text-[18px] leading-7 font-medium text-[#18191c]'>Roles</div>
+      <div className='text-[18px] leading-7 font-medium text-[#18191c]'>Subscriber</div>
       <div className='py-[18px]'>
         <div className='flex items-center justify-end gap-[16px]'>
           <div className='border-[2px] p-[2px] w-[300px] border-[#E4E5E8] rounded-[6px] h-[48px]'>
             <form noValidate onSubmit={onSubmit}>
               <div className='relative'>
                 <div className='absolute left-[18px] top-[50%] translate-y-[-50%]'>
-                  <svg
-                    width='24'
-                    height='24'
-                    viewBox='0 0 24 24'
-                    fill='none'
-                    xmlns='http://www.w3.org/2000/svg'
-                  >
+                  <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
                     <path
                       d='M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19Z'
                       stroke='#0066FF'
@@ -109,10 +94,10 @@ export default function RolesAdmin() {
                 </div>
                 <input
                   type='text'
-                  placeholder='Search role'
+                  placeholder='Search Subscribers'
                   className='w-full h-[40px] pl-[54px] border-none border-transparent
                   focus:border-transparent focus:ring-0 leading-5 text-[14px] text-[#18191C]'
-                  {...register('name')}
+                  {...register('email')}
                 />
               </div>
             </form>
@@ -125,16 +110,16 @@ export default function RolesAdmin() {
             className='bg-[#0A65CC] py-[14px] px-[18px] rounded-[6px] h-[48px] flex items-center
             justify-center text-[14px] leading-5 text-white font-semibold gap-[4px] group'
           >
-            Add Role
+            Add Subscribers
           </Link>
           <Link
             onClick={() => {
-              setValue('name', '');
+              setValue('email', '');
               setSearch(false);
               navigate({
-                pathname: '/admin/role',
+                pathname: '/admin/subscribers',
                 search: createSearchParams({
-                  ...queryConfigRoleAdmin
+                  ...queryConfigSubscriberAdmin
                 }).toString()
               });
             }}
@@ -149,50 +134,41 @@ export default function RolesAdmin() {
       <div className='mt-[24px]'>
         <div className='grid grid-cols-12 bg-[#f1f2f4] px-[20px] py-[10px] rounded-[4px]'>
           <div className='col-span-1 text-center text-[12px] text-[#535860]'>Index</div>
-          <div className='col-span-3 text-[12px] text-[#535860]'>Name</div>
-          <div className='col-span-1 text-[12px] text-[#535860]'>Status</div>
-          <div className='col-span-3 text-[12px] text-[#535860]'>Created At</div>
-          <div className='col-span-3 text-[12px] text-[#535860]'>Updated At</div>
+          <div className='col-span-5 text-[12px] text-center text-[#535860]'>Id</div>
+          <div className='col-span-2 text-[12px] text-[#535860]'>Name</div>
+          <div className='col-span-3 text-[12px] text-[#535860]'>Email</div>
           <div className='col-span-1 text-center text-[12px] text-[#535860]'>Actions</div>
         </div>
       </div>
       <div className='mt-2 h-[530px]'>
-        {listRoleLoading ? (
+        {listSubscriberLoading ? (
           <div className='h-[530px] flex items-center justify-center  '>
             <Loading />
           </div>
         ) : isSearch ? (
-          listRoleSearchLoading ? (
+          listSubscriberSearchLoading ? (
             <div className='h-[530px] flex items-center justify-center  '>
               <Loading />
             </div>
-          ) : listRoleSearchData?.data.data.data &&
-            listRoleSearchData?.data.data.data.length > 0 ? (
-            listRoleSearchData?.data.data.data.map((role, index) => (
+          ) : listSubscriberSearchData?.data.data.data && listSubscriberSearchData?.data.data.data.length > 0 ? (
+            listSubscriberSearchData?.data.data.data.map((subscriber, index) => (
               <div
-                key={role.id}
+                key={subscriber.id}
                 className='grid grid-cols-12 px-[20px] py-[10px] items-center border-b
         hover:cursor-pointer hover:outline outline-[#0b65cc] rounded-[8px]'
               >
                 <div className='col-span-1 text-center text-[16px] text-[#535860]'>
                   {(pageNo - 1) * pageSize + index + 1}
                 </div>
-                <div className='col-span-3  text-[16px] text-[#535860]'>{role.name}</div>
-                <div className='col-span-1  text-[16px] text-[#535860]'>
-                  {role.active ? 'Active' : 'Disable'}
-                </div>
-                <div className='col-span-3 text-[16px] text-[#535860]'>
-                  {moment(role.createdAt).format('DD MMM, YYYY')}
-                </div>
-                <div className='col-span-3 text-[16px] text-[#535860]'>
-                  {moment(role.updatedAt).format('DD MMMM, YYYY')}
-                </div>
+                <div className='col-span-5 text-[16px] text-[#535860]'>{subscriber.id}</div>
+                <div className='col-span-2 text-[16px] text-[#535860]'>{subscriber.name}</div>
+                <div className='col-span-3 text-[16px] text-[#535860]'>{subscriber.email}</div>
                 <div
                   className='col-span-1 text-center text-[16px] text-[#535860] flex justify-center
           items-center gap-[6px]'
                 >
                   <button
-                    onClick={(event) => handleClickButtonEdit(event, role.id)}
+                    onClick={(event) => handleClickButtonEdit(event, subscriber.id)}
                     className='group p-[6px] hover:bg-[#f1f2f4] rounded-[3px] hover:cursor-pointer'
                   >
                     <svg
@@ -281,32 +257,25 @@ export default function RolesAdmin() {
               <div className='font-medium text-[20px] leading-7'>Oops! The job does not exist.</div>
             </div>
           )
-        ) : listRoleData?.data.data.data && listRoleData?.data.data.data.length > 0 ? (
-          listRoleData?.data.data.data.map((role, index) => (
+        ) : listSubscriberData?.data.data.data && listSubscriberData?.data.data.data.length > 0 ? (
+          listSubscriberData?.data.data.data.map((subscriber, index) => (
             <div
-              key={role.id}
+              key={subscriber.id}
               className='grid grid-cols-12 px-[20px] py-[10px] items-center border-b
         hover:cursor-pointer hover:outline outline-[#0b65cc] rounded-[8px]'
             >
               <div className='col-span-1 text-center text-[16px] text-[#535860]'>
                 {(pageNo - 1) * pageSize + index + 1}
               </div>
-              <div className='col-span-3 text-[16px] text-[#535860]'>{role.name}</div>
-              <div className='col-span-1 text-[16px] text-[#535860]'>
-                {role.active ? 'Active' : 'Disable'}
-              </div>
-              <div className='col-span-3 text-[16px] text-[#535860]'>
-                {moment(role.createdAt).format('DD MMMM, YYYY')}
-              </div>
-              <div className='col-span-3 text-[16px] text-[#535860]'>
-                {moment(role.updatedAt).format('DD MMMM, YYYY')}
-              </div>
+              <div className='col-span-5 text-[16px] text-[#535860]'>{subscriber.id}</div>
+              <div className='col-span-2 text-[16px] text-[#535860]'>{subscriber.name}</div>
+              <div className='col-span-3 text-[16px] text-[#535860]'>{subscriber.email}</div>
               <div
                 className='col-span-1 text-center text-[16px] text-[#535860] flex justify-center
           items-center gap-[6px]'
               >
                 <button
-                  onClick={(event) => handleClickButtonEdit(event, role.id)}
+                  onClick={(event) => handleClickButtonEdit(event, subscriber.id)}
                   className='group p-[6px] hover:bg-[#f1f2f4] rounded-[3px] hover:cursor-pointer'
                 >
                   <svg
@@ -396,7 +365,7 @@ export default function RolesAdmin() {
           </div>
         )}
       </div>
-      {listRoleLoading || listRoleSearchLoading ? (
+      {listSubscriberLoading || listSubscriberSearchLoading ? (
         <div className='mt-[30px] flex items-center justify-end gap-x-[20px]'>
           <span className=''>Previous</span>
           <span className=''>Next</span>
@@ -412,9 +381,9 @@ export default function RolesAdmin() {
                 <Link
                   className='text-[#0b65cc]'
                   to={{
-                    pathname: '/admin/role',
+                    pathname: '/admin/subscriber',
                     search: createSearchParams({
-                      ...queryConfigRoleAdmin,
+                      ...queryConfigSubscriberAdmin,
                       pageNo: (pageNo - 1).toString()
                     }).toString()
                   }}
@@ -422,16 +391,16 @@ export default function RolesAdmin() {
                   Previous
                 </Link>
               )}
-              {pageNo === totalPagesListRoleSearch ? (
+              {pageNo === totalPagesListSubscriberSearch ? (
                 <span className=''>Next</span>
               ) : (
                 <Link
                   className='text-[#0b65cc]'
                   to={{
-                    pathname: '/admin/role',
+                    pathname: '/admin/subscriber',
                     search: createSearchParams({
-                      ...queryConfigRoleAdmin,
-                      pageNo: (pageNo + 1).toString()
+                      ...queryConfigSubscriberAdmin,
+                      pageNo: (pageNo - 1).toString()
                     }).toString()
                   }}
                 >
@@ -439,7 +408,7 @@ export default function RolesAdmin() {
                 </Link>
               )}
               <div className='w-[100px]'>
-                Page {pageNo} / {totalPagesListRoleSearch}
+                Page {pageNo} / {totalPagesListSubscriberSearch}
               </div>
             </>
           ) : (
@@ -450,9 +419,9 @@ export default function RolesAdmin() {
                 <Link
                   className='text-[#0b65cc]'
                   to={{
-                    pathname: '/admin/role',
+                    pathname: '/admin/subscriber',
                     search: createSearchParams({
-                      ...queryConfigRoleAdmin,
+                      ...queryConfigSubscriberAdmin,
                       pageNo: (pageNo - 1).toString()
                     }).toString()
                   }}
@@ -460,16 +429,16 @@ export default function RolesAdmin() {
                   Previous
                 </Link>
               )}
-              {pageNo === totalPagesListRole ? (
+              {pageNo === totalPagesListSubscriber ? (
                 <span className=''>Next</span>
               ) : (
                 <Link
                   className='text-[#0b65cc]'
                   to={{
-                    pathname: '/admin/role',
+                    pathname: '/admin/subscriber',
                     search: createSearchParams({
-                      ...queryConfigRoleAdmin,
-                      pageNo: (pageNo + 1).toString()
+                      ...queryConfigSubscriberAdmin,
+                      pageNo: (pageNo - 1).toString()
                     }).toString()
                   }}
                 >
@@ -477,15 +446,15 @@ export default function RolesAdmin() {
                 </Link>
               )}
               <div className='w-[100px]'>
-                Page {pageNo} / {totalPagesListRole}
+                Page {pageNo} / {totalPagesListSubscriber}
               </div>
             </>
           )}
         </div>
       )}
-      {isOpenCreateModal && <ModalCreateRole closeModal={() => setOpenCreateModal(false)} />}
+      {isOpenCreateModal && <ModalCreateSubscriber closeModal={() => setOpenCreateModal(false)} />}
       {isOpenUpdateModal && (
-        <ModalUpdateRole closeModal={() => setOpenUpdateModal(false)} roleId={roleId} />
+        <ModalUpdateSubscriber subscriberId={subscriberId} closeModal={() => setOpenUpdateModal(false)} />
       )}
     </div>
   );

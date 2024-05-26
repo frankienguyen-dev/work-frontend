@@ -431,7 +431,7 @@ export default function PermissionAdmin() {
                     pathname: '/admin/permission',
                     search: createSearchParams({
                       ...queryPermissionAdminConfig,
-                      pageNo: (pageNo - 1).toString()
+                      pageNo: (pageNo + 1).toString()
                     }).toString()
                   }}
                 >
@@ -469,7 +469,7 @@ export default function PermissionAdmin() {
                     pathname: '/admin/permission',
                     search: createSearchParams({
                       ...queryPermissionAdminConfig,
-                      pageNo: (pageNo - 1).toString()
+                      pageNo: (pageNo + 1).toString()
                     }).toString()
                   }}
                 >
