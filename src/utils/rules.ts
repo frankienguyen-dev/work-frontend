@@ -4,10 +4,7 @@ const today = new Date();
 export const schema = yup.object({
   fullName: yup.string().required('Full name is required'),
   email: yup.string().required('Email is required').email('Invalid email address'),
-  password: yup
-    .string()
-    .required('Password is required')
-    .min(6, 'Password must be at least 6 characters'),
+  password: yup.string().required('Password is required').min(6, 'Password must be at least 6 characters'),
   confirm_password: yup
     .string()
     .required('Confirm password is required')
@@ -27,11 +24,7 @@ export const jobSchema = yup.object({
     .typeError('Quantity must be a number')
     .min(1, 'Quantity employer must be at least 1 employer')
     .required('Quantity is required'),
-  level: yup
-    .string()
-    .trim()
-    .notOneOf(['Select...'], 'Level is required')
-    .required('Level is required'),
+  level: yup.string().trim().notOneOf(['Select...'], 'Level is required').required('Level is required'),
   salary: yup
     .number()
     .typeError('Quantity must be a number')
@@ -44,10 +37,7 @@ export const jobSchema = yup.object({
       'Start date must be at least today'
     )
     .required('Start date is required'),
-  endDate: yup
-    .date()
-    .min(yup.ref('startDate'), 'End date must be after start date')
-    .required('End date is required'),
+  endDate: yup.date().min(yup.ref('startDate'), 'End date must be after start date').required('End date is required'),
   description: yup.string().trim().required('Description is required'),
   responsibility: yup.string().trim().required('Responsibility is required'),
   experience: yup.string().trim().required('Experience is required'),
@@ -58,10 +48,7 @@ export const jobSchema = yup.object({
     .required('Skills is required')
     .min(1, 'The job requires at least 1 skill.')
     .max(4, 'The job allows adding a maximum of 4 skills.'),
-  company: yup
-    .string()
-    .notOneOf(['Select...'], 'Company name is required')
-    .required('Company name is required')
+  company: yup.string().notOneOf(['Select...'], 'Company name is required').required('Company name is required')
 });
 
 interface FileWithSize {
@@ -104,22 +91,11 @@ export const userSchema = yup.object({
   address: yup.string().trim().required('Address is required'),
   age: yup.string().notOneOf(['Select...'], 'Age is required'),
   phoneNumber: yup.string().trim().required('Phone is required'),
-  gender: yup
-    .string()
-    .trim()
-    .notOneOf(['Select...'], 'Gender is required')
-    .required('Gender is required'),
-  title: yup
-    .string()
-    .trim()
-    .notOneOf(['Select...'], 'Title is required')
-    .required('Title is required'),
+  gender: yup.string().trim().notOneOf(['Select...'], 'Gender is required').required('Gender is required'),
+  title: yup.string().trim().notOneOf(['Select...'], 'Title is required').required('Title is required'),
   avatar: yup.mixed<FileWithSize>(),
   roles: yup.string().required('Role is required').notOneOf(['Select...'], 'Role is required'),
-  password: yup
-    .string()
-    .required('Password is required')
-    .min(6, 'Password must be at least 6 characters'),
+  password: yup.string().required('Password is required').min(6, 'Password must be at least 6 characters'),
   confirm_password: yup
     .string()
     .required('Confirm password is required')
@@ -130,16 +106,8 @@ export const userSchema = yup.object({
 
 export const permissionSchema = yup.object({
   name: yup.string().trim().required('Permission name is required'),
-  method: yup
-    .string()
-    .trim()
-    .notOneOf(['Select...'], 'Method is required')
-    .required('Method is required'),
-  module: yup
-    .string()
-    .trim()
-    .notOneOf(['Select...'], 'Module is required')
-    .required('Module is required'),
+  method: yup.string().trim().notOneOf(['Select...'], 'Method is required').required('Method is required'),
+  module: yup.string().trim().notOneOf(['Select...'], 'Module is required').required('Module is required'),
   path: yup.string().trim().required('Path is required')
 });
 
@@ -179,6 +147,15 @@ export const searchSubscriberSchema = yup.object({
   email: yup.string().trim()
 });
 
+export const categorySchema = yup.object({
+  name: yup.string().trim().required('Name is required'),
+  description: yup.string().trim().required('Description is required')
+});
+
+export const searchCategorySchema = yup.object({
+  name: yup.string().trim()
+});
+
 export const uploadImage = yup.object({});
 
 export type searchSchemaJob = yup.InferType<typeof searchJobSchema>;
@@ -186,6 +163,7 @@ export type searchSchemaUser = yup.InferType<typeof searchUserSchema>;
 export type searchSchemaRole = yup.InferType<typeof searchRoleSchema>;
 export type searchSchemaPermission = yup.InferType<typeof searchPermissionSchema>;
 export type searchSchemaSubscriber = yup.InferType<typeof searchSubscriberSchema>;
+export type searchSchemaCategory = yup.InferType<typeof searchCategorySchema>;
 export type UserSchema = yup.InferType<typeof userSchema>;
 export type RoleSchema = yup.InferType<typeof roleSchema>;
 export type Schema = yup.InferType<typeof schema>;
@@ -193,3 +171,4 @@ export type postJobSchema = yup.InferType<typeof jobSchema>;
 export type companySchema = yup.InferType<typeof companySchema>;
 export type createPermissionSchema = yup.InferType<typeof permissionSchema>;
 export type createSubscriberSchema = yup.InferType<typeof subscriberSchema>;
+export type createCategorySchema = yup.InferType<typeof categorySchema>;

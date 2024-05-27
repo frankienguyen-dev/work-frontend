@@ -61,13 +61,10 @@ export default function SideBarAdmin() {
                 </svg>
               </div>
               <div
-                className={classNames(
-                  'text-[16px] font-medium group-hover:text-[currentTextColor]',
-                  {
-                    'text-[#0b65cc]': location.pathname === '/admin',
-                    'text-[currentColor]': location.pathname !== '/admin'
-                  }
-                )}
+                className={classNames('text-[16px] font-medium group-hover:text-[currentTextColor]', {
+                  'text-[#0b65cc]': location.pathname === '/admin',
+                  'text-[currentColor]': location.pathname !== '/admin'
+                })}
               >
                 Overview
               </div>
@@ -124,13 +121,10 @@ export default function SideBarAdmin() {
                 </svg>
               </div>
               <div
-                className={classNames(
-                  'text-[16px] font-medium group-hover:text-[currentTextColor]',
-                  {
-                    'text-[#0b65cc]': location.pathname === '/admin/company',
-                    'text-[currentColor]': location.pathname !== '/admin/company'
-                  }
-                )}
+                className={classNames('text-[16px] font-medium group-hover:text-[currentTextColor]', {
+                  'text-[#0b65cc]': location.pathname === '/admin/company',
+                  'text-[currentColor]': location.pathname !== '/admin/company'
+                })}
               >
                 Companies
               </div>
@@ -187,13 +181,10 @@ export default function SideBarAdmin() {
                 </svg>
               </div>
               <div
-                className={classNames(
-                  'text-[16px] font-medium group-hover:text-[currentTextColor]',
-                  {
-                    'text-[#0b65cc]': location.pathname === '/admin/user',
-                    'text-[currentColor]': location.pathname !== '/admin/user'
-                  }
-                )}
+                className={classNames('text-[16px] font-medium group-hover:text-[currentTextColor]', {
+                  'text-[#0b65cc]': location.pathname === '/admin/user',
+                  'text-[currentColor]': location.pathname !== '/admin/user'
+                })}
               >
                 Users
               </div>
@@ -250,13 +241,10 @@ export default function SideBarAdmin() {
                 </svg>
               </div>
               <div
-                className={classNames(
-                  'text-[16px] font-medium group-hover:text-[currentTextColor]',
-                  {
-                    'text-[#0b65cc]': location.pathname === '/admin/job',
-                    'text-[currentColor]': location.pathname !== '/admin/job'
-                  }
-                )}
+                className={classNames('text-[16px] font-medium group-hover:text-[currentTextColor]', {
+                  'text-[#0b65cc]': location.pathname === '/admin/job',
+                  'text-[currentColor]': location.pathname !== '/admin/job'
+                })}
               >
                 Jobs
               </div>
@@ -313,13 +301,10 @@ export default function SideBarAdmin() {
                 </svg>
               </div>
               <div
-                className={classNames(
-                  'text-[16px] font-medium group-hover:text-[currentTextColor]',
-                  {
-                    'text-[#0b65cc]': location.pathname === '/admin/permission',
-                    'text-[currentColor]': location.pathname !== '/admin/permission'
-                  }
-                )}
+                className={classNames('text-[16px] font-medium group-hover:text-[currentTextColor]', {
+                  'text-[#0b65cc]': location.pathname === '/admin/permission',
+                  'text-[currentColor]': location.pathname !== '/admin/permission'
+                })}
               >
                 Permissions
               </div>
@@ -376,13 +361,10 @@ export default function SideBarAdmin() {
                 </svg>
               </div>
               <div
-                className={classNames(
-                  'text-[16px] font-medium group-hover:text-[currentTextColor]',
-                  {
-                    'text-[#0b65cc]': location.pathname === '/admin/role',
-                    'text-[currentColor]': location.pathname !== '/admin/role'
-                  }
-                )}
+                className={classNames('text-[16px] font-medium group-hover:text-[currentTextColor]', {
+                  'text-[#0b65cc]': location.pathname === '/admin/role',
+                  'text-[currentColor]': location.pathname !== '/admin/role'
+                })}
               >
                 Roles
               </div>
@@ -439,15 +421,72 @@ export default function SideBarAdmin() {
                 </svg>
               </div>
               <div
-                className={classNames(
-                  'text-[16px] font-medium group-hover:text-[currentTextColor]',
-                  {
-                    'text-[#0b65cc]': location.pathname === '/admin/subscriber',
-                    'text-[currentColor]': location.pathname !== '/admin/subscriber'
-                  }
-                )}
+                className={classNames('text-[16px] font-medium group-hover:text-[currentTextColor]', {
+                  'text-[#0b65cc]': location.pathname === '/admin/subscriber',
+                  'text-[currentColor]': location.pathname !== '/admin/subscriber'
+                })}
               >
                 Subscribers
+              </div>
+            </Link>
+          </div>
+          <div className='group'>
+            <Link
+              onClick={() => scrollTo(0, 0)}
+              to='category'
+              className={classNames(
+                'flex items-center gap-[16px] pl-[20px] py-[16px] group-hover:bg-[#E7F0FA]\n' +
+                  ' group-hover:cursor-pointer  group-hover:text-[#0b65cc] text-[#9199a3] border-l-[3px]\n' +
+                  ' group-hover:border-l-[#0b65cc]  transition-transform transform\n' +
+                  ' group-hover:translate-y-0',
+                {
+                  'border-l-[#0b65cc] bg-[#E7F0FA] ': location.pathname === '/admin/category',
+                  'border-l-transparent': location.pathname !== '/admin/category'
+                }
+              )}
+            >
+              <div>
+                <svg
+                  className={classNames('group-hover:stroke-[#0b65cc]', {
+                    'text-[#0b65cc]': location.pathname === '/admin/category',
+                    '': location.pathname !== '/admin/category'
+                  })}
+                  width='24'
+                  height='24'
+                  viewBox='0 0 24 24'
+                  fill='none'
+                  xmlns='http://www.w3.org/2000/svg'
+                >
+                  <path
+                    d='M3 16.5L12 21.75L21 16.5'
+                    stroke='currentColor'
+                    strokeWidth='1.5'
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                  />
+                  <path
+                    d='M3 12L12 17.25L21 12'
+                    stroke='currentColor'
+                    strokeWidth='1.5'
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                  />
+                  <path
+                    d='M3 7.5L12 12.75L21 7.5L12 2.25L3 7.5Z'
+                    stroke='currentColor'
+                    strokeWidth='1.5'
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                  />
+                </svg>
+              </div>
+              <div
+                className={classNames('text-[16px] font-medium group-hover:text-[currentTextColor]', {
+                  'text-[#0b65cc]': location.pathname === '/admin/category',
+                  'text-[currentColor]': location.pathname !== '/admin/category'
+                })}
+              >
+                Categories
               </div>
             </Link>
           </div>
