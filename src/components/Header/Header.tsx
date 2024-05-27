@@ -5,7 +5,7 @@ import { useContext, useEffect } from 'react';
 import { AppContext } from '../../contexts/app.context.tsx';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import authApi from '../../apis/auth.api.ts';
-import { isAccessTokenExpired, clearAccessTokenFromLocalStorage } from '../../utils/auth.ts';
+import { isAccessTokenExpired, clearAccessTokenFromLocalStorage, clearRoleToLocalStorage } from '../../utils/auth.ts';
 import userApi from '../../apis/user.api.ts';
 import { getLogoUrl } from '../../utils/utils.ts';
 
@@ -23,6 +23,8 @@ export default function Header() {
     mutationFn: () => authApi.logoutAccount(),
     onSuccess: () => {
       setIsAuthenticated(false);
+      clearAccessTokenFromLocalStorage();
+      clearRoleToLocalStorage();
     }
   });
 
@@ -46,13 +48,7 @@ export default function Header() {
             <Link to='/'>
               <div className='flex items-center'>
                 <div className='mr-2'>
-                  <svg
-                    width='50'
-                    height='50'
-                    viewBox='0 0 40 40'
-                    fill='none'
-                    xmlns='http://www.w3.org/2000/svg'
-                  >
+                  <svg width='50' height='50' viewBox='0 0 40 40' fill='none' xmlns='http://www.w3.org/2000/svg'>
                     <g clipPath='url(#clip0_100_11637)'>
                       <path
                         d='M33.7512 11.25H6.25122C5.56086 11.25 5.00122 11.8097 5.00122 12.5V32.5C5.00122 33.1904 5.56086 33.75 6.25122 33.75H33.7512C34.4416 33.75 35.0012 33.1904 35.0012 32.5V12.5C35.0012 11.8097 34.4416 11.25 33.7512 11.25Z'
@@ -99,7 +95,7 @@ export default function Header() {
                   to='/signin'
                   onClick={() => scrollTo(0, 0)}
                   className='w-[101px] border border-[#CEE0F5] flex items-center justify-center
-                rounded-[3px] text-[16px] font-semibold text-[#0A65CC] h-[48px]'
+                  rounded-[3px] text-[16px] font-semibold text-[#0A65CC] h-[48px]'
                   color='light'
                 >
                   Sign In
@@ -108,7 +104,7 @@ export default function Header() {
                   to='/dashboard/post-job'
                   onClick={() => scrollTo(0, 0)}
                   className='w-[140px] border bg-[#0A65CC] border-[#CEE0F5] flex items-center justify-center
-                rounded-[3px] text-[16px] font-semibold text-white h-[48px] '
+                  rounded-[3px] text-[16px] font-semibold text-white h-[48px] '
                   color='blue'
                 >
                   Post A Job
@@ -123,7 +119,7 @@ export default function Header() {
                     onClick={() => scrollTo(0, 0)}
                     to={'/dashboard/post-job'}
                     className='w-[140px] border bg-[#0A65CC] border-[#CEE0F5] flex items-center justify-center
-                rounded-[3px] text-[16px] font-semibold text-white h-[48px] '
+                  rounded-[3px] text-[16px] font-semibold text-white h-[48px] '
                     color='blue'
                   >
                     Post A Job
@@ -133,7 +129,7 @@ export default function Header() {
                 <div className='ml-[20px]'>
                   <div
                     className='w-[48px] h-[48px]
-                    object-cover rounded-full flex items-center bg-[#f7f7f8]'
+                      object-cover rounded-full flex items-center bg-[#f7f7f8]'
                   >
                     {profile && (
                       <Dropdown
@@ -146,15 +142,13 @@ export default function Header() {
                             src={getLogoUrl(profile.logo)}
                             alt=''
                             className='w-[48px] h-[48px]
-                    object-cover rounded-full flex items-center'
+                      object-cover rounded-full flex items-center'
                           />
                         }
                       >
                         <Dropdown.Header>
                           <span className='block text-sm font-medium'>{profile.fullName}</span>
-                          <span className='block truncate text-sm font-medium'>
-                            {profile.email}
-                          </span>
+                          <span className='block truncate text-sm font-medium'>{profile.email}</span>
                         </Dropdown.Header>
                         {isRole === 'ROLE_ADMIN' ? (
                           <Dropdown.Item>
@@ -180,11 +174,7 @@ export default function Header() {
 
                         <Dropdown.Divider className='my-0' />
                         <Dropdown.Item>
-                          <Link
-                            to=''
-                            onClick={handleLogout}
-                            className='font-medium py-[10px] block w-full text-left'
-                          >
+                          <Link to='' onClick={handleLogout} className='font-medium py-[10px] block w-full text-left'>
                             Logout
                           </Link>
                         </Dropdown.Item>

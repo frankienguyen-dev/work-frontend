@@ -1,13 +1,12 @@
 import { Button, CustomFlowbiteTheme, Flowbite, Modal } from 'flowbite-react';
-
-import { useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { createPermissionSchema, permissionSchema } from '../../../../../utils/rules.ts';
+import { useRef, useState } from 'react';
+import TextArea from '../../../../../components/TextArea';
+import { categorySchema, createCategorySchema } from '../../../../../utils/rules.ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { CreatePermission } from '../../../../../types/permission.type.ts';
-import permissionApi from '../../../../../apis/permission.api.ts';
-import useQueryParams from '../../../../../hooks/useQueryPrams.tsx';
+import { CreateCategory } from '../../../../../types/category.type.ts';
+import categoryApi from '../../../../../apis/category.api.ts';
 import useQueryConfig from '../../../../../hooks/useQueryConfig.tsx';
 import { isAxiosConflictError, isAxiosUnauthorizedError } from '../../../../../utils/utils.ts';
 import { ErrorResponse } from '../../../../../types/utils.type.ts';
@@ -69,6 +68,7 @@ const custom: CustomFlowbiteTheme = {
     }
   }
 };
+
 type UnauthorizedError = {
   message: string;
 };
@@ -76,53 +76,47 @@ type FormError = {
   message: string;
 };
 
-type FormData = createPermissionSchema;
-const createPermission = permissionSchema;
-
 interface Props {
   closeModal: () => void;
 }
 
-export default function ModalCreatePermission({ closeModal }: Props) {
+type FormData = createCategorySchema;
+const createCategory = categorySchema;
+
+export default function ModalCreateCategory({ closeModal }: Props) {
   const [isOpenModalUnauthorized, setIsOpenModalUnauthorized] = useState<boolean>(false);
+
   const submitFormRef = useRef<HTMLButtonElement>(null);
-  const queryClient = useQueryClient();
-  const queryParams = useQueryParams();
   const queryConfig = useQueryConfig();
-  const queryPermissionAdminConfig = {
+  const queryCategoryAdminConfig = {
     ...queryConfig,
     sortBy: 'createdAt',
     sortDir: 'desc',
     pageSize: '10'
   };
+  const queryClient = useQueryClient();
   const {
     register,
     formState: { errors },
+    setValue,
     handleSubmit,
     setError
-  } = useForm<FormData>({
-    resolver: yupResolver(createPermission)
-  });
+  } = useForm<FormData>({ resolver: yupResolver(createCategory) });
 
-  const createPermissionMutation = useMutation({
-    mutationFn: (body: CreatePermission) => permissionApi.createNewPermission(body)
+  const createCategoryMutation = useMutation({
+    mutationFn: (body: CreateCategory) => categoryApi.createCategory(body)
   });
 
   const onSubmit = handleSubmit((data) => {
-    createPermissionMutation.mutate(data, {
+    createCategoryMutation.mutate(data, {
       onSuccess: (data) => {
         queryClient
           .invalidateQueries({
-            queryKey: ['permissionList', queryPermissionAdminConfig]
-          })
-          .then();
-        queryClient
-          .invalidateQueries({
-            queryKey: ['permissionListSearch', queryParams]
+            queryKey: ['categoryList', queryCategoryAdminConfig]
           })
           .then();
         closeModal();
-        console.log('check data success: ', data);
+        console.log('check success: ', data);
       },
       onError: (error) => {
         if (isAxiosConflictError<ErrorResponse<FormError>>(error)) {
@@ -145,12 +139,12 @@ export default function ModalCreatePermission({ closeModal }: Props) {
     <>
       <Flowbite theme={{ theme: custom }}>
         <Modal size='7xl' show={true} position='center' onClose={closeModal}>
-          <Modal.Header>Create New Permission</Modal.Header>
+          <Modal.Header>Create New Category</Modal.Header>
           <Modal.Body>
             <form noValidate onSubmit={onSubmit}>
-              <div className='grid grid-cols-12 gap-x-[20px] mt-[24px]'>
-                <div className='col-span-3 h-[76px]'>
-                  <div className='text-[14px] leading-5 text-[#18191C]'>Permission Name</div>
+              <div className='grid grid-cols-12 mt-[24px]'>
+                <div className='col-span-12 h-[76px]'>
+                  <div className='text-[14px] leading-5 text-[#18191C]'>Category Name</div>
                   <input
                     type='text'
                     autoComplete='off'
@@ -162,65 +156,16 @@ export default function ModalCreatePermission({ closeModal }: Props) {
                     <span className='font-medium'>{errors.name?.message}</span>
                   </div>
                 </div>
-                <div className='col-span-3 h-[76px]'>
-                  <div className='text-[14px] leading-5 text-[#18191C]'>Path</div>
-                  <input
-                    type='text'
-                    autoComplete='off'
-                    {...register('path')}
-                    className='w-full mt-2 h-[48px] rounded-[5px] border-[2px] border-[#e4e5e8] text-[16px]
-                      leading-6 text-[#111827] focus:outline-none focus:border-[#9099a3] focus:ring-0 '
-                  />
-                  <div className='mt-1 min-h-[1.25rem] text-[12px] text-red-600 dark:text-red-500'>
-                    <span className='font-medium'>{errors.path?.message}</span>
-                  </div>
-                </div>
-                <div className='col-span-3 h-[76px]'>
-                  <div className='text-[14px] leading-5 text-[#18191C]'>Method</div>
-                  <select
-                    id='method'
-                    {...register('method')}
-                    className='w-full mt-2 h-[48px] rounded-[5px] border-[2px] border-[#e4e5e8] text-[16px]
-                      leading-6 text-[#111827] focus:outline-none focus:border-[#9099a3] focus:ring-0 hover:cursor-pointer'
-                    defaultValue='Select...'
-                  >
-                    <option disabled value='Select...'>
-                      Select...
-                    </option>
-                    <option value='POST'>POST</option>
-                    <option value='GET'>GET</option>
-                    <option value='PUT'>PUT</option>
-                    <option value='PATCH'>PATCH</option>
-                    <option value='DELETE'>DELETE</option>
-                  </select>
-                  <div className='mt-1 min-h-[1.25rem] text-[12px] text-red-600 dark:text-red-500'>
-                    <span className='font-medium'>{errors.method?.message}</span>
-                  </div>
-                </div>
-                <div className='col-span-3 h-[76px]'>
-                  <div className='text-[14px] leading-5 text-[#18191C]'>Module</div>
-                  <select
-                    id='module'
-                    {...register('module')}
-                    className='w-full mt-2 h-[48px] rounded-[5px] border-[2px] border-[#e4e5e8] text-[16px]
-                      leading-6 text-[#111827] focus:outline-none focus:border-[#9099a3] focus:ring-0 hover:cursor-pointer'
-                    defaultValue='Select...'
-                  >
-                    <option disabled value='Select...'>
-                      Select...
-                    </option>
-                    <option value='USERS'>USERS</option>
-                    <option value='PERMISSIONS'>PERMISSIONS</option>
-                    <option value='JOBS'>JOBS</option>
-                    <option value='COMPANIES'>COMPANIES</option>
-                    <option value='ROLES'>ROLES</option>
-                    <option value='FILES'>FILES</option>
-                    <option value='SUBSCRIBERS'>SUBSCRIBERS</option>
-                    <option value='INVITATIONS'>INVITATIONS</option>
-                    <option value='RESUMES'>RESUMES</option>
-                  </select>
-                  <div className='mt-1 min-h-[1.25rem] text-[12px] text-red-600 dark:text-red-500'>
-                    <span className='font-medium'>{errors.module?.message}</span>
+                <div className='col-span-12 mt-[24px]'>
+                  <div className='text-[14px] leading-5 text-[#18191C] mb-2'>Description</div>
+                  <div>
+                    <TextArea
+                      placeholder='Description'
+                      register={register}
+                      name='description'
+                      setValue={setValue}
+                      errorMessage={errors.description?.message}
+                    />
                   </div>
                 </div>
               </div>
