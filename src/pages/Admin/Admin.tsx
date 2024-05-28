@@ -10,6 +10,7 @@ import RolesAdmin from './RolesAdmin';
 import SubscriberAdmin from './SubscriberAdmin';
 import CategoryAdmin from './CategoryAdmin';
 import ResumeAdmin from './ResumeAdmin';
+import InvitationAdmin from './InvitationAdmin';
 
 export default function Admin() {
   return (
@@ -31,6 +32,7 @@ export default function Admin() {
               <Route path='/subscriber' element={<SubscriberAdmin />} />
               <Route path='/category' element={<CategoryAdmin />} />
               <Route path='/resume' element={<ResumeAdmin />} />
+              <Route path='/invitation' element={<InvitationAdmin />} />
             </Routes>
           </div>
         </div>
