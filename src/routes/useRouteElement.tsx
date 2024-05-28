@@ -25,6 +25,7 @@ import PermissionAdmin from '../pages/Admin/PermissionAdmin';
 import RolesAdmin from '../pages/Admin/RolesAdmin';
 import SubscriberAdmin from '../pages/Admin/SubscriberAdmin';
 import CategoryAdmin from '../pages/Admin/CategoryAdmin';
+import ResumeAdmin from '../pages/Admin/ResumeAdmin';
 
 function ProtectedRoute() {
   const { isAuthenticated } = useContext(AppContext);
@@ -103,6 +104,10 @@ export default function useRouteElement() {
             {
               path: 'category',
               element: <CategoryAdmin />
+            },
+            {
+              path: 'resume',
+              element: <ResumeAdmin />
             }
           ]
         }
