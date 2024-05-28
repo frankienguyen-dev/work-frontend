@@ -9,6 +9,7 @@ import PermissionAdmin from './PermissionAdmin';
 import RolesAdmin from './RolesAdmin';
 import SubscriberAdmin from './SubscriberAdmin';
 import CategoryAdmin from './CategoryAdmin';
+import ResumeAdmin from './ResumeAdmin';
 
 export default function Admin() {
   return (
@@ -29,6 +30,7 @@ export default function Admin() {
               <Route path='/role' element={<RolesAdmin />} />
               <Route path='/subscriber' element={<SubscriberAdmin />} />
               <Route path='/category' element={<CategoryAdmin />} />
+              <Route path='/resume' element={<ResumeAdmin />} />
             </Routes>
           </div>
         </div>

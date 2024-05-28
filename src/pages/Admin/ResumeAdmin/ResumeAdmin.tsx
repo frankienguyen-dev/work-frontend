@@ -1,83 +1,71 @@
 import { createSearchParams, Link, useNavigate } from 'react-router-dom';
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
-import useQueryConfig from '../../../hooks/useQueryConfig.tsx';
-import userApi from '../../../apis/user.api.ts';
-import React, { useContext, useState } from 'react';
-import { AppContext } from '../../../contexts/app.context.tsx';
 import Loading from '../../../components/Loading/Loading.tsx';
 import SvgOops from '../../../components/SvgOops';
-import moment from 'moment';
+import React, { useState } from 'react';
+import { searchResumeSchema, searchSchemaResume } from '../../../utils/rules.ts';
 import { useForm } from 'react-hook-form';
-import { searchSchemaUser, searchUserSchema } from '../../../utils/rules.ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { omit } from 'lodash';
-import ModalCreateUser from './ModalUser/ModalCreateUser';
-import ModalUpdateUser from './ModalUser/ModalUpdateUser';
 import useQueryParams from '../../../hooks/useQueryPrams.tsx';
+import useQueryConfig from '../../../hooks/useQueryConfig.tsx';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import resumeApi from '../../../apis/resume.api.ts';
+import ModalUpdateResume from './ModalResume';
 
-type FormData = Pick<searchSchemaUser, 'email'>;
-const searchUserAdminSchema = searchUserSchema.pick(['email']);
+type FormData = Pick<searchSchemaResume, 'email'>;
+const searchResumeAdminSchema = searchResumeSchema.pick(['email']);
 
-export default function UserAdmin() {
+export default function ResumeAdmin() {
   const [isSearch, setSearch] = useState<boolean>(false);
-  const [isOpenModalCreateUser, setOpenModalCreateUser] = useState<boolean>(false);
-  const [isOpenModalUpdateUser, setOpenModalUpdateUser] = useState<boolean>(false);
-  const [userId, setUserId] = useState<string>('');
-  const { isAuthenticated } = useContext(AppContext);
-  const queryConfig = useQueryConfig();
-  const queryParams = useQueryParams();
+  const [isOpenModalUpdate, setOpenModalUpdate] = useState<boolean>(false);
+  const [resumeId, setResumeId] = useState<string>('');
+
+  const { register, handleSubmit, setValue } = useForm<FormData>({ resolver: yupResolver(searchResumeAdminSchema) });
   const navigate = useNavigate();
-  const queryConfigUserAdmin = {
+  const queryParams = useQueryParams();
+  const queryConfig = useQueryConfig();
+  const queryResumeAdminConfig = {
     ...queryConfig,
     sortBy: 'createdAt',
     sortDir: 'desc',
     pageSize: '10'
   };
-  const pageNo = Number(queryConfigUserAdmin.pageNo);
-  const pageSize = Number(queryConfigUserAdmin.pageSize);
-  const { register, handleSubmit, setValue } = useForm<FormData>({
-    defaultValues: {
-      email: ''
-    },
-    resolver: yupResolver(searchUserAdminSchema)
-  });
-  const { data: listUserData, isLoading: loadingUserList } = useQuery({
-    queryKey: ['allUsersData', queryConfigUserAdmin],
-    queryFn: () => (isAuthenticated ? userApi.getAllUsers(queryConfigUserAdmin) : null),
+  const pageNo = Number(queryResumeAdminConfig.pageNo);
+  const pageSize = Number(queryResumeAdminConfig.pageSize);
+  const { data: resumeListData, isLoading: resumeListLoading } = useQuery({
+    queryKey: ['resumeList', queryResumeAdminConfig],
+    queryFn: () => resumeApi.getAllResume(queryResumeAdminConfig),
     placeholderData: keepPreviousData
   });
-  const totalPagesData = Number(listUserData?.data.data.meta.totalPages);
-  const { data: listUserSearchData, isLoading: loadingSearch } = useQuery({
-    queryKey: ['allUsersSearchData', queryParams],
-    queryFn: () => (isAuthenticated ? userApi.searchUser(queryParams) : null),
-    enabled: isSearch,
-    placeholderData: keepPreviousData
+  const totalPagesResumeList = Number(resumeListData?.data.data.meta.totalPages);
+  const { data: resumeListSearchData, isLoading: resumeListSearchLoading } = useQuery({
+    queryKey: ['resumeSearchList', queryParams],
+    queryFn: () => resumeApi.searchResume(queryResumeAdminConfig),
+    placeholderData: keepPreviousData,
+    enabled: isSearch
   });
-  const totalPagesSearchData = Number(listUserSearchData?.data.data.meta.totalPages);
-  console.log('Check data search: ', listUserSearchData);
+  const totalPagesResumeListSearch = Number(resumeListData?.data.data.meta.totalPages);
+
   const onSubmit = handleSubmit((data) => {
     setSearch(true);
     navigate({
-      pathname: '/admin/user',
-      search: createSearchParams(
-        omit({
-          ...queryConfigUserAdmin,
-          email: data.email as string,
-          pageNo: '1'
-        })
-      ).toString()
+      pathname: '/admin/resume',
+      search: createSearchParams({
+        ...queryResumeAdminConfig,
+        email: data.email as string,
+        pageNo: '1'
+      }).toString()
     });
-    console.log('check handle submit: ', data);
   });
 
-  const handleClickButtonEdit = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, userId: string) => {
-    setUserId(userId);
-    setOpenModalUpdateUser(true);
+  const handleClickButtonEdit = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, resumeId: string) => {
     event.preventDefault();
+    setResumeId(resumeId);
+    setOpenModalUpdate(true);
   };
+
   return (
     <div className='my-[54px]'>
-      <div className='text-[18px] leading-7 font-medium text-[#18191c]'>Users</div>
+      <div className='text-[18px] leading-7 font-medium text-[#18191c]'>Resumes</div>
       <div className='py-[18px]'>
         <div className='flex items-center justify-end gap-[16px]'>
           <div className='border-[2px] p-[2px] w-[300px] border-[#E4E5E8] rounded-[6px] h-[48px]'>
@@ -103,7 +91,7 @@ export default function UserAdmin() {
                 </div>
                 <input
                   type='text'
-                  placeholder='Search user'
+                  placeholder='Search category'
                   className='w-full h-[40px] pl-[54px] border-none border-transparent
                   focus:border-transparent focus:ring-0 leading-5 text-[14px] text-[#18191C]'
                   {...register('email')}
@@ -113,22 +101,12 @@ export default function UserAdmin() {
           </div>
           <Link
             onClick={() => {
-              setOpenModalCreateUser(true);
-            }}
-            to=''
-            className='bg-[#0A65CC] py-[14px] px-[18px] rounded-[6px] h-[48px] flex items-center
-            justify-center text-[14px] leading-5 text-white font-semibold gap-[4px] group'
-          >
-            Add User
-          </Link>
-          <Link
-            onClick={() => {
               setValue('email', '');
               setSearch(false);
               navigate({
-                pathname: '/admin/user',
+                pathname: '/admin/resume',
                 search: createSearchParams({
-                  ...queryConfigUserAdmin
+                  ...queryResumeAdminConfig
                 }).toString()
               });
             }}
@@ -143,46 +121,43 @@ export default function UserAdmin() {
       <div className='mt-[24px]'>
         <div className='grid grid-cols-12 bg-[#f1f2f4] px-[20px] py-[10px] rounded-[4px]'>
           <div className='col-span-1 text-center text-[12px] text-[#535860]'>Index</div>
-          <div className='col-span-3 text-[12px] text-[#535860]'>Name</div>
           <div className='col-span-3 text-[12px] text-[#535860]'>Email</div>
-          <div className='col-span-2 text-[12px] text-[#535860]'>Role Account</div>
-          <div className='col-span-2 text-[12px] text-[#535860]'>Created At</div>
+          <div className='col-span-3 text-[12px] text-[#535860]'>Job Name</div>
+          <div className='col-span-2 text-[12px] text-[#535860]'>Company</div>
+          <div className='col-span-2 text-[12px] text-[#535860]'>Status</div>
           <div className='col-span-1 text-center text-[12px] text-[#535860]'>Actions</div>
         </div>
       </div>
       <div className='mt-2 h-[530px]'>
-        {loadingUserList ? (
+        {resumeListLoading ? (
           <div className='h-[530px] flex items-center justify-center  '>
             <Loading />
           </div>
         ) : isSearch ? (
-          loadingSearch ? (
+          resumeListSearchLoading ? (
             <div className='h-[530px] flex items-center justify-center  '>
               <Loading />
             </div>
-          ) : listUserSearchData?.data.data.data && listUserSearchData?.data.data.data.length > 0 ? (
-            listUserSearchData?.data.data.data.map((user, index) => (
+          ) : resumeListSearchData?.data.data.data && resumeListSearchData?.data.data.data.length > 0 ? (
+            resumeListSearchData?.data.data.data.map((resume, index) => (
               <div
-                key={user.id}
+                key={resume.id}
                 className='grid grid-cols-12 px-[20px] py-[10px] items-center border-b
         hover:cursor-pointer hover:outline outline-[#0b65cc] rounded-[8px]'
               >
                 <div className='col-span-1 text-center text-[16px] text-[#535860]'>
                   {(pageNo - 1) * pageSize + index + 1}
                 </div>
-
-                <div className='col-span-3 text-[16px] text-[#535860]'>{user.fullName}</div>
-                <div className='col-span-3 text-[16px] text-[#535860] truncate w-[200px]'>{user.email}</div>
-                <div className='col-span-2 text-[16px] text-[#535860]'>{user.roles.map((role) => role.name)}</div>
-                <div className='col-span-2 text-[16px] text-[#535860]'>
-                  {moment(user.createdAt).format('DD MMM, YYYY')}
-                </div>
+                <div className='col-span-3 text-[16px] truncate w-[200px] text-[#535860]'>{resume.user.email}</div>
+                <div className='col-span-3 text-[16px] text-[#535860]'>{resume.job.name}</div>
+                <div className='col-span-2 text-[16px] text-[#535860]'>{resume.company.name}</div>
+                <div className='col-span-2 text-[16px] text-[#535860]'>{resume.status}</div>
                 <div
-                  className='col-span-1 text-center text-[16px] text-[#535860] flex justify-center
+                  className='col-span-1 text-center text-[16px] 
           items-center gap-[6px]'
                 >
                   <button
-                    onClick={(event) => handleClickButtonEdit(event, user.id)}
+                    onClick={(event) => handleClickButtonEdit(event, resume.id)}
                     className='group p-[6px] hover:bg-[#f1f2f4] rounded-[3px] hover:cursor-pointer'
                   >
                     <svg
@@ -268,32 +243,29 @@ export default function UserAdmin() {
           ) : (
             <div className='flex flex-col items-center justify-center'>
               <SvgOops />
-              <div className='font-medium text-[20px] leading-7'>Oops! The user does not exist.</div>
+              <div className='font-medium text-[20px] leading-7'>Oops! The permission does not exist.</div>
             </div>
           )
-        ) : listUserData?.data.data.data && listUserData?.data.data.data.length > 0 ? (
-          listUserData?.data.data.data.map((user, index) => (
+        ) : resumeListData?.data.data.data && resumeListData?.data.data.data.length > 0 ? (
+          resumeListData?.data.data.data.map((resume, index) => (
             <div
-              key={user.id}
+              key={resume.id}
               className='grid grid-cols-12 px-[20px] py-[10px] items-center border-b
         hover:cursor-pointer hover:outline outline-[#0b65cc] rounded-[8px]'
             >
               <div className='col-span-1 text-center text-[16px] text-[#535860]'>
                 {(pageNo - 1) * pageSize + index + 1}
               </div>
-
-              <div className='col-span-3 text-[16px] text-[#535860]'>{user.fullName}</div>
-              <div className='col-span-3 text-[16px] text-[#535860] truncate w-[200px]'>{user.email}</div>
-              <div className='col-span-2 text-[16px] text-[#535860]'>{user.roles.map((role) => role.name)}</div>
-              <div className='col-span-2 text-[16px] text-[#535860]'>
-                {moment(user.createdAt).format('DD MMM, YYYY')}
-              </div>
+              <div className='col-span-3 truncate w-[200px] text-[16px] text-[#535860]'>{resume.user.email}</div>
+              <div className='col-span-3 text-[16px] text-[#535860]'>{resume.job.name}</div>
+              <div className='col-span-2 text-[16px] text-[#535860]'>{resume.company.name}</div>
+              <div className='col-span-2 text-[16px] text-[#535860]'>{resume.status}</div>
               <div
                 className='col-span-1 text-center text-[16px] text-[#535860] flex justify-center
           items-center gap-[6px]'
               >
                 <button
-                  onClick={(event) => handleClickButtonEdit(event, user.id)}
+                  onClick={(event) => handleClickButtonEdit(event, resume.id)}
                   className='group p-[6px] hover:bg-[#f1f2f4] rounded-[3px] hover:cursor-pointer'
                 >
                   <svg
@@ -379,11 +351,11 @@ export default function UserAdmin() {
         ) : (
           <div className='flex flex-col items-center justify-center'>
             <SvgOops />
-            <div className='font-medium text-[20px] leading-7'>Oops! There are no users in the list.</div>
+            <div className='font-medium text-[20px] leading-7'>Oops! The permission does not exist.</div>
           </div>
         )}
       </div>
-      {loadingUserList || loadingSearch ? (
+      {resumeListLoading || resumeListSearchLoading ? (
         <div className='mt-[30px] flex items-center justify-end gap-x-[20px]'>
           <span className=''>Previous</span>
           <span className=''>Next</span>
@@ -399,9 +371,9 @@ export default function UserAdmin() {
                 <Link
                   className='text-[#0b65cc]'
                   to={{
-                    pathname: '/admin/user',
+                    pathname: '/admin/resume',
                     search: createSearchParams({
-                      ...queryConfigUserAdmin,
+                      ...queryResumeAdminConfig,
                       pageNo: (pageNo - 1).toString()
                     }).toString()
                   }}
@@ -409,15 +381,15 @@ export default function UserAdmin() {
                   Previous
                 </Link>
               )}
-              {pageNo === totalPagesSearchData ? (
+              {pageNo === totalPagesResumeListSearch ? (
                 <span className=''>Next</span>
               ) : (
                 <Link
                   className='text-[#0b65cc]'
                   to={{
-                    pathname: '/admin/user',
+                    pathname: '/admin/resume',
                     search: createSearchParams({
-                      ...queryConfigUserAdmin,
+                      ...queryResumeAdminConfig,
                       pageNo: (pageNo + 1).toString()
                     }).toString()
                   }}
@@ -426,7 +398,7 @@ export default function UserAdmin() {
                 </Link>
               )}
               <div className='w-[100px]'>
-                Page {pageNo} / {totalPagesSearchData}
+                Page {pageNo} / {totalPagesResumeListSearch}
               </div>
             </>
           ) : (
@@ -437,9 +409,9 @@ export default function UserAdmin() {
                 <Link
                   className='text-[#0b65cc]'
                   to={{
-                    pathname: '/admin/user',
+                    pathname: '/admin/resume',
                     search: createSearchParams({
-                      ...queryConfigUserAdmin,
+                      ...queryResumeAdminConfig,
                       pageNo: (pageNo - 1).toString()
                     }).toString()
                   }}
@@ -447,15 +419,15 @@ export default function UserAdmin() {
                   Previous
                 </Link>
               )}
-              {pageNo === totalPagesData ? (
+              {pageNo === totalPagesResumeList ? (
                 <span className=''>Next</span>
               ) : (
                 <Link
                   className='text-[#0b65cc]'
                   to={{
-                    pathname: '/admin/user',
+                    pathname: '/admin/resume',
                     search: createSearchParams({
-                      ...queryConfigUserAdmin,
+                      ...queryResumeAdminConfig,
                       pageNo: (pageNo + 1).toString()
                     }).toString()
                   }}
@@ -464,28 +436,13 @@ export default function UserAdmin() {
                 </Link>
               )}
               <div className='w-[100px]'>
-                Page {pageNo} / {totalPagesData}
+                Page {pageNo} / {totalPagesResumeList}
               </div>
             </>
           )}
         </div>
       )}
-
-      {isOpenModalCreateUser && (
-        <ModalCreateUser
-          closeModal={() => {
-            setOpenModalCreateUser(false);
-          }}
-        />
-      )}
-      {isOpenModalUpdateUser && (
-        <ModalUpdateUser
-          userId={userId}
-          closeModal={() => {
-            setOpenModalUpdateUser(false);
-          }}
-        />
-      )}
+      {isOpenModalUpdate && <ModalUpdateResume closeModal={() => setOpenModalUpdate(false)} resumeId={resumeId} />}
     </div>
   );
 }

@@ -118,7 +118,9 @@ export const roleSchema = yup.object({
 });
 
 export const searchRoleSchema = yup.object({
-  name: yup.string().trim()
+  name: yup.string().trim(),
+  company: yup.string().trim().required('Company name is required'),
+  job: yup.string().trim().required('Company name is required')
 });
 
 export const searchUserSchema = yup.object({
@@ -156,6 +158,18 @@ export const searchCategorySchema = yup.object({
   name: yup.string().trim()
 });
 
+export const resumeSchema = yup.object({
+  url: yup.string().trim(),
+  company: yup.string().notOneOf(['Select...'], 'Company name is required').required('Company name is required'),
+  job: yup.string().notOneOf(['Select...'], 'Job name is required').required('Job name is required'),
+  resume: yup.mixed<FileWithSize>(),
+  status: yup.string().notOneOf(['Select...'], 'Status resume is required').required('Status resume is required')
+});
+
+export const searchResumeSchema = yup.object({
+  email: yup.string().trim()
+});
+
 export const uploadImage = yup.object({});
 
 export type searchSchemaJob = yup.InferType<typeof searchJobSchema>;
@@ -164,6 +178,7 @@ export type searchSchemaRole = yup.InferType<typeof searchRoleSchema>;
 export type searchSchemaPermission = yup.InferType<typeof searchPermissionSchema>;
 export type searchSchemaSubscriber = yup.InferType<typeof searchSubscriberSchema>;
 export type searchSchemaCategory = yup.InferType<typeof searchCategorySchema>;
+export type searchSchemaResume = yup.InferType<typeof searchResumeSchema>;
 export type UserSchema = yup.InferType<typeof userSchema>;
 export type RoleSchema = yup.InferType<typeof roleSchema>;
 export type Schema = yup.InferType<typeof schema>;
@@ -172,3 +187,4 @@ export type companySchema = yup.InferType<typeof companySchema>;
 export type createPermissionSchema = yup.InferType<typeof permissionSchema>;
 export type createSubscriberSchema = yup.InferType<typeof subscriberSchema>;
 export type createCategorySchema = yup.InferType<typeof categorySchema>;
+export type createResumeSchema = yup.InferType<typeof resumeSchema>;
