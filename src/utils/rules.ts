@@ -170,6 +170,15 @@ export const searchResumeSchema = yup.object({
   email: yup.string().trim()
 });
 
+export const invitationSchema = yup.object({
+  receiverUserEmail: yup.string().trim().required('Email is required').email('Invalid email address'),
+  content: yup.string().trim().required('Content is required')
+});
+
+export const searchInvitationSchema = yup.object({
+  email: yup.string().trim()
+});
+
 export const uploadImage = yup.object({});
 
 export type searchSchemaJob = yup.InferType<typeof searchJobSchema>;
@@ -179,6 +188,7 @@ export type searchSchemaPermission = yup.InferType<typeof searchPermissionSchema
 export type searchSchemaSubscriber = yup.InferType<typeof searchSubscriberSchema>;
 export type searchSchemaCategory = yup.InferType<typeof searchCategorySchema>;
 export type searchSchemaResume = yup.InferType<typeof searchResumeSchema>;
+export type searchSchemaInvitation = yup.InferType<typeof searchInvitationSchema>;
 export type UserSchema = yup.InferType<typeof userSchema>;
 export type RoleSchema = yup.InferType<typeof roleSchema>;
 export type Schema = yup.InferType<typeof schema>;
@@ -188,3 +198,4 @@ export type createPermissionSchema = yup.InferType<typeof permissionSchema>;
 export type createSubscriberSchema = yup.InferType<typeof subscriberSchema>;
 export type createCategorySchema = yup.InferType<typeof categorySchema>;
 export type createResumeSchema = yup.InferType<typeof resumeSchema>;
+export type inviteJoinCompanySchema = yup.InferType<typeof invitationSchema>;

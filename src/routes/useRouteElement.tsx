@@ -26,6 +26,7 @@ import RolesAdmin from '../pages/Admin/RolesAdmin';
 import SubscriberAdmin from '../pages/Admin/SubscriberAdmin';
 import CategoryAdmin from '../pages/Admin/CategoryAdmin';
 import ResumeAdmin from '../pages/Admin/ResumeAdmin';
+import InvitationAdmin from '../pages/Admin/InvitationAdmin';
 
 function ProtectedRoute() {
   const { isAuthenticated } = useContext(AppContext);
@@ -108,6 +109,10 @@ export default function useRouteElement() {
             {
               path: 'resume',
               element: <ResumeAdmin />
+            },
+            {
+              path: 'invitation',
+              element: <InvitationAdmin />
             }
           ]
         }
