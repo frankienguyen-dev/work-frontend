@@ -11,7 +11,7 @@ export default function TopBarSetting() {
           className={classNames(
             'flex items-center gap-[8px] py-[12px] px-[20px] border-b-[3px]\n' +
               ' group-hover:border-b-[#0b65cc] transition-transform transform\n' +
-              ' hover:translate-y-0 group-hover:text-[#0A65CC] text-[#767F8C]',
+              ' hover:translate-y-0 group-hover:text-[#0A65CC] text-[#767F8C]  ',
             {
               'border-b-[#0b65cc]': location.pathname === '/dashboard/my-account-setting',
               'border-b-transparent': location.pathname !== '/dashboard/my-account-setting'
@@ -46,13 +46,10 @@ export default function TopBarSetting() {
             </svg>
           </div>
           <div
-            className={classNames(
-              'text-[14px] font-semibold leading-5 group-hover:text-[currentTextColor]',
-              {
-                'text-[#0b65cc]': location.pathname === '/dashboard/my-account-setting',
-                'text-[currentColor]': location.pathname !== '/dashboard/my-account-setting'
-              }
-            )}
+            className={classNames('text-[14px] font-semibold leading-5 group-hover:text-[currentTextColor]', {
+              'text-[#0b65cc]': location.pathname === '/dashboard/my-account-setting',
+              'text-[currentColor]': location.pathname !== '/dashboard/my-account-setting'
+            })}
           >
             Personal
           </div>
@@ -105,13 +102,10 @@ export default function TopBarSetting() {
             </svg>
           </div>
           <div
-            className={classNames(
-              'text-[14px] font-semibold leading-5 group-hover:text-[currentTextColor]',
-              {
-                'text-[#0b65cc]': location.pathname === '/dashboard/my-account-setting/profile',
-                'text-[currentColor]': location.pathname !== '/dashboard/my-account-setting/profile'
-              }
-            )}
+            className={classNames('text-[14px] font-semibold leading-5 group-hover:text-[currentTextColor]', {
+              'text-[#0b65cc]': location.pathname === '/dashboard/my-account-setting/profile',
+              'text-[currentColor]': location.pathname !== '/dashboard/my-account-setting/profile'
+            })}
           >
             Profile
           </div>
@@ -127,16 +121,14 @@ export default function TopBarSetting() {
             {
               'border-b-[#0b65cc] border-b-[3px]':
                 location.pathname === '/dashboard/my-account-setting/account-setting',
-              'border-b-transparent':
-                location.pathname !== '/dashboard/my-account-setting/account-setting'
+              'border-b-transparent': location.pathname !== '/dashboard/my-account-setting/account-setting'
             }
           )}
         >
           <div>
             <svg
               className={classNames('group-hover:stroke-[#0b65cc]', {
-                'text-[#0b65cc]':
-                  location.pathname === '/dashboard/my-account-setting/account-setting',
+                'text-[#0b65cc]': location.pathname === '/dashboard/my-account-setting/account-setting',
                 '': location.pathname !== '/dashboard/my-account-setting/account-setting'
               })}
               width='24'
@@ -164,15 +156,10 @@ export default function TopBarSetting() {
             </svg>
           </div>
           <div
-            className={classNames(
-              'text-[14px] font-semibold leading-5 group-hover:text-[currentTextColor]',
-              {
-                'text-[#0b65cc]':
-                  location.pathname === '/dashboard/my-account-setting/account-setting',
-                'text-[currentColor]':
-                  location.pathname !== '/dashboard/my-account-setting/account-setting'
-              }
-            )}
+            className={classNames('text-[14px] font-semibold leading-5 group-hover:text-[currentTextColor]', {
+              'text-[#0b65cc]': location.pathname === '/dashboard/my-account-setting/account-setting',
+              'text-[currentColor]': location.pathname !== '/dashboard/my-account-setting/account-setting'
+            })}
           >
             Account Setting
           </div>

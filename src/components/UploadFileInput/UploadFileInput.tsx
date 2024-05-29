@@ -1,11 +1,6 @@
 import { FileInput, Label } from 'flowbite-react';
 import React, { useEffect, useState } from 'react';
-import {
-  RegisterOptions,
-  UseFormRegister,
-  UseFormSetError,
-  UseFormSetValue
-} from 'react-hook-form';
+import { RegisterOptions, UseFormRegister, UseFormSetError, UseFormSetValue } from 'react-hook-form';
 import { useMutation } from '@tanstack/react-query';
 import uploadApi from '../../apis/upload.api.ts';
 import { getLogoUrl, isAxiosPayloadLargeError } from '../../utils/utils.ts';
@@ -42,8 +37,11 @@ export default function UploadFileInput({
   useEffect(() => {
     if (valueFromServer) {
       setSelectedImage(getLogoUrl(valueFromServer));
+    } else {
+      setSelectedImage('');
+      setValue(name, null);
     }
-  }, [valueFromServer]);
+  }, [valueFromServer, setValue, name]);
 
   const uploadImageMutation = useMutation({
     mutationFn: (body: FormData) => uploadApi.uploadImage(body)

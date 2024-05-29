@@ -8,7 +8,7 @@ export default function Personal() {
         <div className='grid grid-cols-12 gap-[48px]'>
           <div className='col-span-4'>
             <div className='mb-2'>Profile Picture</div>
-            <UploadFileInput />
+            {/*<UploadFileInput />*/}
           </div>
           <div className='col-span-8'>
             <form>

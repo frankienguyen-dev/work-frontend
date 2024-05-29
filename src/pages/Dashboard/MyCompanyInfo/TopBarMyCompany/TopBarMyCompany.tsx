@@ -60,13 +60,10 @@ export default function TopBarMyCompany() {
             </svg>
           </div>
           <div
-            className={classNames(
-              'text-[14px] font-semibold leading-5 group-hover:text-[currentTextColor]',
-              {
-                'text-[#0b65cc]': location.pathname === '/dashboard/my-company',
-                'text-[currentColor]': location.pathname !== '/dashboard/my-company'
-              }
-            )}
+            className={classNames('text-[14px] font-semibold leading-5 group-hover:text-[currentTextColor]', {
+              'text-[#0b65cc]': location.pathname === '/dashboard/my-company',
+              'text-[currentColor]': location.pathname !== '/dashboard/my-company'
+            })}
           >
             Company Information
           </div>
@@ -128,13 +125,10 @@ export default function TopBarMyCompany() {
             </svg>
           </div>
           <div
-            className={classNames(
-              'text-[14px] font-semibold leading-5 group-hover:text-[currentTextColor]',
-              {
-                'text-[#0b65cc]': location.pathname === '/dashboard/my-company/founding-info',
-                'text-[currentColor]': location.pathname !== '/dashboard/my-company/founding-info'
-              }
-            )}
+            className={classNames('text-[14px] font-semibold leading-5 group-hover:text-[currentTextColor]', {
+              'text-[#0b65cc]': location.pathname === '/dashboard/my-company/founding-info',
+              'text-[currentColor]': location.pathname !== '/dashboard/my-company/founding-info'
+            })}
           >
             Founding Information
           </div>

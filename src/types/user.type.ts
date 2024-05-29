@@ -22,6 +22,7 @@ export interface User {
   }[];
   jobs: Job[] | [];
   company?: {
+    id: string;
     name: string;
   };
   createdBy: ByUser | null;

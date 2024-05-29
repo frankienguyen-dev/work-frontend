@@ -10,6 +10,7 @@ import userApi from '../../apis/user.api.ts';
 import { getLogoUrl } from '../../utils/utils.ts';
 
 export default function Header() {
+  const { companyInfo, setCompanyInfo, foundingInfo, setFoundingInfo } = useContext(AppContext);
   const { isAuthenticated, setIsAuthenticated, isRole } = useContext(AppContext);
 
   const { data } = useQuery({
@@ -23,6 +24,8 @@ export default function Header() {
     mutationFn: () => authApi.logoutAccount(),
     onSuccess: () => {
       setIsAuthenticated(false);
+      setCompanyInfo(null);
+      setFoundingInfo(null);
       clearAccessTokenFromLocalStorage();
       clearRoleToLocalStorage();
     }

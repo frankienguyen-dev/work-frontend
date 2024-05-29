@@ -11,14 +11,16 @@ export default function Overview() {
   const profile = data?.data.data;
   return (
     <div className='mt-[54px]'>
-      <h1 className='text-[18px] font-medium leading-7 text-[#18191c]'>
-        Hello, {profile?.fullName}
-      </h1>
-      <div className='mt-[8px] text-[14px] leading-5 text-[#767f8c]'>
-        Here is your daily activities and job alerts
-      </div>
+      <h1 className='text-[18px] font-medium leading-7 text-[#18191c]'>Hello, {profile?.fullName}</h1>
+      <div className='mt-[8px] text-[14px] leading-5 text-[#767f8c]'>Here is your daily activities and job alerts</div>
       <div className='grid grid-cols-3 gap-[24px] mt-[24px]'>
-        <div className='col-span-1'>
+        <Link
+          to='/dashboard/applied-job'
+          onClick={() => {
+            window.scrollTo(0, 0);
+          }}
+          className='col-span-1'
+        >
           <div
             className='py-[20px] pl-[24px] pr-[20px] bg-[#e7f0fa] rounded-[8px] flex
                   items-center gap-[24px] hover:cursor-pointer h-[104px]
@@ -30,13 +32,7 @@ export default function Overview() {
             </div>
             <div className='w-[64px] h-[64px] rounded-[5px] bg-white flex items-center justify-center'>
               <div>
-                <svg
-                  width='32'
-                  height='32'
-                  viewBox='0 0 32 32'
-                  fill='none'
-                  xmlns='http://www.w3.org/2000/svg'
-                >
+                <svg width='32' height='32' viewBox='0 0 32 32' fill='none' xmlns='http://www.w3.org/2000/svg'>
                   <g clipPath='url(#clip0_1647_30666)'>
                     <path
                       opacity='0.2'
@@ -81,8 +77,14 @@ export default function Overview() {
               </div>
             </div>
           </div>
-        </div>
-        <div className='col-span-1'>
+        </Link>
+        <Link
+          to='/dashboard/favorite-job'
+          onClick={() => {
+            window.scrollTo(0, 0);
+          }}
+          className='col-span-1'
+        >
           <div
             className='py-[20px] pl-[24px] pr-[20px] bg-[#fff7e6] rounded-[8px] flex
                   items-center gap-[24px] hover:cursor-pointer h-[104px]
@@ -94,13 +96,7 @@ export default function Overview() {
             </div>
             <div className='w-[64px] h-[64px] rounded-[5px] bg-white flex items-center justify-center'>
               <div>
-                <svg
-                  width='32'
-                  height='32'
-                  viewBox='0 0 32 32'
-                  fill='none'
-                  xmlns='http://www.w3.org/2000/svg'
-                >
+                <svg width='32' height='32' viewBox='0 0 32 32' fill='none' xmlns='http://www.w3.org/2000/svg'>
                   <path
                     d='M24 28L15.9991 23L8 28V6C8 5.73478 8.10536 5.48043 8.29289 5.29289C8.48043 5.10536 8.73478 5 9 5H23C23.2652 5 23.5196 5.10536 23.7071 5.29289C23.8946 5.48043 24 5.73478 24 6V28Z'
                     fill='#FFF6E6'
@@ -113,7 +109,7 @@ export default function Overview() {
               </div>
             </div>
           </div>
-        </div>
+        </Link>
         <div className='col-span-1'>
           <div
             className='py-[20px] pl-[24px] pr-[20px] bg-[#e7f6ea] rounded-[8px] flex
@@ -126,13 +122,7 @@ export default function Overview() {
             </div>
             <div className='w-[64px] h-[64px] rounded-[5px] bg-white flex items-center justify-center'>
               <div>
-                <svg
-                  width='32'
-                  height='32'
-                  viewBox='0 0 32 32'
-                  fill='none'
-                  xmlns='http://www.w3.org/2000/svg'
-                >
+                <svg width='32' height='32' viewBox='0 0 32 32' fill='none' xmlns='http://www.w3.org/2000/svg'>
                   <path
                     d='M7.02535 14.0002C7.02205 12.8195 7.25176 11.6497 7.70133 10.5579C8.15089 9.46608 8.81147 8.47371 9.64522 7.63763C10.479 6.80155 11.4695 6.1382 12.56 5.68559C13.6506 5.23298 14.8197 5 16.0005 5C17.1812 5 18.3503 5.23298 19.4409 5.68559C20.5314 6.1382 21.522 6.80155 22.3557 7.63763C23.1895 8.47371 23.85 9.46608 24.2996 10.5579C24.7492 11.6497 24.9789 12.8195 24.9756 14.0002C24.9756 18.4772 25.9122 21.0751 26.7372 22.495C26.8261 22.6467 26.8734 22.8192 26.8743 22.995C26.8752 23.1708 26.8298 23.3438 26.7426 23.4965C26.6553 23.6491 26.5294 23.7761 26.3774 23.8645C26.2254 23.953 26.0528 23.9998 25.877 24.0002H6.12292C5.94707 23.9998 5.77445 23.9529 5.62248 23.8645C5.4705 23.776 5.34454 23.649 5.25731 23.4963C5.17008 23.3437 5.12465 23.1707 5.12563 22.9948C5.1266 22.819 5.17393 22.6465 5.26284 22.4948C6.08825 21.0748 7.02534 18.4769 7.02534 14.0002H7.02535Z'
                     fill='#E7F6EA'
@@ -185,9 +175,7 @@ export default function Overview() {
                 />
               </div>
               <div className='min-w-[384px]'>
-                <h1 className='text-[18px] font-medium text-white'>
-                  Your profile editing is not completed.
-                </h1>
+                <h1 className='text-[18px] font-medium text-white'>Your profile editing is not completed.</h1>
                 <div className='mt-[8px] text-[14px] text-white'>
                   Complete your profile editing & build your custom Resume
                 </div>
@@ -202,20 +190,8 @@ export default function Overview() {
             >
               Edit Profile
               <div>
-                <svg
-                  width='24'
-                  height='24'
-                  viewBox='0 0 24 24'
-                  fill='none'
-                  xmlns='http://www.w3.org/2000/svg'
-                >
-                  <path
-                    d='M5 12H19'
-                    stroke='#E05151'
-                    strokeWidth='1.5'
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                  />
+                <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
+                  <path d='M5 12H19' stroke='#E05151' strokeWidth='1.5' strokeLinecap='round' strokeLinejoin='round' />
                   <path
                     d='M12 5L19 12L12 19'
                     stroke='#E05151'
@@ -288,19 +264,11 @@ export default function Overview() {
                   className='w-[56px] h-[56px] object-cover rounded-[4px]'
                 />
                 <div>
-                  <h3 className='text-[16px] text-[#18191c] font-medium leading-6'>
-                    Junior Graphic Designer
-                  </h3>
+                  <h3 className='text-[16px] text-[#18191c] font-medium leading-6'>Junior Graphic Designer</h3>
                   <div className='flex items-center gap-[16px] mt-[10px]'>
                     <div className='flex items-center gap-[6px]'>
                       <div>
-                        <svg
-                          width='20'
-                          height='20'
-                          viewBox='0 0 20 20'
-                          fill='none'
-                          xmlns='http://www.w3.org/2000/svg'
-                        >
+                        <svg width='20' height='20' viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg'>
                           <path
                             d='M17.5 8.33398C17.5 14.1673 10 19.1673 10 19.1673C10 19.1673 2.5 14.1673 2.5 8.33398C2.5 6.34486 3.29018 4.43721 4.6967 3.03068C6.10322 1.62416 8.01088 0.833984 10 0.833984C11.9891 0.833984 13.8968 1.62416 15.3033 3.03068C16.7098 4.43721 17.5 6.34486 17.5 8.33398Z'
                             stroke='#C8CCD1'
@@ -321,13 +289,7 @@ export default function Overview() {
                     </div>
                     <div className='flex items-center gap-[6px]'>
                       <div>
-                        <svg
-                          width='20'
-                          height='20'
-                          viewBox='0 0 20 20'
-                          fill='none'
-                          xmlns='http://www.w3.org/2000/svg'
-                        >
+                        <svg width='20' height='20' viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg'>
                           <g clipPath='url(#clip0_144_11271)'>
                             <path
                               d='M10 1.875V18.125'
@@ -363,13 +325,7 @@ export default function Overview() {
             <div className='col-span-2'>
               <div className='flex items-center justify-center gap-[4px]'>
                 <div>
-                  <svg
-                    width='20'
-                    height='20'
-                    viewBox='0 0 20 20'
-                    fill='none'
-                    xmlns='http://www.w3.org/2000/svg'
-                  >
+                  <svg width='20' height='20' viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg'>
                     <path
                       d='M10 17.5C14.1421 17.5 17.5 14.1421 17.5 10C17.5 5.85786 14.1421 2.5 10 2.5C5.85786 2.5 2.5 5.85786 2.5 10C2.5 14.1421 5.85786 17.5 10 17.5Z'
                       stroke='#0BA02C'
@@ -413,19 +369,11 @@ export default function Overview() {
                   className='w-[56px] h-[56px] object-cover rounded-[4px]'
                 />
                 <div>
-                  <h3 className='text-[16px] text-[#18191c] font-medium leading-6'>
-                    Junior Graphic Designer
-                  </h3>
+                  <h3 className='text-[16px] text-[#18191c] font-medium leading-6'>Junior Graphic Designer</h3>
                   <div className='flex items-center gap-[16px] mt-[10px]'>
                     <div className='flex items-center gap-[6px]'>
                       <div>
-                        <svg
-                          width='20'
-                          height='20'
-                          viewBox='0 0 20 20'
-                          fill='none'
-                          xmlns='http://www.w3.org/2000/svg'
-                        >
+                        <svg width='20' height='20' viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg'>
                           <path
                             d='M17.5 8.33398C17.5 14.1673 10 19.1673 10 19.1673C10 19.1673 2.5 14.1673 2.5 8.33398C2.5 6.34486 3.29018 4.43721 4.6967 3.03068C6.10322 1.62416 8.01088 0.833984 10 0.833984C11.9891 0.833984 13.8968 1.62416 15.3033 3.03068C16.7098 4.43721 17.5 6.34486 17.5 8.33398Z'
                             stroke='#C8CCD1'
@@ -446,13 +394,7 @@ export default function Overview() {
                     </div>
                     <div className='flex items-center gap-[6px]'>
                       <div>
-                        <svg
-                          width='20'
-                          height='20'
-                          viewBox='0 0 20 20'
-                          fill='none'
-                          xmlns='http://www.w3.org/2000/svg'
-                        >
+                        <svg width='20' height='20' viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg'>
                           <g clipPath='url(#clip0_144_11271)'>
                             <path
                               d='M10 1.875V18.125'
@@ -488,13 +430,7 @@ export default function Overview() {
             <div className='col-span-2'>
               <div className='flex items-center justify-center gap-[4px]'>
                 <div>
-                  <svg
-                    width='20'
-                    height='20'
-                    viewBox='0 0 20 20'
-                    fill='none'
-                    xmlns='http://www.w3.org/2000/svg'
-                  >
+                  <svg width='20' height='20' viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg'>
                     <path
                       d='M10 17.5C14.1421 17.5 17.5 14.1421 17.5 10C17.5 5.85786 14.1421 2.5 10 2.5C5.85786 2.5 2.5 5.85786 2.5 10C2.5 14.1421 5.85786 17.5 10 17.5Z'
                       stroke='#0BA02C'
@@ -538,19 +474,11 @@ export default function Overview() {
                   className='w-[56px] h-[56px] object-cover rounded-[4px]'
                 />
                 <div>
-                  <h3 className='text-[16px] text-[#18191c] font-medium leading-6'>
-                    Junior Graphic Designer
-                  </h3>
+                  <h3 className='text-[16px] text-[#18191c] font-medium leading-6'>Junior Graphic Designer</h3>
                   <div className='flex items-center gap-[16px] mt-[10px]'>
                     <div className='flex items-center gap-[6px]'>
                       <div>
-                        <svg
-                          width='20'
-                          height='20'
-                          viewBox='0 0 20 20'
-                          fill='none'
-                          xmlns='http://www.w3.org/2000/svg'
-                        >
+                        <svg width='20' height='20' viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg'>
                           <path
                             d='M17.5 8.33398C17.5 14.1673 10 19.1673 10 19.1673C10 19.1673 2.5 14.1673 2.5 8.33398C2.5 6.34486 3.29018 4.43721 4.6967 3.03068C6.10322 1.62416 8.01088 0.833984 10 0.833984C11.9891 0.833984 13.8968 1.62416 15.3033 3.03068C16.7098 4.43721 17.5 6.34486 17.5 8.33398Z'
                             stroke='#C8CCD1'
@@ -571,13 +499,7 @@ export default function Overview() {
                     </div>
                     <div className='flex items-center gap-[6px]'>
                       <div>
-                        <svg
-                          width='20'
-                          height='20'
-                          viewBox='0 0 20 20'
-                          fill='none'
-                          xmlns='http://www.w3.org/2000/svg'
-                        >
+                        <svg width='20' height='20' viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg'>
                           <g clipPath='url(#clip0_144_11271)'>
                             <path
                               d='M10 1.875V18.125'
@@ -613,13 +535,7 @@ export default function Overview() {
             <div className='col-span-2'>
               <div className='flex items-center justify-center gap-[4px]'>
                 <div>
-                  <svg
-                    width='20'
-                    height='20'
-                    viewBox='0 0 20 20'
-                    fill='none'
-                    xmlns='http://www.w3.org/2000/svg'
-                  >
+                  <svg width='20' height='20' viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg'>
                     <path
                       d='M10 17.5C14.1421 17.5 17.5 14.1421 17.5 10C17.5 5.85786 14.1421 2.5 10 2.5C5.85786 2.5 2.5 5.85786 2.5 10C2.5 14.1421 5.85786 17.5 10 17.5Z'
                       stroke='#0BA02C'
@@ -663,19 +579,11 @@ export default function Overview() {
                   className='w-[56px] h-[56px] object-cover rounded-[4px]'
                 />
                 <div>
-                  <h3 className='text-[16px] text-[#18191c] font-medium leading-6'>
-                    Junior Graphic Designer
-                  </h3>
+                  <h3 className='text-[16px] text-[#18191c] font-medium leading-6'>Junior Graphic Designer</h3>
                   <div className='flex items-center gap-[16px] mt-[10px]'>
                     <div className='flex items-center gap-[6px]'>
                       <div>
-                        <svg
-                          width='20'
-                          height='20'
-                          viewBox='0 0 20 20'
-                          fill='none'
-                          xmlns='http://www.w3.org/2000/svg'
-                        >
+                        <svg width='20' height='20' viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg'>
                           <path
                             d='M17.5 8.33398C17.5 14.1673 10 19.1673 10 19.1673C10 19.1673 2.5 14.1673 2.5 8.33398C2.5 6.34486 3.29018 4.43721 4.6967 3.03068C6.10322 1.62416 8.01088 0.833984 10 0.833984C11.9891 0.833984 13.8968 1.62416 15.3033 3.03068C16.7098 4.43721 17.5 6.34486 17.5 8.33398Z'
                             stroke='#C8CCD1'
@@ -696,13 +604,7 @@ export default function Overview() {
                     </div>
                     <div className='flex items-center gap-[6px]'>
                       <div>
-                        <svg
-                          width='20'
-                          height='20'
-                          viewBox='0 0 20 20'
-                          fill='none'
-                          xmlns='http://www.w3.org/2000/svg'
-                        >
+                        <svg width='20' height='20' viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg'>
                           <g clipPath='url(#clip0_144_11271)'>
                             <path
                               d='M10 1.875V18.125'
@@ -738,13 +640,7 @@ export default function Overview() {
             <div className='col-span-2'>
               <div className='flex items-center justify-center gap-[4px]'>
                 <div>
-                  <svg
-                    width='20'
-                    height='20'
-                    viewBox='0 0 20 20'
-                    fill='none'
-                    xmlns='http://www.w3.org/2000/svg'
-                  >
+                  <svg width='20' height='20' viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg'>
                     <path
                       d='M10 17.5C14.1421 17.5 17.5 14.1421 17.5 10C17.5 5.85786 14.1421 2.5 10 2.5C5.85786 2.5 2.5 5.85786 2.5 10C2.5 14.1421 5.85786 17.5 10 17.5Z'
                       stroke='#0BA02C'
@@ -788,19 +684,11 @@ export default function Overview() {
                   className='w-[56px] h-[56px] object-cover rounded-[4px]'
                 />
                 <div>
-                  <h3 className='text-[16px] text-[#18191c] font-medium leading-6'>
-                    Junior Graphic Designer
-                  </h3>
+                  <h3 className='text-[16px] text-[#18191c] font-medium leading-6'>Junior Graphic Designer</h3>
                   <div className='flex items-center gap-[16px] mt-[10px]'>
                     <div className='flex items-center gap-[6px]'>
                       <div>
-                        <svg
-                          width='20'
-                          height='20'
-                          viewBox='0 0 20 20'
-                          fill='none'
-                          xmlns='http://www.w3.org/2000/svg'
-                        >
+                        <svg width='20' height='20' viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg'>
                           <path
                             d='M17.5 8.33398C17.5 14.1673 10 19.1673 10 19.1673C10 19.1673 2.5 14.1673 2.5 8.33398C2.5 6.34486 3.29018 4.43721 4.6967 3.03068C6.10322 1.62416 8.01088 0.833984 10 0.833984C11.9891 0.833984 13.8968 1.62416 15.3033 3.03068C16.7098 4.43721 17.5 6.34486 17.5 8.33398Z'
                             stroke='#C8CCD1'
@@ -821,13 +709,7 @@ export default function Overview() {
                     </div>
                     <div className='flex items-center gap-[6px]'>
                       <div>
-                        <svg
-                          width='20'
-                          height='20'
-                          viewBox='0 0 20 20'
-                          fill='none'
-                          xmlns='http://www.w3.org/2000/svg'
-                        >
+                        <svg width='20' height='20' viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg'>
                           <g clipPath='url(#clip0_144_11271)'>
                             <path
                               d='M10 1.875V18.125'
@@ -863,13 +745,7 @@ export default function Overview() {
             <div className='col-span-2'>
               <div className='flex items-center justify-center gap-[4px]'>
                 <div>
-                  <svg
-                    width='20'
-                    height='20'
-                    viewBox='0 0 20 20'
-                    fill='none'
-                    xmlns='http://www.w3.org/2000/svg'
-                  >
+                  <svg width='20' height='20' viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg'>
                     <path
                       d='M10 17.5C14.1421 17.5 17.5 14.1421 17.5 10C17.5 5.85786 14.1421 2.5 10 2.5C5.85786 2.5 2.5 5.85786 2.5 10C2.5 14.1421 5.85786 17.5 10 17.5Z'
                       stroke='#0BA02C'
@@ -913,19 +789,11 @@ export default function Overview() {
                   className='w-[56px] h-[56px] object-cover rounded-[4px]'
                 />
                 <div>
-                  <h3 className='text-[16px] text-[#18191c] font-medium leading-6'>
-                    Junior Graphic Designer
-                  </h3>
+                  <h3 className='text-[16px] text-[#18191c] font-medium leading-6'>Junior Graphic Designer</h3>
                   <div className='flex items-center gap-[16px] mt-[10px]'>
                     <div className='flex items-center gap-[6px]'>
                       <div>
-                        <svg
-                          width='20'
-                          height='20'
-                          viewBox='0 0 20 20'
-                          fill='none'
-                          xmlns='http://www.w3.org/2000/svg'
-                        >
+                        <svg width='20' height='20' viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg'>
                           <path
                             d='M17.5 8.33398C17.5 14.1673 10 19.1673 10 19.1673C10 19.1673 2.5 14.1673 2.5 8.33398C2.5 6.34486 3.29018 4.43721 4.6967 3.03068C6.10322 1.62416 8.01088 0.833984 10 0.833984C11.9891 0.833984 13.8968 1.62416 15.3033 3.03068C16.7098 4.43721 17.5 6.34486 17.5 8.33398Z'
                             stroke='#C8CCD1'
@@ -946,13 +814,7 @@ export default function Overview() {
                     </div>
                     <div className='flex items-center gap-[6px]'>
                       <div>
-                        <svg
-                          width='20'
-                          height='20'
-                          viewBox='0 0 20 20'
-                          fill='none'
-                          xmlns='http://www.w3.org/2000/svg'
-                        >
+                        <svg width='20' height='20' viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg'>
                           <g clipPath='url(#clip0_144_11271)'>
                             <path
                               d='M10 1.875V18.125'
@@ -988,13 +850,7 @@ export default function Overview() {
             <div className='col-span-2'>
               <div className='flex items-center justify-center gap-[4px]'>
                 <div>
-                  <svg
-                    width='20'
-                    height='20'
-                    viewBox='0 0 20 20'
-                    fill='none'
-                    xmlns='http://www.w3.org/2000/svg'
-                  >
+                  <svg width='20' height='20' viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg'>
                     <path
                       d='M10 17.5C14.1421 17.5 17.5 14.1421 17.5 10C17.5 5.85786 14.1421 2.5 10 2.5C5.85786 2.5 2.5 5.85786 2.5 10C2.5 14.1421 5.85786 17.5 10 17.5Z'
                       stroke='#0BA02C'
@@ -1038,19 +894,11 @@ export default function Overview() {
                   className='w-[56px] h-[56px] object-cover rounded-[4px]'
                 />
                 <div>
-                  <h3 className='text-[16px] text-[#18191c] font-medium leading-6'>
-                    Junior Graphic Designer
-                  </h3>
+                  <h3 className='text-[16px] text-[#18191c] font-medium leading-6'>Junior Graphic Designer</h3>
                   <div className='flex items-center gap-[16px] mt-[10px]'>
                     <div className='flex items-center gap-[6px]'>
                       <div>
-                        <svg
-                          width='20'
-                          height='20'
-                          viewBox='0 0 20 20'
-                          fill='none'
-                          xmlns='http://www.w3.org/2000/svg'
-                        >
+                        <svg width='20' height='20' viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg'>
                           <path
                             d='M17.5 8.33398C17.5 14.1673 10 19.1673 10 19.1673C10 19.1673 2.5 14.1673 2.5 8.33398C2.5 6.34486 3.29018 4.43721 4.6967 3.03068C6.10322 1.62416 8.01088 0.833984 10 0.833984C11.9891 0.833984 13.8968 1.62416 15.3033 3.03068C16.7098 4.43721 17.5 6.34486 17.5 8.33398Z'
                             stroke='#C8CCD1'
@@ -1071,13 +919,7 @@ export default function Overview() {
                     </div>
                     <div className='flex items-center gap-[6px]'>
                       <div>
-                        <svg
-                          width='20'
-                          height='20'
-                          viewBox='0 0 20 20'
-                          fill='none'
-                          xmlns='http://www.w3.org/2000/svg'
-                        >
+                        <svg width='20' height='20' viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg'>
                           <g clipPath='url(#clip0_144_11271)'>
                             <path
                               d='M10 1.875V18.125'
@@ -1113,13 +955,7 @@ export default function Overview() {
             <div className='col-span-2'>
               <div className='flex items-center justify-center gap-[4px]'>
                 <div>
-                  <svg
-                    width='20'
-                    height='20'
-                    viewBox='0 0 20 20'
-                    fill='none'
-                    xmlns='http://www.w3.org/2000/svg'
-                  >
+                  <svg width='20' height='20' viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg'>
                     <path
                       d='M10 17.5C14.1421 17.5 17.5 14.1421 17.5 10C17.5 5.85786 14.1421 2.5 10 2.5C5.85786 2.5 2.5 5.85786 2.5 10C2.5 14.1421 5.85786 17.5 10 17.5Z'
                       stroke='#0BA02C'

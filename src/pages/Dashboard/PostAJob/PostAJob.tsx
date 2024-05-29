@@ -8,6 +8,8 @@ import jobApi from '../../../apis/job.api.ts';
 import TagInputComponent from '../../../components/TagInputComponent';
 import userApi from '../../../apis/user.api.ts';
 import { PostJob } from '../../../types/job.type.ts';
+import useQueryConfig from '../../../hooks/useQueryConfig.tsx';
+import categoryApi from '../../../apis/category.api.ts';
 
 export type FormPostJobData = postJobSchema;
 
@@ -20,6 +22,11 @@ export default function PostAJob() {
   } = useForm<FormPostJobData>({
     resolver: yupResolver(jobSchema)
   });
+  const queryConfig = useQueryConfig();
+  const queryCategoryConfig = {
+    ...queryConfig,
+    pageSize: '100'
+  };
 
   const { data } = useQuery({
     queryKey: ['userData'],
@@ -31,6 +38,11 @@ export default function PostAJob() {
     mutationFn: (body: PostJob) => jobApi.postJob(body)
   });
 
+  const { data: categoryListData } = useQuery({
+    queryKey: ['categoryList', queryCategoryConfig],
+    queryFn: () => categoryApi.getAllCategory(queryCategoryConfig)
+  });
+
   const onSubmitPostJob = handleSubmit(
     (data) => {
       const postJobData = {
@@ -38,7 +50,9 @@ export default function PostAJob() {
         company: {
           name: data.company
         },
-
+        category: {
+          id: data.category
+        },
         startDate: data.startDate.toISOString(),
         endDate: data.endDate.toISOString()
       };
@@ -73,7 +87,7 @@ export default function PostAJob() {
           </div>
         </div>
         <div className='grid grid-cols-12 gap-[18px] mt-[18px]'>
-          <div className='col-span-4'>
+          <div className='col-span-3'>
             <div className='text-[14px] leading-5 text-[#18191c]'>Location</div>
             <input
               type='text'
@@ -87,7 +101,7 @@ export default function PostAJob() {
               <span className='font-medium'>{errors.location?.message}</span>
             </div>
           </div>
-          <div className='col-span-4'>
+          <div className='col-span-3'>
             <div className='text-[14px] leading-5 text-[#18191c]'>Quantity</div>
             <input
               type='text'
@@ -101,7 +115,7 @@ export default function PostAJob() {
               <span className='font-medium'>{errors.quantity?.message}</span>
             </div>
           </div>
-          <div className='col-span-4'>
+          <div className='col-span-3'>
             <div className='text-[14px] leading-5 text-[#18191c]'>Job Level</div>
             <select
               id='level'
@@ -124,9 +138,7 @@ export default function PostAJob() {
               <span className='font-medium'>{errors.level?.message}</span>
             </div>
           </div>
-        </div>
-        <div className='grid grid-cols-12 gap-[18px] mt-[18px]'>
-          <div className='col-span-4'>
+          <div className='col-span-3'>
             <div className='text-[14px] leading-5 text-[#18191c] mb-2'>Salary</div>
             <input
               type='text'
@@ -138,6 +150,32 @@ export default function PostAJob() {
             />
             <div className='mt-1 min-h-[1.25rem] text-sm text-red-600 dark:text-red-500'>
               <span className='font-medium'>{errors.salary?.message}</span>
+            </div>
+          </div>
+        </div>
+        <div className='grid grid-cols-12 gap-[18px] mt-[18px]'>
+          <div className='col-span-4'>
+            <div className='text-[14px] leading-5 text-[#18191c]'>Job Category</div>
+            <select
+              id='category'
+              className='w-full h-[48px] border-[2px] solid border-[#e4e5e8] rounded-[5px]
+          focus:outline-none focus:border-[#9099a3] focus:ring-0 py-[12px] px-[18px]
+          text-[16px] leading-6 text-[#111827] mt-2 hover:cursor-pointer'
+              {...register('category')}
+              defaultValue='Select...'
+            >
+              <option disabled value='Select...'>
+                Select...
+              </option>
+              {categoryListData &&
+                categoryListData.data.data.data.map((category) => (
+                  <option key={category.id} value={category.id}>
+                    {category.name}
+                  </option>
+                ))}
+            </select>
+            <div className='mt-1 min-h-[1.25rem] text-sm text-red-600 dark:text-red-500'>
+              <span className='font-medium'>{errors.category?.message}</span>
             </div>
           </div>
           <div className='col-span-4'>
@@ -154,19 +192,12 @@ export default function PostAJob() {
           <div className='col-span-4'>
             <div className='text-[14px] leading-5 text-[#18191c] mb-2'>End Date</div>
             <div>
-              <Calendar
-                name='endDate'
-                setValue={setValue}
-                register={register}
-                errorMessage={errors.endDate?.message}
-              />
+              <Calendar name='endDate' setValue={setValue} register={register} errorMessage={errors.endDate?.message} />
             </div>
           </div>
         </div>
         <div className='mt-[32px]'>
-          <div className='text-[18px] leading-7 font-medium text-[#18191C]'>
-            Advance Information
-          </div>
+          <div className='text-[18px] leading-7 font-medium text-[#18191C]'>Advance Information</div>
           <div className='grid grid-cols-12 gap-[18px] mt-[18px]'>
             <div className='col-span-3'>
               <div className='text-[14px] leading-5 text-[#18191c] mb-2'>Education</div>
@@ -224,7 +255,7 @@ export default function PostAJob() {
                 <option disabled value='Select...'>
                   Select...
                 </option>
-                {profile && profile?.company?.id ? (
+                {profile && profile?.company?.name ? (
                   <option value={profile?.company?.name}>{profile?.company?.name}</option>
                 ) : (
                   <option disabled value=''>
@@ -249,9 +280,7 @@ export default function PostAJob() {
         </div>
 
         <div className='mt-[32px]'>
-          <div className='text-[18px] leading-7 text-[#18191c] font-medium'>
-            Description & Responsibility
-          </div>
+          <div className='text-[18px] leading-7 text-[#18191c] font-medium'>Description & Responsibility</div>
           <div className='mt-[18px] text-[14px] leading-5 text-[#18191C]'>Description</div>
           <div className='mt-[8px]'>
             <TextArea
