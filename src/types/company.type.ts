@@ -108,3 +108,26 @@ export interface UpdateCompany {
     id: string | undefined;
   };
 }
+
+export interface CompanyInfoInterface {
+  name: string;
+  description: string;
+  logo?: {
+    id: string | undefined;
+  };
+  banner?: {
+    id: string | undefined;
+  };
+  website: string;
+}
+
+export interface FoundingInfoInterface {
+  companyType: string;
+  teamSize: number;
+  foundedDate: string;
+  email: string;
+  address: string;
+  phoneNumber: string;
+  companyBenefit: string;
+  companyVision: string;
+}

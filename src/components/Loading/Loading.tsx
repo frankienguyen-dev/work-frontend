@@ -49,6 +49,7 @@ const custom: CustomFlowbiteTheme = {
 };
 
 export default function Loading() {
+  console.log('loading ne');
   return (
     <div className='text-center'>
       <Flowbite theme={{ theme: custom }}>

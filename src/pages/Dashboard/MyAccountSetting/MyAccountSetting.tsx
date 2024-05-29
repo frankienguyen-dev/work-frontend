@@ -7,7 +7,6 @@ export default function MyAccountSetting() {
       <div>
         <div className='text-[24px] leading-8 font-medium text-[#18191c]'>Settings</div>
         <TopBarSetting />
-
         <Outlet />
       </div>
     </div>

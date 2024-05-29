@@ -1,11 +1,5 @@
 import http from '../utils/http.ts';
-import {
-  CompanyConfig,
-  CompanyList,
-  CompanyResponse,
-  CreateCompany,
-  UpdateCompany
-} from '../types/company.type.ts';
+import { CompanyConfig, CompanyList, CompanyResponse, CreateCompany, UpdateCompany } from '../types/company.type.ts';
 import { AxiosRequestConfig } from 'axios';
 
 const companyApi = {
@@ -19,7 +13,7 @@ const companyApi = {
   searchCompany: (params: CompanyConfig & AxiosRequestConfig) => {
     return http.get<CompanyList>('/companies/search', { params });
   },
-  updateCompany: (body: UpdateCompany, id: string) =>
-    http.patch<CompanyResponse>(`companies/${id}`, body)
+  updateCompany: (body: UpdateCompany, id: string) => http.patch<CompanyResponse>(`companies/${id}`, body),
+  getMyCompany: () => http.get<CompanyResponse>('/companies/my-company')
 };
 export default companyApi;

@@ -21,9 +21,9 @@ export const jobSchema = yup.object({
   location: yup.string().trim().required('Location is required'),
   quantity: yup
     .number()
-    .typeError('Quantity must be a number')
     .min(1, 'Quantity employer must be at least 1 employer')
-    .required('Quantity is required'),
+    .required('Quantity is required')
+    .typeError('Quantity must be a number'),
   level: yup.string().trim().notOneOf(['Select...'], 'Level is required').required('Level is required'),
   salary: yup
     .number()
@@ -48,7 +48,8 @@ export const jobSchema = yup.object({
     .required('Skills is required')
     .min(1, 'The job requires at least 1 skill.')
     .max(4, 'The job allows adding a maximum of 4 skills.'),
-  company: yup.string().notOneOf(['Select...'], 'Company name is required').required('Company name is required')
+  company: yup.string().notOneOf(['Select...'], 'Company name is required').required('Company name is required'),
+  category: yup.string().notOneOf(['Select...'], 'Job category is required').required('Job category is required')
 });
 
 interface FileWithSize {
@@ -193,7 +194,7 @@ export type UserSchema = yup.InferType<typeof userSchema>;
 export type RoleSchema = yup.InferType<typeof roleSchema>;
 export type Schema = yup.InferType<typeof schema>;
 export type postJobSchema = yup.InferType<typeof jobSchema>;
-export type companySchema = yup.InferType<typeof companySchema>;
+export type createCompanySchema = yup.InferType<typeof companySchema>;
 export type createPermissionSchema = yup.InferType<typeof permissionSchema>;
 export type createSubscriberSchema = yup.InferType<typeof subscriberSchema>;
 export type createCategorySchema = yup.InferType<typeof categorySchema>;

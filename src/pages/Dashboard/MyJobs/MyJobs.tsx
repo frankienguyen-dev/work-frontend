@@ -60,7 +60,11 @@ export default function MyJobs() {
           {/* Item 1 */}
           {profileData &&
             profileData.data.data.jobs.map((job) => (
-              <div
+              <Link
+                to={`/job/${job.id}`}
+                onClick={() => {
+                  window.scrollTo(0, 0);
+                }}
                 key={job.id}
                 className='grid grid-cols-12 p-[20px] group items-center h-[92px] hover:cursor-pointer
           hover:outline hover:outline-[#0b65cc] hover:rounded-[8px] border-b border-b-[#e4e5e8] solid'
@@ -81,13 +85,7 @@ export default function MyJobs() {
                   {job.active ? (
                     <div className='flex gap-[4px] items-center justify-center'>
                       <div>
-                        <svg
-                          width='20'
-                          height='20'
-                          viewBox='0 0 20 20'
-                          fill='none'
-                          xmlns='http://www.w3.org/2000/svg'
-                        >
+                        <svg width='20' height='20' viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg'>
                           <path
                             d='M10 17.5C14.1421 17.5 17.5 14.1421 17.5 10C17.5 5.85786 14.1421 2.5 10 2.5C5.85786 2.5 2.5 5.85786 2.5 10C2.5 14.1421 5.85786 17.5 10 17.5Z'
                             stroke='#0BA02C'
@@ -109,13 +107,7 @@ export default function MyJobs() {
                   ) : (
                     <div className='flex gap-[4px] items-center justify-center'>
                       <div>
-                        <svg
-                          width='20'
-                          height='20'
-                          viewBox='0 0 20 20'
-                          fill='none'
-                          xmlns='http://www.w3.org/2000/svg'
-                        >
+                        <svg width='20' height='20' viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg'>
                           <path
                             d='M10 17.5C14.1421 17.5 17.5 14.1421 17.5 10C17.5 5.85786 14.1421 2.5 10 2.5C5.85786 2.5 2.5 5.85786 2.5 10C2.5 14.1421 5.85786 17.5 10 17.5Z'
                             stroke='#E05151'
@@ -138,22 +130,14 @@ export default function MyJobs() {
                           />
                         </svg>
                       </div>
-                      <div className='text-[16px] font-medium leading-5 text-[#E05151]'>
-                        Expired
-                      </div>
+                      <div className='text-[16px] font-medium leading-5 text-[#E05151]'>Expired</div>
                     </div>
                   )}
                 </div>
                 <div className='col-span-3 text-center'>
                   <div className='flex items-center gap-[8px] justify-center'>
                     <div>
-                      <svg
-                        width='24'
-                        height='24'
-                        viewBox='0 0 24 24'
-                        fill='none'
-                        xmlns='http://www.w3.org/2000/svg'
-                      >
+                      <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
                         <path
                           d='M8.25 15C10.9424 15 13.125 12.8174 13.125 10.125C13.125 7.43261 10.9424 5.25 8.25 5.25C5.55761 5.25 3.375 7.43261 3.375 10.125C3.375 12.8174 5.55761 15 8.25 15Z'
                           stroke='#5E6670'
@@ -270,9 +254,7 @@ export default function MyJobs() {
                                 />
                               </svg>
                             </div>
-                            <div className='text-[16px] font-medium text-[currentColor]'>
-                              View Detail
-                            </div>
+                            <div className='text-[16px] font-medium text-[currentColor]'>View Detail</div>
                           </Link>
                         </Dropdown.Item>
                         <Dropdown.Item>
@@ -308,16 +290,14 @@ export default function MyJobs() {
                                 />
                               </svg>
                             </div>
-                            <div className='text-[16px] font-medium text-[currentColor]'>
-                              Make it Expired
-                            </div>
+                            <div className='text-[16px] font-medium text-[currentColor]'>Make it Expired</div>
                           </Link>
                         </Dropdown.Item>
                       </Dropdown>
                     </div>
                   </div>
                 </div>
-              </div>
+              </Link>
             ))}
         </div>
       </div>

@@ -15,6 +15,11 @@ export interface Job {
   experience: string;
   jobType: string;
   education: string;
+  category: {
+    id: string;
+    name: string;
+    description: string;
+  };
   createdBy: ByUser | null;
   createdAt: string | null;
   updatedBy: ByUser | null;
@@ -66,6 +71,9 @@ export interface PostJob {
   experience: string;
   jobType: string;
   education: string;
+  category: {
+    id: string;
+  };
   company: {
     name: string;
   };

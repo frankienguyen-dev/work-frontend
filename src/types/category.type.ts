@@ -5,7 +5,7 @@ export interface Category {
   id: string;
   name: string;
   description: string;
-  job:
+  jobs:
     | {
         id: string;
         name: string;
