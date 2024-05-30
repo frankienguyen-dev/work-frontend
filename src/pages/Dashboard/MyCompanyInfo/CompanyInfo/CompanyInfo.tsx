@@ -20,7 +20,7 @@ interface FileWithSize {
 type FormData = Pick<createCompanySchema, 'name' | 'logo' | 'website' | 'banner' | 'description'>;
 const updateCompanyInfoSchema = companySchema.pick(['name', 'logo', 'website', 'banner', 'description']);
 export default function CompanyInfo() {
-  const { companyInfo, setCompanyInfo } = useContext(AppContext);
+  const { setCompanyInfo } = useContext(AppContext);
   const [imageLogoId, setImageLogoId] = useState<string>('');
   const [imageBannerId, setImageBannerId] = useState<string>('');
   const navigate = useNavigate();
@@ -99,7 +99,7 @@ export default function CompanyInfo() {
               setError={setError}
               errorMessage={errors.logo?.message}
               onImageUpload={handleImageLogoUpload}
-              valueFromServer={myCompanyInfoData?.logo?.fileName}
+              valueFromServer={myCompanyInfoData?.logo}
             />
           </div>
           <div className='col-span-8'>
@@ -111,7 +111,7 @@ export default function CompanyInfo() {
               setValue={setValue}
               setError={setError}
               onImageUpload={handleImageBannerUpload}
-              valueFromServer={myCompanyInfoData?.banner?.fileName}
+              valueFromServer={myCompanyInfoData?.banner}
             />
           </div>
         </div>

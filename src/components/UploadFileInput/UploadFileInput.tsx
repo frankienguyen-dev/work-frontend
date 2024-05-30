@@ -32,13 +32,19 @@ export default function UploadFileInput({
   onImageUpload,
   valueFromServer
 }: Props) {
-  const [selectedImage, setSelectedImage] = useState('');
+  const [selectedFile, setSelectedFile] = useState<string | null>(null);
+  const [fileType, setFileType] = useState<string | null>(null);
 
   useEffect(() => {
     if (valueFromServer) {
-      setSelectedImage(getLogoUrl(valueFromServer));
+      const file = valueFromServer;
+      setFileType(file.fileType);
+      setSelectedFile(getLogoUrl(file.fileName));
+      console.log('check fileName: ', file.fileName);
+      console.log('check type: ', file.type);
+      console.log('check server: ', file);
     } else {
-      setSelectedImage('');
+      setSelectedFile(null);
       setValue(name, null);
     }
   }, [valueFromServer, setValue, name]);
@@ -48,11 +54,14 @@ export default function UploadFileInput({
   });
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
-      const image = event.target.files[0];
-      setSelectedImage(URL.createObjectURL(image));
+      const file = event.target.files[0];
+      setFileType(file.type);
+      setSelectedFile(URL.createObjectURL(file));
+
       const formData = new FormData();
-      formData.append('file', image);
+      formData.append('file', file);
       console.log(formData.get('file'));
+
       uploadImageMutation.mutate(formData, {
         onSuccess: (data) => {
           console.log('check data upload image: ', data);
@@ -61,6 +70,12 @@ export default function UploadFileInput({
             onImageUpload(data.data.data.id);
           }
           if (name === 'logo') {
+            onImageUpload(data.data.data.id);
+          }
+          if (name === 'avatar') {
+            onImageUpload(data.data.data.id);
+          }
+          if (name === 'resume') {
             onImageUpload(data.data.data.id);
           }
         },
@@ -76,7 +91,7 @@ export default function UploadFileInput({
           }
         }
       });
-      setValue(name, image);
+      setValue(name, file);
     }
   };
   return (
@@ -86,8 +101,13 @@ export default function UploadFileInput({
           htmlFor={`dropzone-file-${name}`}
           className='dark:hover:bg-bray-800 flex h-64 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:border-gray-500 dark:hover:bg-gray-600'
         >
-          {selectedImage ? (
-            <img src={selectedImage} alt='' className='w-full h-full object-cover rounded-lg' />
+          {selectedFile ? (
+            fileType?.startsWith('image/') ? (
+              <img src={selectedFile} alt='' className='w-full h-full object-cover rounded-lg' />
+            ) : fileType === 'application/pdf' ? (
+              // <img src={selectedFile} alt='' className='w-full h-full object-cover rounded-lg' />
+              <div>Resume File</div>
+            ) : null
           ) : (
             <div className='flex flex-col items-center justify-center pb-6 pt-5'>
               <svg
@@ -113,7 +133,7 @@ export default function UploadFileInput({
             </div>
           )}
           <FileInput
-            accept='.jpg, .jpeg, .png, .svg'
+            accept='.jpg, .jpeg, .png, .svg, .pdf'
             {...register(name, rules)}
             id={`dropzone-file-${name}`}
             className='hidden'

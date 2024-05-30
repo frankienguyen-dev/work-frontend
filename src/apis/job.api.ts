@@ -17,6 +17,10 @@ const jobApi = {
   },
   updateJob: (id: string, body: PostJob) => {
     return http.patch(`jobs/${id}`, body);
+  },
+  favoriteJob: (id: string) => http.post<JobResponse>(`/jobs/favorite/${id}`),
+  getFavoriteJobList: (params: JobListConfig) => {
+    return http.get<JobList>('/jobs/my-favorite-job', { params });
   }
 };
 export default jobApi;

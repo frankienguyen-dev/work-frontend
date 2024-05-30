@@ -3,8 +3,19 @@ import { useQuery } from '@tanstack/react-query';
 import useQueryParams from '../../hooks/useQueryPrams.tsx';
 import jobApi from '../../apis/job.api.ts';
 import { calcDayRemaining, formatSalary, getLogoUrl } from '../../utils/utils.ts';
+import React, { useContext, useState } from 'react';
+import ModalApplyJob from '../ModalApplyJob';
+import { AppContext } from '../../contexts/app.context.tsx';
+import ModalAuthentication from '../ModalAuthentication';
 
 export default function FeatureJob() {
+  const [isOpenModalApplyJob, setOpenModalApplyJob] = useState<boolean>(false);
+  const [isOpenModalAuthentication, setOpenModalAuthentication] = useState<boolean>(false);
+  const [isLogin, setLogin] = useState<boolean>(false);
+  const [jobId, setJobId] = useState<string>('');
+  const [companyId, setCompanyId] = useState<string>('');
+  const [jobName, setJobName] = useState<string>('');
+  const { isAuthenticated } = useContext(AppContext);
   const queryParams = useQueryParams();
 
   const { data: jobData } = useQuery({
@@ -13,6 +24,27 @@ export default function FeatureJob() {
       return jobApi.getAllJobs(queryParams);
     }
   });
+
+  const handleApplyJob = (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    jobId: string,
+    companyId: string,
+    jobName: string
+  ) => {
+    if (isAuthenticated) {
+      setOpenModalAuthentication(false);
+      setLogin(true);
+    } else {
+      setLogin(false);
+      setOpenModalAuthentication(true);
+    }
+    event.preventDefault();
+    setOpenModalApplyJob(true);
+    setJobId(jobId);
+    setCompanyId(companyId);
+    setJobName(jobName);
+    console.log('da apply job id: ', jobId);
+  };
 
   return (
     <div className='bg-white my-[100px]'>
@@ -29,20 +61,8 @@ export default function FeatureJob() {
           >
             View All{' '}
             <div>
-              <svg
-                width='24'
-                height='24'
-                viewBox='0 0 24 24'
-                fill='none'
-                xmlns='http://www.w3.org/2000/svg'
-              >
-                <path
-                  d='M5 12H19'
-                  stroke='#0A65CC'
-                  strokeWidth='1.5'
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                />
+              <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
+                <path d='M5 12H19' stroke='#0A65CC' strokeWidth='1.5' strokeLinecap='round' strokeLinejoin='round' />
                 <path
                   d='M12 5L19 12L12 19'
                   stroke='#0A65CC'
@@ -79,13 +99,7 @@ export default function FeatureJob() {
 
                     <div className='flex items-center gap-[16px] mt-[14px]'>
                       <div className='flex items-center gap-[6px]'>
-                        <svg
-                          width='22'
-                          height='22'
-                          viewBox='0 0 22 22'
-                          fill='none'
-                          xmlns='http://www.w3.org/2000/svg'
-                        >
+                        <svg width='22' height='22' viewBox='0 0 22 22' fill='none' xmlns='http://www.w3.org/2000/svg'>
                           <path
                             d='M19.25 9.16675C19.25 15.5834 11 21.0834 11 21.0834C11 21.0834 2.75 15.5834 2.75 9.16675C2.75 6.97871 3.61919 4.88029 5.16637 3.33312C6.71354 1.78594 8.81196 0.916748 11 0.916748C13.188 0.916748 15.2865 1.78594 16.8336 3.33312C18.3808 4.88029 19.25 6.97871 19.25 9.16675Z'
                             stroke='#C5C9D6'
@@ -105,13 +119,7 @@ export default function FeatureJob() {
                         <div className='text-[14px] leading-5 text-[#636A80]'>{job.location}</div>
                       </div>
                       <div className='flex items-center gap-[4px]'>
-                        <svg
-                          width='22'
-                          height='22'
-                          viewBox='0 0 22 22'
-                          fill='none'
-                          xmlns='http://www.w3.org/2000/svg'
-                        >
+                        <svg width='22' height='22' viewBox='0 0 22 22' fill='none' xmlns='http://www.w3.org/2000/svg'>
                           <g clipPath='url(#clip0_1647_32162)'>
                             <path
                               d='M11 2.0625V19.9375'
@@ -135,18 +143,10 @@ export default function FeatureJob() {
                           </defs>
                         </svg>
 
-                        <div className='text-[14px] leading-5 text-[#636A80]'>
-                          {formatSalary(job.salary)}
-                        </div>
+                        <div className='text-[14px] leading-5 text-[#636A80]'>{formatSalary(job.salary)}</div>
                       </div>
                       <div className='flex items-center gap-[6px]'>
-                        <svg
-                          width='22'
-                          height='22'
-                          viewBox='0 0 22 22'
-                          fill='none'
-                          xmlns='http://www.w3.org/2000/svg'
-                        >
+                        <svg width='22' height='22' viewBox='0 0 22 22' fill='none' xmlns='http://www.w3.org/2000/svg'>
                           <g clipPath='url(#clip0_1647_32168)'>
                             <path
                               d='M17.875 3.4375H4.125C3.7453 3.4375 3.4375 3.7453 3.4375 4.125V17.875C3.4375 18.2547 3.7453 18.5625 4.125 18.5625H17.875C18.2547 18.5625 18.5625 18.2547 18.5625 17.875V4.125C18.5625 3.7453 18.2547 3.4375 17.875 3.4375Z'
@@ -195,18 +195,13 @@ export default function FeatureJob() {
                 </div>
                 <div>
                   <button
+                    onClick={(event) => handleApplyJob(event, job.id, job.company.id, job.name)}
                     className='group flex items-center gap-[12px] bg-[#E7F0FA] px-6 py-3 rounded-[3px]
               text-[16px] font-semibold text-[#0A65CC] group-hover:bg-[#0A65CC] group-hover:text-white'
                   >
                     Apply Now{' '}
                     <div>
-                      <svg
-                        width='24'
-                        height='24'
-                        viewBox='0 0 24 24'
-                        fill='none'
-                        xmlns='http://www.w3.org/2000/svg'
-                      >
+                      <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
                         <path
                           d='M5 12H19'
                           stroke='currentColor'
@@ -229,6 +224,17 @@ export default function FeatureJob() {
             ))}
         </div>
       </div>
+      {isOpenModalApplyJob && isLogin && (
+        <ModalApplyJob
+          jobId={jobId}
+          jobName={jobName}
+          companyId={companyId}
+          closeModal={() => setOpenModalApplyJob(false)}
+        />
+      )}
+      {!isLogin && isOpenModalAuthentication && (
+        <ModalAuthentication closeModal={() => setOpenModalAuthentication(false)} />
+      )}
     </div>
   );
 }
