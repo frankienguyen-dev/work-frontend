@@ -1,6 +1,6 @@
 import Pagination from '../../components/Pagination';
 import useQueryParams from '../../hooks/useQueryPrams.tsx';
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useMutation, useQuery } from '@tanstack/react-query';
 import jobApi from '../../apis/job.api.ts';
 import { calcDayRemaining, formatSalary, getLogoUrl } from '../../utils/utils.ts';
 import { createSearchParams, Link, useNavigate } from 'react-router-dom';
@@ -11,11 +11,13 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { omit } from 'lodash';
 import { JobListConfig } from '../../types/job.type.ts';
 import { sortByJob } from '../../constants/sort.ts';
+import React, { useEffect, useState } from 'react';
 
 type FormData = Pick<Schema, 'name' | 'location'>;
 const searchPageSchema = schema.pick(['name', 'location']);
 
 export default function SearchPage() {
+  const [jobId, setJobId] = useState<string>('');
   const queryConfig = useQueryConfig();
   const pageNo = Number(queryConfig.pageNo);
   const { register, handleSubmit } = useForm<FormData>({
@@ -51,6 +53,25 @@ export default function SearchPage() {
     });
   });
 
+  const favoriteJobMutation = useMutation({
+    mutationFn: (jobId: string) => jobApi.favoriteJob(jobId)
+  });
+
+  const handleFavoriteJob = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, jobId: string) => {
+    event.preventDefault();
+    setJobId(jobId);
+  };
+
+  useEffect(() => {
+    if (jobId) {
+      favoriteJobMutation.mutate(jobId, {
+        onSuccess: (data) => {
+          console.log('check favorite job success ', data);
+        }
+      });
+    }
+  }, [jobId]);
+
   const handleSelectSortDir = (sortDirValue: Exclude<JobListConfig['sortDir'], undefined>) => {
     navigate({
       pathname: '/jobs',
@@ -79,13 +100,7 @@ export default function SearchPage() {
             <div className='bg-white h-[80px] rounded-[8px] grid grid-cols-12 p-[12px]'>
               <div className='col-span-7 relative border-r solid border-r-[#eeeff5]'>
                 <div className='absolute left-[18px] top-[50%] translate-y-[-50%]'>
-                  <svg
-                    width='24'
-                    height='24'
-                    viewBox='0 0 24 24'
-                    fill='none'
-                    xmlns='http://www.w3.org/2000/svg'
-                  >
+                  <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
                     <path
                       d='M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19Z'
                       stroke='#0066FF'
@@ -112,13 +127,7 @@ export default function SearchPage() {
               </div>
               <div className='col-span-3 relative'>
                 <div className='absolute left-[18px] top-[50%] translate-y-[-50%]'>
-                  <svg
-                    width='24'
-                    height='24'
-                    viewBox='0 0 24 24'
-                    fill='none'
-                    xmlns='http://www.w3.org/2000/svg'
-                  >
+                  <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
                     <path
                       d='M21 10C21 17 12 23 12 23C12 23 3 17 3 10C3 7.61305 3.94821 5.32387 5.63604 3.63604C7.32387 1.94821 9.61305 1 12 1C14.3869 1 16.6761 1.94821 18.364 3.63604C20.0518 5.32387 21 7.61305 21 10Z'
                       stroke='#0066FF'
@@ -172,9 +181,7 @@ export default function SearchPage() {
               focus:outline-none focus:border-[#9099a3] focus:ring-0'
               defaultValue='Filter sort...'
               onChange={(event) =>
-                handleSelectSortDir(
-                  event.target.value as Exclude<JobListConfig['sortDir'], undefined>
-                )
+                handleSelectSortDir(event.target.value as Exclude<JobListConfig['sortDir'], undefined>)
               }
             >
               <option value='Filter sort...' disabled>
@@ -250,6 +257,7 @@ export default function SearchPage() {
               <Link
                 to={`/job/${job.id}`}
                 key={job.id}
+                onClick={() => scrollTo(0, 0)}
                 className='flex items-center justify-between p-[32px] h-[132px] rounded-[12px] group
           hover:cursor-pointer hover:shadow-2xl hover:transition hover:ease-in-out hover:duration-[0.25s]
           border solid border-[#e3e4e7] mt-[24px]'
@@ -263,9 +271,7 @@ export default function SearchPage() {
                     />
                   </div>
                   <div>
-                    <div className='text-[18px] leading-7 font-medium text-[#18191c]'>
-                      {job.name}
-                    </div>
+                    <div className='text-[18px] leading-7 font-medium text-[#18191c]'>{job.name}</div>
                     <div className='flex gap-[16px] items-center mt-[12px]'>
                       <div className='flex items-center gap-[6px]'>
                         <div>
@@ -326,9 +332,7 @@ export default function SearchPage() {
                             </defs>
                           </svg>
                         </div>
-                        <div className='text-[14px] leading-5 text-[#5e6670]'>
-                          {formatSalary(job.salary)}/month
-                        </div>
+                        <div className='text-[14px] leading-5 text-[#5e6670]'>{formatSalary(job.salary)}/month</div>
                       </div>
                       <div className='flex items-center gap-[6px]'>
                         <div>
@@ -386,17 +390,12 @@ export default function SearchPage() {
                   </div>
                 </div>
                 <div className='flex items-center gap-[8px]'>
-                  <div
+                  <button
+                    onClick={(event) => handleFavoriteJob(event, job.id)}
                     className='w-[48px] h-[48px] rounded-[5px] flex items-center
-              justify-center group-hover:bg-[#f1f2f4] group-hover:text-[#18191c] text-[#767f8c]'
+                      justify-center group-hover:bg-[#f1f2f4] group-hover:text-[#18191c] text-[#767f8c]'
                   >
-                    <svg
-                      width='24'
-                      height='24'
-                      viewBox='0 0 24 24'
-                      fill='none'
-                      xmlns='http://www.w3.org/2000/svg'
-                    >
+                    <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
                       <path
                         d='M18 21L11.9993 17.25L6 21V4.5C6 4.30109 6.07902 4.11032 6.21967 3.96967C6.36032 3.82902 6.55109 3.75 6.75 3.75H17.25C17.4489 3.75 17.6397 3.82902 17.7803 3.96967C17.921 4.11032 18 4.30109 18 4.5V21Z'
                         stroke='currentColor'
@@ -405,7 +404,7 @@ export default function SearchPage() {
                         strokeLinejoin='round'
                       />
                     </svg>
-                  </div>
+                  </button>
                   <div>
                     <button
                       className='min-w-[168px] h-[48px] py-[12px] px-[24px] flex items-center gap-[12px]
@@ -414,13 +413,7 @@ export default function SearchPage() {
                     >
                       Apply Now
                       <div>
-                        <svg
-                          width='24'
-                          height='24'
-                          viewBox='0 0 24 24'
-                          fill='none'
-                          xmlns='http://www.w3.org/2000/svg'
-                        >
+                        <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
                           <path
                             d='M5 12H19'
                             stroke='currentColor'
@@ -444,11 +437,7 @@ export default function SearchPage() {
             ))}
         </div>
         <div className='mb-[100px]'>
-          <Pagination
-            queryConfig={queryConfig}
-            totalPages={metaData?.totalPages as number}
-            pathname='/job/search'
-          />
+          <Pagination queryConfig={queryConfig} totalPages={metaData?.totalPages as number} pathname='/job/search' />
         </div>
       </div>
     </div>

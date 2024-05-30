@@ -9,7 +9,7 @@ import moment from 'moment';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import companyApi from '../../../../apis/company.api.ts';
 import { UpdateCompany } from '../../../../types/company.type.ts';
-import { isAxiosConflictError, isAxiosUnauthorizedError } from '../../../../utils/utils.ts';
+import { isAxiosUnauthorizedError } from '../../../../utils/utils.ts';
 import { ErrorResponse } from '../../../../types/utils.type.ts';
 import { clearAccessTokenFromLocalStorage, clearRoleToLocalStorage } from '../../../../utils/auth.ts';
 import ModalExpiredToken from '../../../../components/ModalExpiredToken';
@@ -34,19 +34,15 @@ const updateFoundingInfoSchema = companySchema.pick([
 type UnauthorizedError = {
   message: string;
 };
-type FormError = {
-  message: string;
-};
 export default function FoundingInformation() {
-  const { foundingInfo, setFoundingInfo, companyInfo, setCompanyInfo } = useContext(AppContext);
+  const { companyInfo } = useContext(AppContext);
   const [isOpenModalUnauthorized, setIsOpenModalUnauthorized] = useState<boolean>(false);
   const navigate = useNavigate();
   const {
     register,
     setValue,
     handleSubmit,
-    formState: { errors },
-    setError
+    formState: { errors }
   } = useForm<FormData>({
     resolver: yupResolver(updateFoundingInfoSchema),
     defaultValues: {
@@ -108,16 +104,6 @@ export default function FoundingInformation() {
         console.log('check data success: ', data);
       },
       onError: (error) => {
-        if (isAxiosConflictError<ErrorResponse<FormError>>(error)) {
-          const formError = error.response?.data.data;
-          if (formError) {
-            setError('name', {
-              message: formError.message
-            });
-          }
-          console.log('check error server: ', error);
-        }
-
         if (isAxiosUnauthorizedError<ErrorResponse<UnauthorizedError>>(error)) {
           clearAccessTokenFromLocalStorage();
           setIsOpenModalUnauthorized(true);

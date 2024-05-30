@@ -1,4 +1,3 @@
-import { BelongToCompany } from './company.type.ts';
 import { Job } from './job.type.ts';
 import { MetaData } from './meta.type.ts';
 
@@ -12,7 +11,15 @@ export interface User {
   fullName: string;
   address: string;
   email: string;
-  logo?: string;
+  education: string;
+  experience: string;
+  avatar: {
+    id: string;
+    fileName: string;
+    fileType: string;
+    size: number;
+    uploadTime: string;
+  } | null;
   phoneNumber: string;
   gender: string;
   title: string;
@@ -60,7 +67,11 @@ export interface CreateUser {
   fullName: string;
   address: string;
   email: string;
-  logo?: string;
+  education: string;
+  experience: string;
+  avatar?: {
+    id: string | undefined;
+  };
   phoneNumber?: string;
   gender: string;
   password: string;
@@ -78,7 +89,11 @@ export interface UpdateUser {
   fullName: string;
   address: string;
   email: string;
-  logo?: string;
+  education: string;
+  experience: string;
+  avatar?: {
+    id: string | undefined;
+  };
   phoneNumber: string;
   gender: string;
   title: string;

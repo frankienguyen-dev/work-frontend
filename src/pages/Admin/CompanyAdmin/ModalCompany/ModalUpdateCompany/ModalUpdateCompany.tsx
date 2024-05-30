@@ -229,7 +229,7 @@ export default function ModalUpdateCompany({ closeModal, companyId }: Props) {
                     register={register}
                     name='logo'
                     setValue={setValue}
-                    valueFromServer={companyInfo?.logo?.fileName}
+                    valueFromServer={companyInfo?.logo}
                     onImageUpload={handleImageLogoUpload}
                   />
                 </div>
@@ -241,7 +241,7 @@ export default function ModalUpdateCompany({ closeModal, companyId }: Props) {
                     register={register}
                     name='banner'
                     setValue={setValue}
-                    valueFromServer={companyInfo?.banner?.fileName}
+                    valueFromServer={companyInfo?.banner}
                     onImageUpload={handleImageBannerUpload}
                   />
                 </div>

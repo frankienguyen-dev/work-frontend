@@ -102,7 +102,9 @@ export const userSchema = yup.object({
     .required('Confirm password is required')
     .min(6, 'Password must be at least 6 characters')
     .oneOf([yup.ref('password')], "Password doesn't match"),
-  company: yup.string()
+  company: yup.string(),
+  experience: yup.string().trim().required('Experience is required'),
+  education: yup.string().trim().required('Education is required')
 });
 
 export const permissionSchema = yup.object({
@@ -163,7 +165,7 @@ export const resumeSchema = yup.object({
   url: yup.string().trim(),
   company: yup.string().notOneOf(['Select...'], 'Company name is required').required('Company name is required'),
   job: yup.string().notOneOf(['Select...'], 'Job name is required').required('Job name is required'),
-  resume: yup.mixed<FileWithSize>(),
+  resume: yup.mixed<FileWithSize>().required('Resume is required'),
   status: yup.string().notOneOf(['Select...'], 'Status resume is required').required('Status resume is required')
 });
 

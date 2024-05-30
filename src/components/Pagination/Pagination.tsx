@@ -51,11 +51,7 @@ export default function Pagination({ queryConfig, totalPages, pathname }: Props)
       .fill(0)
       .map((_, index) => {
         const pageNumber = index + 1;
-        if (
-          pageNo <= RANGE * 2 + 1 &&
-          pageNumber > pageNo + RANGE &&
-          pageNumber < totalPages - RANGE + 1
-        ) {
+        if (pageNo <= RANGE * 2 + 1 && pageNumber > pageNo + RANGE && pageNumber < totalPages - RANGE + 1) {
           return renderDotAfter(index);
         } else if (pageNo > RANGE * 2 + 1 && pageNo < totalPages - RANGE * 2) {
           if (pageNumber < pageNo - RANGE && pageNumber > RANGE) {
@@ -83,10 +79,8 @@ export default function Pagination({ queryConfig, totalPages, pathname }: Props)
                 ' font-medium',
 
               {
-                'bg-[#0b65cc] text-white hover:bg-[#0b65cc] hover:text-white':
-                  pageNo === pageNumber,
-                'bg-white hover:bg-[#f1f2f4] hover:text-[#18191c] text-[#18191c]':
-                  pageNo !== pageNumber
+                'bg-[#0b65cc] text-white hover:bg-[#0b65cc] hover:text-white': pageNo === pageNumber,
+                'bg-white hover:bg-[#f1f2f4] hover:text-[#18191c] text-[#18191c]': pageNo !== pageNumber
               }
             )}
             key={index}
@@ -108,13 +102,7 @@ export default function Pagination({ queryConfig, totalPages, pathname }: Props)
             fill='none'
             xmlns='http://www.w3.org/2000/svg'
           >
-            <path
-              d='M19 12H5'
-              stroke='currentColor'
-              strokeWidth='1.5'
-              strokeLinecap='round'
-              strokeLinejoin='round'
-            />
+            <path d='M19 12H5' stroke='currentColor' strokeWidth='1.5' strokeLinecap='round' strokeLinejoin='round' />
             <path
               d='M12 5L5 12L12 19'
               stroke='currentColor'
@@ -144,13 +132,7 @@ export default function Pagination({ queryConfig, totalPages, pathname }: Props)
             fill='none'
             xmlns='http://www.w3.org/2000/svg'
           >
-            <path
-              d='M19 12H5'
-              stroke='currentColor'
-              strokeWidth='1.5'
-              strokeLinecap='round'
-              strokeLinejoin='round'
-            />
+            <path d='M19 12H5' stroke='currentColor' strokeWidth='1.5' strokeLinecap='round' strokeLinejoin='round' />
             <path
               d='M12 5L5 12L12 19'
               stroke='currentColor'
@@ -172,13 +154,7 @@ export default function Pagination({ queryConfig, totalPages, pathname }: Props)
             fill='none'
             xmlns='http://www.w3.org/2000/svg'
           >
-            <path
-              d='M5 12H19'
-              stroke='currentColor'
-              strokeWidth='1.5'
-              strokeLinecap='round'
-              strokeLinejoin='round'
-            />
+            <path d='M5 12H19' stroke='currentColor' strokeWidth='1.5' strokeLinecap='round' strokeLinejoin='round' />
             <path
               d='M12 5L19 12L12 19'
               stroke='currentColor'
@@ -208,13 +184,7 @@ export default function Pagination({ queryConfig, totalPages, pathname }: Props)
             fill='none'
             xmlns='http://www.w3.org/2000/svg'
           >
-            <path
-              d='M5 12H19'
-              stroke='currentColor'
-              strokeWidth='1.5'
-              strokeLinecap='round'
-              strokeLinejoin='round'
-            />
+            <path d='M5 12H19' stroke='currentColor' strokeWidth='1.5' strokeLinecap='round' strokeLinejoin='round' />
             <path
               d='M12 5L19 12L12 19'
               stroke='currentColor'

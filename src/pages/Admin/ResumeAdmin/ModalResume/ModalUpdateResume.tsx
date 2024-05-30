@@ -76,8 +76,8 @@ interface Props {
   resumeId: string;
 }
 
-type FormData = createResumeSchema;
-const updateStatusResumeSchema = resumeSchema;
+type FormData = Pick<createResumeSchema, 'company' | 'job' | 'status' | 'url'>;
+const updateStatusResumeSchema = resumeSchema.pick(['company', 'job', 'status', 'url']);
 
 export default function ModalUpdateResume({ closeModal, resumeId }: Props) {
   const [isOpenModalUnauthorized, setIsOpenModalUnauthorized] = useState<boolean>(false);

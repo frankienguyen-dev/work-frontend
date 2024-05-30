@@ -142,7 +142,7 @@ export default function Header() {
                         label={
                           <img
                             // src='src/assets/images/tiktok.png'
-                            src={getLogoUrl(profile.logo)}
+                            src={getLogoUrl(profile?.avatar?.fileName)}
                             alt=''
                             className='w-[48px] h-[48px]
                       object-cover rounded-full flex items-center'
