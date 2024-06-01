@@ -45,7 +45,7 @@ class Http {
         if (url === URL_LOGIN) {
           this.accessToken = (response.data as AuthResponse).data.accessToken;
           saveAccessTokenFromLocalStorage(this.accessToken);
-          // window.location.reload();
+          window.location.reload();
         } else if (url === URL_LOGOUT) {
           this.accessToken = '';
           clearRoleToLocalStorage();

@@ -182,6 +182,16 @@ export const searchInvitationSchema = yup.object({
   email: yup.string().trim()
 });
 
+export const changePassword = yup.object({
+  currentPassword: yup.string().trim().required('Current password is required'),
+  newPassword: yup.string().trim().required('New password is required'),
+  confirmPassword: yup
+    .string()
+    .trim()
+    .required('Confirm password is required')
+    .oneOf([yup.ref('newPassword')], "Password doesn't match")
+});
+
 export const uploadImage = yup.object({});
 
 export type searchSchemaJob = yup.InferType<typeof searchJobSchema>;
@@ -202,3 +212,4 @@ export type createSubscriberSchema = yup.InferType<typeof subscriberSchema>;
 export type createCategorySchema = yup.InferType<typeof categorySchema>;
 export type createResumeSchema = yup.InferType<typeof resumeSchema>;
 export type inviteJoinCompanySchema = yup.InferType<typeof invitationSchema>;
+export type changePasswordSchema = yup.InferType<typeof changePassword>;
