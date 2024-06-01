@@ -20,6 +20,32 @@ export interface Job {
     name: string;
     description: string;
   };
+  resumes:
+    | {
+        id: string;
+        url: string | null;
+        resume: {
+          id: string;
+          fileName: string;
+          fileType: string;
+          size: number;
+          uploadTime: string;
+        };
+        company: {
+          id: string;
+          name: string;
+        };
+        user: ByUser;
+        status: string;
+        createdBy: ByUser | null;
+        createdAt: string | null;
+        updatedBy: ByUser | null;
+        updatedAt: string | null;
+        deletedBy: ByUser | null;
+        deletedAt: string | null;
+        deleted: boolean;
+      }[]
+    | [];
   createdBy: ByUser | null;
   createdAt: string | null;
   updatedBy: ByUser | null;

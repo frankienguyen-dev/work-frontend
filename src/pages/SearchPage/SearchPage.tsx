@@ -1,8 +1,8 @@
 import Pagination from '../../components/Pagination';
 import useQueryParams from '../../hooks/useQueryPrams.tsx';
-import { keepPreviousData, useMutation, useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import jobApi from '../../apis/job.api.ts';
-import { calcDayRemaining, formatSalary, getLogoUrl } from '../../utils/utils.ts';
+import { calcDayRemaining, formatSalary, getLogoUrl, isAxiosUnauthorizedError } from '../../utils/utils.ts';
 import { createSearchParams, Link, useNavigate } from 'react-router-dom';
 import useQueryConfig from '../../hooks/useQueryConfig.tsx';
 import { useForm } from 'react-hook-form';
@@ -11,14 +11,26 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { omit } from 'lodash';
 import { JobListConfig } from '../../types/job.type.ts';
 import { sortByJob } from '../../constants/sort.ts';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import { ErrorResponse } from '../../types/utils.type.ts';
+import { clearAccessTokenFromLocalStorage, clearRoleToLocalStorage } from '../../utils/auth.ts';
+import ModalExpiredToken from '../../components/ModalExpiredToken';
+import { AppContext } from '../../contexts/app.context.tsx';
 
 type FormData = Pick<Schema, 'name' | 'location'>;
 const searchPageSchema = schema.pick(['name', 'location']);
 
+type UnauthorizedError = {
+  message: string;
+};
+
 export default function SearchPage() {
+  const [isOpenModalUnauthorized, setIsOpenModalUnauthorized] = useState<boolean>(false);
+  const { isAuthenticated } = useContext(AppContext);
   const [jobId, setJobId] = useState<string>('');
   const queryConfig = useQueryConfig();
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const pageNo = Number(queryConfig.pageNo);
   const { register, handleSubmit } = useForm<FormData>({
     defaultValues: {
@@ -27,6 +39,10 @@ export default function SearchPage() {
     },
     resolver: yupResolver(searchPageSchema)
   });
+  const queryFavoriteJobConfig = {
+    ...queryConfig,
+    pageSize: '1000'
+  };
   const queryParams = useQueryParams();
   const { data: searchJobData } = useQuery({
     queryKey: ['JobList', queryParams],
@@ -36,7 +52,15 @@ export default function SearchPage() {
     placeholderData: keepPreviousData
   });
   const metaData = searchJobData?.data.data.meta;
-  const navigate = useNavigate();
+
+  const { data: favoriteJobListData } = useQuery({
+    queryKey: ['favoriteJobListData', queryFavoriteJobConfig],
+    queryFn: () => jobApi.getFavoriteJobList(queryFavoriteJobConfig),
+    enabled: isAuthenticated
+  });
+
+  console.log('check favorite job list: ', favoriteJobListData);
+
   const onSubmitSearch = handleSubmit((data) => {
     navigate({
       pathname: '/job/search',
@@ -59,18 +83,9 @@ export default function SearchPage() {
 
   const handleFavoriteJob = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, jobId: string) => {
     event.preventDefault();
+    event.stopPropagation();
     setJobId(jobId);
   };
-
-  useEffect(() => {
-    if (jobId) {
-      favoriteJobMutation.mutate(jobId, {
-        onSuccess: (data) => {
-          console.log('check favorite job success ', data);
-        }
-      });
-    }
-  }, [jobId]);
 
   const handleSelectSortDir = (sortDirValue: Exclude<JobListConfig['sortDir'], undefined>) => {
     navigate({
@@ -87,6 +102,35 @@ export default function SearchPage() {
       ).toString()
     });
   };
+
+  useEffect(() => {
+    if (jobId) {
+      favoriteJobMutation.mutate(jobId, {
+        onSuccess: (data) => {
+          queryClient
+            .invalidateQueries({
+              queryKey: ['JobList', queryParams]
+            })
+            .then();
+          queryClient
+            .invalidateQueries({
+              queryKey: ['favoriteJobListData', queryFavoriteJobConfig]
+            })
+            .then();
+          console.log('check favorite job success ', data);
+        },
+        onError: (error) => {
+          if (isAxiosUnauthorizedError<ErrorResponse<UnauthorizedError>>(error)) {
+            clearAccessTokenFromLocalStorage();
+            setIsOpenModalUnauthorized(true);
+          }
+        }
+      });
+    }
+    return () => {
+      setJobId('');
+    };
+  }, [jobId]);
   return (
     <div className='pt-[138px] min-h-[1900px]'>
       <div className='h-[76px] bg-[#f1f2f4]'>
@@ -390,21 +434,41 @@ export default function SearchPage() {
                   </div>
                 </div>
                 <div className='flex items-center gap-[8px]'>
-                  <button
-                    onClick={(event) => handleFavoriteJob(event, job.id)}
-                    className='w-[48px] h-[48px] rounded-[5px] flex items-center
+                  {favoriteJobListData &&
+                  favoriteJobListData.data.data.data.some((favorite) => favorite.id === job.id) ? (
+                    <button
+                      onClick={(event) => handleFavoriteJob(event, job.id)}
+                      className='w-[48px] h-[48px] rounded-[5px] flex items-center
                       justify-center group-hover:bg-[#f1f2f4] group-hover:text-[#18191c] text-[#767f8c]'
-                  >
-                    <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
-                      <path
-                        d='M18 21L11.9993 17.25L6 21V4.5C6 4.30109 6.07902 4.11032 6.21967 3.96967C6.36032 3.82902 6.55109 3.75 6.75 3.75H17.25C17.4489 3.75 17.6397 3.82902 17.7803 3.96967C17.921 4.11032 18 4.30109 18 4.5V21Z'
-                        stroke='currentColor'
-                        strokeWidth='1.5'
-                        strokeLinecap='round'
-                        strokeLinejoin='round'
-                      />
-                    </svg>
-                  </button>
+                    >
+                      <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
+                        <path
+                          d='M18 21L11.9993 17.25L6 21V4.5C6 4.30109 6.07902 4.11032 6.21967 3.96967C6.36032 3.82902 6.55109 3.75 6.75 3.75H17.25C17.4489 3.75 17.6397 3.82902 17.7803 3.96967C17.921 4.11032 18 4.30109 18 4.5V21Z'
+                          stroke='#FBBC09'
+                          fill='#FBBC09'
+                          strokeWidth='1.5'
+                          strokeLinecap='round'
+                          strokeLinejoin='round'
+                        />
+                      </svg>
+                    </button>
+                  ) : (
+                    <button
+                      onClick={(event) => handleFavoriteJob(event, job.id)}
+                      className='w-[48px] h-[48px] rounded-[5px] flex items-center
+                      justify-center group-hover:bg-[#f1f2f4] group-hover:text-[#18191c] text-[#767f8c]'
+                    >
+                      <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
+                        <path
+                          d='M18 21L11.9993 17.25L6 21V4.5C6 4.30109 6.07902 4.11032 6.21967 3.96967C6.36032 3.82902 6.55109 3.75 6.75 3.75H17.25C17.4489 3.75 17.6397 3.82902 17.7803 3.96967C17.921 4.11032 18 4.30109 18 4.5V21Z'
+                          stroke='currentColor'
+                          strokeWidth='1.5'
+                          strokeLinecap='round'
+                          strokeLinejoin='round'
+                        />
+                      </svg>
+                    </button>
+                  )}
                   <div>
                     <button
                       className='min-w-[168px] h-[48px] py-[12px] px-[24px] flex items-center gap-[12px]
@@ -440,6 +504,35 @@ export default function SearchPage() {
           <Pagination queryConfig={queryConfig} totalPages={metaData?.totalPages as number} pathname='/job/search' />
         </div>
       </div>
+      {isOpenModalUnauthorized && (
+        <ModalExpiredToken
+          closeModal={() => {
+            window.location.reload();
+            clearRoleToLocalStorage();
+            setIsOpenModalUnauthorized(false);
+          }}
+          heading='Credential session has expired, please sign in again.'
+          textButtonYes='OK'
+          icon={
+            <svg width='50' height='50' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
+              <path
+                d='M5.10571 18.8943C4.24283 18.0314 4.81514 16.2198 4.37595 15.1584C3.92066 14.058 2.25 13.1723 2.25 12C2.25 10.8276 3.92067 9.942 4.37595 8.84164C4.81515 7.78015 4.24283 5.96858 5.10571 5.10571C5.96858 4.24283 7.78016 4.81514 8.84165 4.37595C9.94203 3.92066 10.8277 2.25 12 2.25C13.1724 2.25 14.058 3.92067 15.1584 4.37595C16.2199 4.81515 18.0314 4.24283 18.8943 5.10571C19.7572 5.96858 19.1849 7.78016 19.6241 8.84165C20.0793 9.94203 21.75 10.8277 21.75 12C21.75 13.1724 20.0793 14.058 19.624 15.1584C19.1848 16.2199 19.7572 18.0314 18.8943 18.8943C18.0314 19.7572 16.2198 19.1849 15.1584 19.6241C14.058 20.0793 13.1723 21.75 12 21.75C10.8276 21.75 9.942 20.0793 8.84164 19.624C7.78015 19.1848 5.96858 19.7572 5.10571 18.8943Z'
+                stroke='#0d7490'
+                strokeWidth='1.5'
+                strokeLinecap='round'
+                strokeLinejoin='round'
+              />
+              <path
+                d='M16.125 9.75L10.625 15L7.875 12.375'
+                stroke='#0d7490'
+                strokeWidth='1.5'
+                strokeLinecap='round'
+                strokeLinejoin='round'
+              />
+            </svg>
+          }
+        />
+      )}
     </div>
   );
 }

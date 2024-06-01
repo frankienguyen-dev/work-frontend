@@ -10,7 +10,7 @@ import userApi from '../../apis/user.api.ts';
 import { getLogoUrl } from '../../utils/utils.ts';
 
 export default function Header() {
-  const { companyInfo, setCompanyInfo, foundingInfo, setFoundingInfo } = useContext(AppContext);
+  const { setCompanyInfo, setFoundingInfo } = useContext(AppContext);
   const { isAuthenticated, setIsAuthenticated, isRole } = useContext(AppContext);
 
   const { data } = useQuery({
@@ -177,7 +177,7 @@ export default function Header() {
 
                         <Dropdown.Divider className='my-0' />
                         <Dropdown.Item>
-                          <Link to='' onClick={handleLogout} className='font-medium py-[10px] block w-full text-left'>
+                          <Link to='/' onClick={handleLogout} className='font-medium py-[10px] block w-full text-left'>
                             Logout
                           </Link>
                         </Dropdown.Item>

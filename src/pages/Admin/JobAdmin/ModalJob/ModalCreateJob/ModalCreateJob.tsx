@@ -5,15 +5,12 @@ import ModalExpiredToken from '../../../../../components/ModalExpiredToken';
 import { useRef, useState } from 'react';
 
 import { jobSchema, postJobSchema } from '../../../../../utils/rules.ts';
-import {
-  clearAccessTokenFromLocalStorage,
-  clearRoleToLocalStorage
-} from '../../../../../utils/auth.ts';
+import { clearAccessTokenFromLocalStorage, clearRoleToLocalStorage } from '../../../../../utils/auth.ts';
 import { useForm } from 'react-hook-form';
 import TagInputComponent from '../../../../../components/TagInputComponent';
 import AutoCompleteSearchInput from '../../../../../components/AutocompleteSearchInput';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import jobApi from '../../../../../apis/job.api.ts';
 import { PostJob } from '../../../../../types/job.type.ts';
 import useQueryConfig from '../../../../../hooks/useQueryConfig.tsx';
@@ -21,6 +18,7 @@ import { isAxiosConflictError, isAxiosUnauthorizedError } from '../../../../../u
 import { ErrorResponse } from '../../../../../types/utils.type.ts';
 import moment from 'moment';
 import CalendarJobAdmin from '../../CalendarJobAdmin/CalendarJobAdmin.tsx';
+import categoryApi from '../../../../../apis/category.api.ts';
 
 const custom: CustomFlowbiteTheme = {
   modal: {
@@ -110,19 +108,32 @@ export default function ModalCreateJob({ closeModal }: Props) {
     sortDir: 'desc',
     pageSize: '10'
   };
+
+  const queryCategoryConfig = {
+    ...queryConfig,
+    pageSize: '100'
+  };
+
   const queryClient = useQueryClient();
   const createNewJobAdminMutation = useMutation({
     mutationFn: (body: PostJob) => jobApi.postJob(body)
   });
 
+  const { data: categoryListData } = useQuery({
+    queryKey: ['categoryList', queryCategoryConfig],
+    queryFn: () => categoryApi.getAllCategory(queryCategoryConfig)
+  });
+
   const onSubmit = handleSubmit((data) => {
-    console.log('check data submit: ', data);
     const createNewJobData = {
       ...data,
       startDate: moment.utc(data.startDate).local().format('YYYY-MM-DDTHH:mm:ss'),
       endDate: moment.utc(data.endDate).local().format('YYYY-MM-DDTHH:mm:ss'),
       company: {
         name: companyName.name
+      },
+      category: {
+        id: data.category
       }
     };
     console.log('check data submit 2: ', createNewJobData);
@@ -258,6 +269,30 @@ export default function ModalCreateJob({ closeModal }: Props) {
                   </div>
                 </div>
                 <div className='col-span-4'>
+                  <div className='text-[14px] leading-5 text-[#18191c]'>Job Category</div>
+                  <select
+                    id='category'
+                    className='w-full h-[48px] border-[2px] solid border-[#e4e5e8] rounded-[5px]
+          focus:outline-none focus:border-[#9099a3] focus:ring-0 py-[12px] px-[18px]
+          text-[16px] leading-6 text-[#111827] mt-2 hover:cursor-pointer'
+                    {...register('category')}
+                    defaultValue='Select...'
+                  >
+                    <option disabled value='Select...'>
+                      Select...
+                    </option>
+                    {categoryListData &&
+                      categoryListData.data.data.data.map((category) => (
+                        <option key={category.id} value={category.id}>
+                          {category.name}
+                        </option>
+                      ))}
+                  </select>
+                  <div className='mt-1 min-h-[1.25rem] text-sm text-red-600 dark:text-red-500'>
+                    <span className='font-medium'>{errors.category?.message}</span>
+                  </div>
+                </div>
+                <div className='col-span-4'>
                   <div className='text-[14px] leading-5 text-[#18191c] mb-2'>End Date</div>
                   <div>
                     <CalendarJobAdmin
@@ -270,9 +305,7 @@ export default function ModalCreateJob({ closeModal }: Props) {
                 </div>
               </div>
               <div className='mt-[32px]'>
-                <div className='text-[18px] leading-7 font-medium text-[#18191C]'>
-                  Advance Information
-                </div>
+                <div className='text-[18px] leading-7 font-medium text-[#18191C]'>Advance Information</div>
                 <div className='grid grid-cols-12 gap-[18px] mt-[18px]'>
                   <div className='col-span-3'>
                     <div className='text-[14px] leading-5 text-[#18191c] mb-2'>Education</div>
@@ -342,9 +375,7 @@ export default function ModalCreateJob({ closeModal }: Props) {
               </div>
 
               <div className='mt-[32px]'>
-                <div className='text-[18px] leading-7 text-[#18191c] font-medium'>
-                  Description & Responsibility
-                </div>
+                <div className='text-[18px] leading-7 text-[#18191c] font-medium'>Description & Responsibility</div>
                 <div className='mt-[18px] text-[14px] leading-5 text-[#18191C]'>Description</div>
                 <div className='mt-[8px]'>
                   <TextArea
@@ -409,13 +440,7 @@ export default function ModalCreateJob({ closeModal }: Props) {
           heading='Credential session has expired, please sign in again.'
           textButtonYes='OK'
           icon={
-            <svg
-              width='50'
-              height='50'
-              viewBox='0 0 24 24'
-              fill='none'
-              xmlns='http://www.w3.org/2000/svg'
-            >
+            <svg width='50' height='50' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
               <path
                 d='M5.10571 18.8943C4.24283 18.0314 4.81514 16.2198 4.37595 15.1584C3.92066 14.058 2.25 13.1723 2.25 12C2.25 10.8276 3.92067 9.942 4.37595 8.84164C4.81515 7.78015 4.24283 5.96858 5.10571 5.10571C5.96858 4.24283 7.78016 4.81514 8.84165 4.37595C9.94203 3.92066 10.8277 2.25 12 2.25C13.1724 2.25 14.058 3.92067 15.1584 4.37595C16.2199 4.81515 18.0314 4.24283 18.8943 5.10571C19.7572 5.96858 19.1849 7.78016 19.6241 8.84165C20.0793 9.94203 21.75 10.8277 21.75 12C21.75 13.1724 20.0793 14.058 19.624 15.1584C19.1848 16.2199 19.7572 18.0314 18.8943 18.8943C18.0314 19.7572 16.2198 19.1849 15.1584 19.6241C14.058 20.0793 13.1723 21.75 12 21.75C10.8276 21.75 9.942 20.0793 8.84164 19.624C7.78015 19.1848 5.96858 19.7572 5.10571 18.8943Z'
                 stroke='#0d7490'

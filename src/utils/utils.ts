@@ -13,27 +13,18 @@ export function isAxiosConflictError<FormError>(error: unknown): error is AxiosE
   return isAxiosError(error) && error.response?.status === HttpStatusCode.Conflict;
 }
 
-export function isAxiosPayloadLargeError<PayloadLargeError>(
-  error: unknown
-): error is AxiosError<PayloadLargeError> {
+export function isAxiosPayloadLargeError<PayloadLargeError>(error: unknown): error is AxiosError<PayloadLargeError> {
   return isAxiosError(error) && error.response?.status === HttpStatusCode.PayloadTooLarge;
 }
 
-export function isAxiosUnauthorizedError<UnauthorizedError>(
-  error: unknown
-): error is AxiosError<UnauthorizedError> {
+export function isAxiosUnauthorizedError<UnauthorizedError>(error: unknown): error is AxiosError<UnauthorizedError> {
   return isAxiosError(error) && error.response?.status === HttpStatusCode.Unauthorized;
 }
 
-export function isAxiosExpiredTokenError<UnauthorizedError>(
-  error: unknown
-): error is AxiosError<UnauthorizedError> {
+export function isAxiosExpiredTokenError<UnauthorizedError>(error: unknown): error is AxiosError<UnauthorizedError> {
   return (
-    isAxiosUnauthorizedError<
-      ErrorResponse<{ timestamp: string; message: string; details: string }>
-    >(error) &&
-    error.response?.data?.data?.message ===
-      'Unable to create Access Token from Refresh Token, Please login again'
+    isAxiosUnauthorizedError<ErrorResponse<{ timestamp: string; message: string; details: string }>>(error) &&
+    error.response?.data?.data?.message === 'Unable to create Access Token from Refresh Token, Please login again'
   );
 }
 
@@ -57,4 +48,30 @@ export function formatSalary(salary: number) {
 export const getLogoUrl = (logoName?: string) => {
   const { VITE_API_BASE_URL } = import.meta.env;
   return logoName ? `${VITE_API_BASE_URL}/files/${logoName}` : logoImage;
+};
+
+export const saveFileDownload = (blob: Blob, fileName: string) => {
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = fileName;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  window.URL.revokeObjectURL(url);
+};
+
+export const getExtensionFormMIME = (mimeType: string) => {
+  switch (mimeType) {
+    case 'application/pdf':
+      return '.pdf';
+    case 'image/jpeg':
+      return '.jpeg';
+    case 'image/png':
+      return '.png';
+    case 'video/mp4':
+      return '.mp4';
+    default:
+      return 'file';
+  }
 };

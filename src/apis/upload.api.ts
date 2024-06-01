@@ -8,6 +8,11 @@ const uploadApi = {
         'Content-Type': 'multipart/form-data'
       }
     });
+  },
+  downloadFile: (id: string) => {
+    return http.get<Blob>(`/files/download/${id}`, {
+      responseType: 'blob'
+    });
   }
 };
 export default uploadApi;

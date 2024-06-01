@@ -22,6 +22,8 @@ export interface User {
   } | null;
   phoneNumber: string;
   gender: string;
+  biography: string;
+  coverLetter: string;
   title: string;
   age: number;
   roles: {
@@ -76,6 +78,8 @@ export interface CreateUser {
   gender: string;
   password: string;
   title: string;
+  biography: string;
+  coverLetter: string;
   age?: number;
   company: {
     name: string;
@@ -96,6 +100,8 @@ export interface UpdateUser {
   };
   phoneNumber: string;
   gender: string;
+  biography: string;
+  coverLetter: string;
   title: string;
   age: number;
   company: {
