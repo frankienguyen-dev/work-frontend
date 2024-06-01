@@ -2,7 +2,6 @@ import axios, { AxiosError } from 'axios';
 import { HttpStatusCode } from 'src/constants/httpStatusCode.enum';
 import { ErrorResponse } from '../types/utils.type.ts';
 import moment from 'moment';
-import logoImage from 'src/assets/images/logoImage.jpeg';
 
 export function isAxiosError<T>(error: unknown): error is AxiosError<T> {
   // eslint-disable-next-line import/no-named-as-default-member
@@ -11,6 +10,10 @@ export function isAxiosError<T>(error: unknown): error is AxiosError<T> {
 
 export function isAxiosConflictError<FormError>(error: unknown): error is AxiosError<FormError> {
   return isAxiosError(error) && error.response?.status === HttpStatusCode.Conflict;
+}
+
+export function isAxiosBadRequestError<FormError>(error: unknown): error is AxiosError<FormError> {
+  return isAxiosError(error) && error.response?.status === HttpStatusCode.BadRequest;
 }
 
 export function isAxiosPayloadLargeError<PayloadLargeError>(error: unknown): error is AxiosError<PayloadLargeError> {
@@ -47,7 +50,9 @@ export function formatSalary(salary: number) {
 
 export const getLogoUrl = (logoName?: string) => {
   const { VITE_API_BASE_URL } = import.meta.env;
-  return logoName ? `${VITE_API_BASE_URL}/files/${logoName}` : logoImage;
+  return logoName
+    ? `${VITE_API_BASE_URL}/files/${logoName}`
+    : 'https://as1.ftcdn.net/v2/jpg/05/99/32/28/1000_F_599322870_hufBazDahX69a57xhcprgfn4WSjAlXZj.webp';
 };
 
 export const saveFileDownload = (blob: Blob, fileName: string) => {

@@ -10,3 +10,17 @@ export type AuthResponse = SuccessResponse<{
   createdAt: string;
 }>;
 export type RefreshTokenResponse = SuccessResponse<{ accessToken: string }>;
+
+export interface ChangePassword {
+  currentPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+}
+
+export interface ChangePasswordResponse {
+  message: string;
+  statusCode: number;
+  data: {
+    newPassword: string;
+  };
+}

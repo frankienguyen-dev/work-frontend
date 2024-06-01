@@ -32,14 +32,15 @@ export default function JobApplication() {
     gcTime: 0,
     placeholderData: keepPreviousData
   });
+
+  console.log('check application data: ', applicationData);
   const metaData = applicationData && (applicationData.data.data.meta as MetaData);
   const downloadResumeMutation = useMutation({
     mutationFn: (resumeId: string) => uploadApi.downloadFile(resumeId),
     onSuccess: (response: AxiosResponse<Blob>, variables: string) => {
       const mimeType = response.headers['content-type'];
-      console.log('check mime type: ', mimeType);
       const extension = getExtensionFormMIME(mimeType);
-      const fileName = `resume_${variables}.${extension}`;
+      const fileName = `resume_${variables}${extension}`;
       saveFileDownload(response.data, fileName);
     }
   });
@@ -47,30 +48,25 @@ export default function JobApplication() {
     event.preventDefault();
     event.stopPropagation();
     setResumeId(resumeId);
+    downloadResumeMutation.mutate(resumeId, {
+      onSuccess: (data) => {
+        console.log('check success download: ', data);
+      }
+    });
   };
 
   const handleClickViewApplicationJob = (
     event: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
-    applicationId: string
+    applicationId: string,
+    resumeId: string
   ) => {
     event.preventDefault();
     event.stopPropagation();
     setApplicationId(applicationId);
+    setResumeId(resumeId);
     setIsOpenModalViewApplication(true);
   };
 
-  useEffect(() => {
-    if (resumeId) {
-      downloadResumeMutation.mutate(resumeId, {
-        onSuccess: (data) => {
-          console.log('check success download: ', data);
-        }
-      });
-    }
-    return () => {
-      setResumeId('');
-    };
-  }, [resumeId]);
   return (
     <div className='mt-[48px]'>
       <div className='flex items-center justify-between h-[44px]'>
@@ -111,7 +107,7 @@ export default function JobApplication() {
               applicationData.data.data.data.map((resume) => (
                 <Link
                   to=''
-                  onClick={(event) => handleClickViewApplicationJob(event, resume.user.id)}
+                  onClick={(event) => handleClickViewApplicationJob(event, resume.user.id, resume.resume.id)}
                   key={resume.id}
                   className='col-span-1 hover:cursor-pointer border-[2px] border-[#EDEFF5]
           hover:outline hover:outline-[#0b65cc] hover:rounded-[12px] rounded-[12px] h-[254px] solid'
@@ -202,7 +198,13 @@ export default function JobApplication() {
           />
         )}
       </div>
-      {isOpenModalViewApplication && <ModalViewApplication closeModal={() => setIsOpenModalViewApplication(false)} />}
+      {isOpenModalViewApplication && (
+        <ModalViewApplication
+          applicationId={applicationId}
+          resumeId={resumeId}
+          closeModal={() => setIsOpenModalViewApplication(false)}
+        />
+      )}
     </div>
   );
 }
