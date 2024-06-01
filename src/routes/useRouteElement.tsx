@@ -27,6 +27,7 @@ import SubscriberAdmin from '../pages/Admin/SubscriberAdmin';
 import CategoryAdmin from '../pages/Admin/CategoryAdmin';
 import ResumeAdmin from '../pages/Admin/ResumeAdmin';
 import InvitationAdmin from '../pages/Admin/InvitationAdmin';
+import JobApplication from '../pages/Dashboard/JobApplication';
 
 function ProtectedRoute() {
   const { isAuthenticated } = useContext(AppContext);
@@ -71,6 +72,10 @@ export default function useRouteElement() {
             {
               path: 'my-company',
               element: <MyCompanyInfo />
+            },
+            {
+              path: ':id/application',
+              element: <JobApplication />
             }
           ]
         },

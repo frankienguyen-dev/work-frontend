@@ -25,6 +25,9 @@ const resumeApi = {
   },
   searchResume: (params: ResumeConfig) => {
     return http.get<ResumeListResponse>('resumes/search', { params });
+  },
+  getListResumeByJobId: (id: string, params: ResumeConfig) => {
+    return http.get<ResumeListResponse>(`/resumes/all-resumes/${id}`, { params });
   }
 };
 

@@ -21,6 +21,9 @@ const jobApi = {
   favoriteJob: (id: string) => http.post<JobResponse>(`/jobs/favorite/${id}`),
   getFavoriteJobList: (params: JobListConfig) => {
     return http.get<JobList>('/jobs/my-favorite-job', { params });
+  },
+  getMyJobList: (params: JobListConfig) => {
+    return http.get<JobList>('/jobs/my-list-job', { params });
   }
 };
 export default jobApi;

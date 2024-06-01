@@ -11,3 +11,9 @@ export interface UploadResponse {
   statusCode: number;
   data: Image;
 }
+
+export interface DownloadResponse {
+  message: string;
+  statusCode: number;
+  data: Image;
+}

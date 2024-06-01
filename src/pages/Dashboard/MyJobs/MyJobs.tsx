@@ -1,40 +1,55 @@
-import { Link } from 'react-router-dom';
-import { CustomFlowbiteTheme, Dropdown } from 'flowbite-react';
-import { useQuery } from '@tanstack/react-query';
-import userApi from '../../../apis/user.api.ts';
+import { Link, useNavigate } from 'react-router-dom';
+import { keepPreviousData, useQuery, useQueryClient } from '@tanstack/react-query';
 import { calcDayRemaining } from '../../../utils/utils.ts';
+import React from 'react';
+import Loading from '../../../components/Loading/Loading.tsx';
+import SvgOops from '../../../components/SvgOops';
+import useQueryConfig from '../../../hooks/useQueryConfig.tsx';
+import jobApi from '../../../apis/job.api.ts';
+import Pagination from '../../../components/Pagination';
+import { MetaData } from '../../../types/meta.type.ts';
 
-const custom: CustomFlowbiteTheme['dropdown'] = {
-  content: 'w-[220px]',
-  floating: {
-    item: {
-      base:
-        'flex items-center justify-start py-4 px-4 text-[#5E6670] cursor-pointer ' +
-        ' w-full hover:bg-gray-100 hover:text-[#0b65cc] focus:bg-gray-100 ' +
-        ' focus:outline-none'
-    }
-  }
-};
 export default function MyJobs() {
-  const { data: profileData } = useQuery({
-    queryKey: ['profile'],
-    queryFn: () => {
-      return userApi.getProfile();
-    }
+  const queryConfig = useQueryConfig();
+  const queryClient = useQueryClient();
+  const queryMyJobConfig = {
+    ...queryConfig,
+    sortBy: 'createdAt',
+    sortDir: 'desc',
+    pageSize: '6'
+  };
+
+  const queryApplicationConfig = {
+    ...queryConfig,
+    sortBy: 'createdAt',
+    sortDir: 'desc',
+    pageSize: '6'
+  };
+  const { data: myJobListData, isLoading } = useQuery({
+    queryKey: ['jobListData', queryMyJobConfig],
+    queryFn: () => jobApi.getMyJobList(queryMyJobConfig),
+    gcTime: 0,
+    placeholderData: keepPreviousData
   });
 
-  console.log('check: ', profileData);
-
+  const metaData = myJobListData?.data.data.meta as MetaData;
+  const navigate = useNavigate();
+  const handleClickViewApplicationJob = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: string) => {
+    event.preventDefault();
+    navigate({
+      pathname: `/dashboard/${id}/application`
+    });
+    queryClient
+      .invalidateQueries({
+        queryKey: ['applicationListData', queryApplicationConfig]
+      })
+      .then();
+  };
   return (
-    <div className='mt-[40px]'>
+    <div className='mt-[48px]'>
       <div className='flex items-center justify-between'>
         <div className='flex items-center gap-[8px]'>
-          <div className='text-[20px] font-medium leading-8 text-[#18191c]'>My Jobs</div>
-          {profileData && (
-            <div className='text-[20px] font-medium leading-8 text-[#9199a3]'>
-              {/*({profileData.data.data.jobs.length})*/}3
-            </div>
-          )}
+          <div className='text-[18px] font-medium leading-7 text-[#18191c]'>My Jobs</div>
         </div>
         <div>
           <select
@@ -49,7 +64,7 @@ export default function MyJobs() {
           </select>
         </div>
       </div>
-      <div className='mt-[24px]'>
+      <div className='mt-[20px] min-h-[618px]'>
         <div className='grid grid-cols-12 bg-[#f1f2f4] px-[20px] py-[10px] rounded-[4px]'>
           <div className='col-span-4 text-center text-[12px] text-[#535860]'>JOBS</div>
           <div className='col-span-2 text-center text-[12px] text-[#535860]'>STATUS</div>
@@ -57,9 +72,18 @@ export default function MyJobs() {
           <div className='col-span-3 text-center text-[12px] text-[#535860]'>ACTIONS</div>
         </div>
         <div className='mt-2'>
-          {/* Item 1 */}
-          {profileData &&
-            profileData.data.data.jobs.map((job) => (
+          {isLoading ? (
+            <div className='h-[530px] flex items-center justify-center'>
+              <Loading />
+            </div>
+          ) : myJobListData && myJobListData.data.data.data.length === 0 ? (
+            <div className='flex flex-col items-center justify-center'>
+              <SvgOops />
+              <div className='font-medium text-[20px] leading-7'>Oops! No Applied Job.</div>
+            </div>
+          ) : (
+            myJobListData &&
+            myJobListData.data.data.data.map((job) => (
               <Link
                 to={`/job/${job.id}`}
                 onClick={() => {
@@ -73,7 +97,7 @@ export default function MyJobs() {
                   <div className='text-[16px] font-medium leading-6 text-[#18191c]'>{job.name}</div>
                   <div className='relative flex gap-[10px] items-center mt-2'>
                     <div className='text-[14px] leading-5 text-[#767f8c]'>{job.jobType}</div>
-                    <div className='w-[4px] h-[4px] bg-red-700 rounded-[4px]'></div>
+                    <div className='w-[4px] h-[4px] bg-[#5E6670] rounded-[4px]'></div>
                     <div className='text-[14px] leading-5 text-[#767f8c]'>
                       {calcDayRemaining(job.endDate) > 1
                         ? calcDayRemaining(job.endDate) + ' Days Remaining'
@@ -173,133 +197,33 @@ export default function MyJobs() {
                 <div className='col-span-3 flex justify-center'>
                   <div className='flex items-center gap-[8px]'>
                     <div>
-                      <Link
-                        to=''
+                      <button
+                        onClick={(event) => handleClickViewApplicationJob(event, job.id)}
                         className='w-[188px] h-[48px] bg-[#f1f2f4] rounded-[3px] text-[16px]
                    font-semibold leading-6 text-[#5e6670] py-[12px] px-[24px] hover:cursor-pointer
                    group-hover:bg-[#0b65cc] group-hover:text-white block transition duration-[0.25s]
                    ease-in-out'
                       >
                         View Applications
-                      </Link>
-                    </div>
-                    <div>
-                      <Dropdown
-                        theme={custom}
-                        content='content'
-                        label=''
-                        dismissOnClick={false}
-                        renderTrigger={() => (
-                          <div
-                            className='w-[48px] h-[48px] group-hover:bg-[#f1f2f4] rounded-[5px]
-                   hover:cursor-pointer transition duration-[0.25s] ease-in-out flex items-center
-                   justify-center'
-                          >
-                            <svg
-                              width='24'
-                              height='24'
-                              viewBox='0 0 24 24'
-                              fill='none'
-                              xmlns='http://www.w3.org/2000/svg'
-                            >
-                              <path
-                                d='M12 13.125C12.6213 13.125 13.125 12.6213 13.125 12C13.125 11.3787 12.6213 10.875 12 10.875C11.3787 10.875 10.875 11.3787 10.875 12C10.875 12.6213 11.3787 13.125 12 13.125Z'
-                                fill='#767F8C'
-                                stroke='#767F8C'
-                              />
-                              <path
-                                d='M12 6.65039C12.6213 6.65039 13.125 6.14671 13.125 5.52539C13.125 4.90407 12.6213 4.40039 12 4.40039C11.3787 4.40039 10.875 4.90407 10.875 5.52539C10.875 6.14671 11.3787 6.65039 12 6.65039Z'
-                                fill='#767F8C'
-                                stroke='#767F8C'
-                              />
-                              <path
-                                d='M12 19.6094C12.6213 19.6094 13.125 19.1057 13.125 18.4844C13.125 17.8631 12.6213 17.3594 12 17.3594C11.3787 17.3594 10.875 17.8631 10.875 18.4844C10.875 19.1057 11.3787 19.6094 12 19.6094Z'
-                                fill='#767F8C'
-                                stroke='#767F8C'
-                              />
-                            </svg>
-                          </div>
-                        )}
-                      >
-                        <Dropdown.Item>
-                          <Link
-                            onClick={() => {
-                              scrollTo(0, 0);
-                            }}
-                            to={`/job/${job.id}`}
-                            className='flex items-center w-full gap-[8px]'
-                          >
-                            <div>
-                              <svg
-                                className='font-medium'
-                                width='22'
-                                height='22'
-                                viewBox='0 0 20 20'
-                                fill='none'
-                                xmlns='http://www.w3.org/2000/svg'
-                              >
-                                <path
-                                  d='M10 3.54102C3.75 3.54102 1.25 9.99996 1.25 9.99996C1.25 9.99996 3.75 16.4577 10 16.4577C16.25 16.4577 18.75 9.99996 18.75 9.99996C18.75 9.99996 16.25 3.54102 10 3.54102Z'
-                                  stroke='currentColor'
-                                  strokeWidth='1.5'
-                                  strokeLinecap='round'
-                                  strokeLinejoin='round'
-                                />
-                                <path
-                                  d='M10 13.125C11.7259 13.125 13.125 11.7259 13.125 10C13.125 8.27411 11.7259 6.875 10 6.875C8.27411 6.875 6.875 8.27411 6.875 10C6.875 11.7259 8.27411 13.125 10 13.125Z'
-                                  stroke='currentColor'
-                                  strokeWidth='1.5'
-                                  strokeLinecap='round'
-                                  strokeLinejoin='round'
-                                />
-                              </svg>
-                            </div>
-                            <div className='text-[16px] font-medium text-[currentColor]'>View Detail</div>
-                          </Link>
-                        </Dropdown.Item>
-                        <Dropdown.Item>
-                          <Link to={`/job/${job.id}`} className='flex items-center gap-[8px]'>
-                            <div>
-                              <svg
-                                className='font-medium'
-                                width='22'
-                                height='22'
-                                viewBox='0 0 20 20'
-                                fill='none'
-                                xmlns='http://www.w3.org/2000/svg'
-                              >
-                                <path
-                                  d='M10 17.5C14.1421 17.5 17.5 14.1421 17.5 10C17.5 5.85786 14.1421 2.5 10 2.5C5.85786 2.5 2.5 5.85786 2.5 10C2.5 14.1421 5.85786 17.5 10 17.5Z'
-                                  stroke='currentColor'
-                                  strokeWidth='1.5'
-                                  strokeMiterlimit='10'
-                                />
-                                <path
-                                  d='M12.5 7.5L7.5 12.5'
-                                  stroke='currentColor'
-                                  strokeWidth='1.5'
-                                  strokeLinecap='round'
-                                  strokeLinejoin='round'
-                                />
-                                <path
-                                  d='M12.5 12.5L7.5 7.5'
-                                  stroke='currentColor'
-                                  strokeWidth='1.5'
-                                  strokeLinecap='round'
-                                  strokeLinejoin='round'
-                                />
-                              </svg>
-                            </div>
-                            <div className='text-[16px] font-medium text-[currentColor]'>Make it Expired</div>
-                          </Link>
-                        </Dropdown.Item>
-                      </Dropdown>
+                      </button>
                     </div>
                   </div>
                 </div>
               </Link>
-            ))}
+            ))
+          )}
         </div>
+      </div>
+      <div className='mt-[40px]'>
+        {isLoading ? (
+          <Pagination queryConfig={queryMyJobConfig} totalPages={1} pathname='/dashboard/my-jobs' />
+        ) : (
+          <Pagination
+            queryConfig={queryMyJobConfig}
+            totalPages={Number(metaData.totalPages)}
+            pathname='/dashboard/my-jobs'
+          />
+        )}
       </div>
     </div>
   );

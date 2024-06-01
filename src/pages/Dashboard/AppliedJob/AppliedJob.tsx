@@ -29,7 +29,7 @@ export default function AppliedJob() {
 
   return (
     <div className='mt-[48px]'>
-      <div className='text-[18px] leading-7 font-medium text-[#18191c] flex items-center gap-[8px]'>
+      <div className='text-[18px] leading-7 h-[44px] font-medium text-[#18191c] flex items-center gap-[8px]'>
         Applied Job
         <div className='text-[18px] leading-7 font-medium text-[#9199a3]'>(100)</div>
       </div>

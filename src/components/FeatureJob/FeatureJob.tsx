@@ -39,6 +39,7 @@ export default function FeatureJob() {
       setOpenModalAuthentication(true);
     }
     event.preventDefault();
+    event.stopPropagation();
     setOpenModalApplyJob(true);
     setJobId(jobId);
     setCompanyId(companyId);

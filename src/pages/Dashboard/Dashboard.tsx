@@ -13,6 +13,7 @@ import MyJobs from './MyJobs';
 import MyCompanyInfo from './MyCompanyInfo';
 import CompanyInfo from './MyCompanyInfo/CompanyInfo';
 import FoundingInformation from './MyCompanyInfo/FoundingInformation';
+import JobApplication from './JobApplication';
 
 export default function Dashboard() {
   return (
@@ -29,6 +30,7 @@ export default function Dashboard() {
               <Route path='' element={<Overview />} />
               <Route path='/applied-job' element={<AppliedJob />} />
               <Route path='/favorite-job' element={<FavoriteJob />} />
+              <Route path='/:id/application' element={<JobApplication />} />
               <Route path='/post-job' element={<PostAJob />} />
               <Route path='/my-jobs' element={<MyJobs />} />
               <Route path='/my-company' element={<MyCompanyInfo />}>

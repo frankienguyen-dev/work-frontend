@@ -2,7 +2,7 @@ import { ByUser } from './user.type.ts';
 import { Company } from './company.type.ts';
 import { MetaData } from './meta.type.ts';
 
-export interface Resumse {
+export interface Resume {
   id: string;
   url: string | null;
   resume: {
@@ -50,7 +50,27 @@ export interface Resumse {
     active: boolean;
     deleted: boolean;
   };
-  user: ByUser;
+  user: {
+    id: string;
+    fullName: string;
+    email: string;
+    address: string;
+    avatar: {
+      id: string;
+      fileName: string;
+      fileType: string;
+      size: number;
+      uploadTime: string;
+    };
+    biography: string;
+    coverLetter: string;
+    education: string;
+    experience: string;
+    phoneNumber: string;
+    gender: string;
+    title: string;
+    age: number;
+  };
   status: string;
   createdBy: ByUser | null;
   createdAt: string;
@@ -64,7 +84,7 @@ export interface Resumse {
 export interface ResumeResponse {
   message: string;
   statusCode: number;
-  data: Resumse;
+  data: Resume;
 }
 
 export interface ResumeListResponse {
@@ -72,7 +92,7 @@ export interface ResumeListResponse {
   statusCode: number;
   data: {
     meta: MetaData;
-    data: Resumse[] | [];
+    data: Resume[] | [];
   };
 }
 
@@ -82,6 +102,7 @@ export interface ResumeConfig {
   sortBy?: number | string;
   sortDir?: number | string;
   email?: string;
+  jobId?: string;
 }
 
 export interface CreateResume {
