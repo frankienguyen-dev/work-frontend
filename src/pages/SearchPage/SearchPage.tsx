@@ -17,6 +17,8 @@ import { clearAccessTokenFromLocalStorage, clearRoleToLocalStorage } from '../..
 import ModalExpiredToken from '../../components/ModalExpiredToken';
 import { AppContext } from '../../contexts/app.context.tsx';
 import Loading from '../../components/Loading/Loading.tsx';
+import { toast } from 'react-toastify';
+import ModalAuthentication from '../../components/ModalAuthentication';
 
 type FormData = Pick<Schema, 'name' | 'location'>;
 const searchPageSchema = schema.pick(['name', 'location']);
@@ -27,6 +29,8 @@ type UnauthorizedError = {
 
 export default function SearchPage() {
   const [isOpenModalUnauthorized, setIsOpenModalUnauthorized] = useState<boolean>(false);
+  const [isOpenModalAuthentication, setOpenModalAuthentication] = useState<boolean>(false);
+  const [isLogin, setIsLogin] = useState<boolean>(false);
   const { isAuthenticated } = useContext(AppContext);
   const [jobId, setJobId] = useState<string>('');
   const queryConfig = useQueryConfig();
@@ -90,6 +94,13 @@ export default function SearchPage() {
   const handleFavoriteJob = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, jobId: string) => {
     event.preventDefault();
     event.stopPropagation();
+    if (isAuthenticated) {
+      setOpenModalAuthentication(false);
+      setIsLogin(true);
+    } else {
+      setIsLogin(false);
+      setOpenModalAuthentication(true);
+    }
     setJobId(jobId);
   };
 
@@ -523,7 +534,10 @@ export default function SearchPage() {
           <Pagination queryConfig={queryConfig} totalPages={metaData?.totalPages as number} pathname='/job/search' />
         </div>
       </div>
-      {isOpenModalUnauthorized && (
+      {!isLogin && isOpenModalAuthentication && (
+        <ModalAuthentication closeModal={() => setOpenModalAuthentication(false)} />
+      )}
+      {isOpenModalUnauthorized && isLogin && (
         <ModalExpiredToken
           closeModal={() => {
             // window.location.reload();
