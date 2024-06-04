@@ -28,6 +28,7 @@ import CategoryAdmin from '../pages/Admin/CategoryAdmin';
 import ResumeAdmin from '../pages/Admin/ResumeAdmin';
 import InvitationAdmin from '../pages/Admin/InvitationAdmin';
 import JobApplication from '../pages/Dashboard/JobApplication';
+import OpenViewPosition from '../pages/OpenViewPosition';
 
 function ProtectedRoute() {
   const { isAuthenticated } = useContext(AppContext);
@@ -176,6 +177,14 @@ export default function useRouteElement() {
       element: (
         <MainLayout>
           <CompanyDetails />
+        </MainLayout>
+      )
+    },
+    {
+      path: '/company/viewposition/:id',
+      element: (
+        <MainLayout>
+          <OpenViewPosition />
         </MainLayout>
       )
     },

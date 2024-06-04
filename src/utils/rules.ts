@@ -104,7 +104,9 @@ export const userSchema = yup.object({
     .oneOf([yup.ref('password')], "Password doesn't match"),
   company: yup.string(),
   experience: yup.string().trim().required('Experience is required'),
-  education: yup.string().trim().required('Education is required')
+  education: yup.string().trim().required('Education is required'),
+  biography: yup.string().trim(),
+  coverLetter: yup.string().trim()
 });
 
 export const permissionSchema = yup.object({

@@ -69,8 +69,8 @@ export interface CreateUser {
   fullName: string;
   address: string;
   email: string;
-  education: string;
-  experience: string;
+  education?: string;
+  experience?: string;
   avatar?: {
     id: string | undefined;
   };
@@ -78,8 +78,8 @@ export interface CreateUser {
   gender: string;
   password: string;
   title: string;
-  biography: string;
-  coverLetter: string;
+  biography?: string;
+  coverLetter?: string;
   age?: number;
   company: {
     name: string;
@@ -93,15 +93,15 @@ export interface UpdateUser {
   fullName: string;
   address: string;
   email: string;
-  education: string;
-  experience: string;
+  education?: string;
+  experience?: string;
   avatar?: {
     id: string | undefined;
   };
   phoneNumber: string;
   gender: string;
-  biography: string;
-  coverLetter: string;
+  biography?: string;
+  coverLetter?: string;
   title: string;
   age: number;
   company: {

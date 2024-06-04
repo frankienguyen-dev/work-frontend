@@ -24,6 +24,9 @@ const jobApi = {
   },
   getMyJobList: (params: JobListConfig) => {
     return http.get<JobList>('/jobs/my-list-job', { params });
+  },
+  getJobListByCompanyId: (id: string, params: JobListConfig) => {
+    return http.get<JobList>(`/jobs/companyjob/${id}`, { params });
   }
 };
 export default jobApi;

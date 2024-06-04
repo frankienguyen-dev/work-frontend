@@ -10,6 +10,7 @@ import ModalExpiredToken from '../../../../components/ModalExpiredToken';
 import { clearAccessTokenFromLocalStorage, clearRoleToLocalStorage } from '../../../../utils/auth.ts';
 import { isAxiosUnauthorizedError } from '../../../../utils/utils.ts';
 import { ErrorResponse } from '../../../../types/utils.type.ts';
+import { toast } from 'react-toastify';
 
 interface FileWithSize {
   id: string;
@@ -87,7 +88,9 @@ export default function Personal() {
         name: profileData?.company?.name as string
       },
       address: profileData?.address as string,
-      roles: roleName as { name: string }[]
+      roles: roleName as { name: string }[],
+      coverLetter: profileData?.coverLetter,
+      biography: profileData?.biography
     };
     updatePersonalMutation.mutate(finalFormSubmit, {
       onSuccess: (data) => {
@@ -96,6 +99,7 @@ export default function Personal() {
             queryKey: ['profileData']
           })
           .then();
+        toast.success('Update Profile Successfully!');
         console.log('check data success: ', data);
       },
       onError: (error) => {

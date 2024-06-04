@@ -491,7 +491,13 @@ export default function JobDetails() {
                       />
                     </div>
                     <div>
-                      <div className='text-[20px] text-[#18191c] font-medium leading-8'>{job.company.name}</div>
+                      <Link
+                        to={`/company/${job.company.id}`}
+                        onClick={() => scrollTo(0, 0)}
+                        className='text-[20px] text-[#18191c] font-medium leading-8'
+                      >
+                        {job.company.name}
+                      </Link>
                       <div className='mt-2 text-[14px] leading-5 text-[#767f8c]'>{job.company.companyType}</div>
                     </div>
                   </div>
