@@ -1,17 +1,27 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import companyApi from '../../apis/company.api.ts';
 import { getLogoUrl } from '../../utils/utils.ts';
 import useQueryConfig from '../../hooks/useQueryConfig.tsx';
+import React from 'react';
 
 export default function TopCompany() {
   const queryConfig = useQueryConfig();
+  const navigate = useNavigate();
   const { data: companyData } = useQuery({
     queryKey: ['CompanyList', queryConfig],
     queryFn: () => {
       return companyApi.getAllCompanies(queryConfig);
     }
   });
+
+  const handleOpenPosition = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, companyId: string) => {
+    event.preventDefault();
+    event.stopPropagation();
+    navigate(`/company/viewposition/${companyId}`);
+    scrollTo(0, 0);
+  };
+
   return (
     <div className='bg-white'>
       <div className='container'>
@@ -25,13 +35,7 @@ export default function TopCompany() {
               justify-center flex rounded-[5px] text-[#0A65CC] hover:bg-[#0A65CC]
               hover:text-white duration-[0.25s] ease-in'
               >
-                <svg
-                  width='24'
-                  height='24'
-                  viewBox='0 0 24 24'
-                  fill='none'
-                  xmlns='http://www.w3.org/2000/svg'
-                >
+                <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
                   <path
                     d='M19 12H5'
                     stroke='currentColor'
@@ -54,13 +58,7 @@ export default function TopCompany() {
               justify-center flex rounded-[5px] text-[#0A65CC] hover:bg-[#0A65CC]
               hover:text-white duration-[0.25s] ease-in'
               >
-                <svg
-                  width='24'
-                  height='24'
-                  viewBox='0 0 24 24'
-                  fill='none'
-                  xmlns='http://www.w3.org/2000/svg'
-                >
+                <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
                   <path
                     d='M5 12H19'
                     stroke='currentColor'
@@ -127,14 +125,13 @@ export default function TopCompany() {
                               strokeLinejoin='round'
                             />
                           </svg>
-                          <div className='text-[14px] leading-5 text-[#939AAD]'>
-                            {company.address}
-                          </div>
+                          <div className='text-[14px] leading-5 text-[#939AAD]'>{company.address}</div>
                         </div>
                       </div>
                     </div>
                     <div className='mt-[32px]'>
                       <button
+                        onClick={(event) => handleOpenPosition(event, company.id)}
                         className='bg-[#E7F0FA] min-w-[248px] h-[48px] rounded-[3px] text-[16px]
                       leading-6 text-[#0A65CC] font-semibold flex items-center justify-center
                       hover:bg-[#0A65CC] hover:text-white'

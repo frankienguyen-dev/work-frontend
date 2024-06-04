@@ -79,7 +79,8 @@ export default function CompanyDetails() {
                     </div>
                     <div>
                       <Link
-                        to=''
+                        to={`/company/viewposition/${id}`}
+                        onClick={() => scrollTo(0, 0)}
                         className='min-w-[251px] h-[56px] py-[16px] px-[32px] rounded-[4px] bg-[#0b65cc]
                   text-white text-[16px] leading-6 font-semibold flex items-center gap-[12px]'
                       >

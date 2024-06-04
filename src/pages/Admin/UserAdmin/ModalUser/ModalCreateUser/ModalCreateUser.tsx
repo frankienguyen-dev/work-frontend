@@ -69,8 +69,8 @@ const custom: CustomFlowbiteTheme = {
     }
   }
 };
-export type FormUserData = Omit<UserSchema, 'avatar'>;
-const createUserSchema = userSchema.omit(['avatar']);
+export type FormUserData = Omit<UserSchema, 'avatar' | 'education' | 'experience' | 'biography' | 'coverLetter'>;
+const createUserSchema = userSchema.omit(['avatar', 'education', 'experience', 'biography', 'coverLetter']);
 type UnauthorizedError = {
   message: string;
 };
@@ -107,48 +107,54 @@ export default function ModalCreateUser({ closeModal }: Props) {
     mutationFn: (body: CreateUser) => userApi.createUser(body)
   });
 
-  const onSubmit = handleSubmit((data) => {
-    const createUserData = {
-      ...data,
-      age: Number(data.age),
-      roles: [
-        {
-          name: data.roles
-        }
-      ],
-      company: {
-        name: companyName.name
-      }
-    };
-    console.log('check data: ', data);
-    console.log('check data create: ', createUserData);
-    createUserMutation.mutate(createUserData, {
-      onSuccess: (data) => {
-        queryClient
-          .invalidateQueries({
-            queryKey: ['allUsersData', queryConfigUserAdmin]
-          })
-          .then();
-        closeModal();
-        console.log('check success: ', data);
-      },
-      onError: (error) => {
-        if (isAxiosConflictError<ErrorResponse<FormError>>(error)) {
-          const formError = error.response?.data.data;
-          if (formError) {
-            setError('email', {
-              message: formError.message
-            });
+  const onSubmit = handleSubmit(
+    (data) => {
+      const createUserData = {
+        ...data,
+        age: Number(data.age),
+        roles: [
+          {
+            name: data.roles
           }
-          console.log('check error server: ', error);
+        ],
+        company: {
+          name: companyName.name
         }
-        if (isAxiosUnauthorizedError<ErrorResponse<UnauthorizedError>>(error)) {
-          clearAccessTokenFromLocalStorage();
-          setIsOpenModalUnauthorized(true);
+      };
+      console.log('check data: ', data);
+      console.log('check data create: ', createUserData);
+
+      createUserMutation.mutate(createUserData, {
+        onSuccess: (data) => {
+          queryClient
+            .invalidateQueries({
+              queryKey: ['allUsersData', queryConfigUserAdmin]
+            })
+            .then();
+          closeModal();
+          console.log('check success: ', data);
+        },
+        onError: (error) => {
+          if (isAxiosConflictError<ErrorResponse<FormError>>(error)) {
+            const formError = error.response?.data.data;
+            if (formError) {
+              setError('email', {
+                message: formError.message
+              });
+            }
+            console.log('check error server: ', error);
+          }
+          if (isAxiosUnauthorizedError<ErrorResponse<UnauthorizedError>>(error)) {
+            clearAccessTokenFromLocalStorage();
+            setIsOpenModalUnauthorized(true);
+          }
         }
-      }
-    });
-  });
+      });
+    },
+    (errors) => {
+      console.log('check error: ', errors);
+    }
+  );
 
   return (
     <>
@@ -326,16 +332,6 @@ export default function ModalCreateUser({ closeModal }: Props) {
                   </div>
                 </div>
               </div>
-              <div className='mt-[32px]'>
-                <div>Biography</div>
-                <TextArea placeholder='Biography' register={register} name='biography' setValue={setValue} />
-              </div>
-
-              <div className='mt-[32px]'>
-                <div>Cover Letter</div>
-                <TextArea placeholder='Cover Letter' register={register} name='coverLetter' setValue={setValue} />
-              </div>
-
               <div className=' mt-[20px] hidden'>
                 <button
                   className='rounded-[4px]'

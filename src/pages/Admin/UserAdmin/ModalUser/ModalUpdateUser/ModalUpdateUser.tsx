@@ -69,8 +69,19 @@ const custom: CustomFlowbiteTheme = {
     }
   }
 };
-export type FormUserData = Omit<UserSchema, 'avatar' | 'password' | 'confirm_password'>;
-const createUserSchema = userSchema.omit(['avatar', 'password', 'confirm_password']);
+export type FormUserData = Omit<
+  UserSchema,
+  'avatar' | 'password' | 'confirm_password' | 'coverLetter' | 'biography' | 'experience' | 'education'
+>;
+const createUserSchema = userSchema.omit([
+  'avatar',
+  'password',
+  'confirm_password',
+  'experience',
+  'education',
+  'biography',
+  'coverLetter'
+]);
 type UnauthorizedError = {
   message: string;
 };

@@ -75,10 +75,7 @@ export default function CompanyAdmin() {
     console.log('check handle submit company admin: ', data);
   });
 
-  const handleButtonEditClicked = (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    companyId: string
-  ) => {
+  const handleButtonEditClicked = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, companyId: string) => {
     setOpenModalUpdateCompany(true);
     setCompanyId(companyId);
     event.preventDefault();
@@ -93,13 +90,7 @@ export default function CompanyAdmin() {
             <form noValidate onSubmit={onSubmit}>
               <div className='relative'>
                 <div className='absolute left-[18px] top-[50%] translate-y-[-50%]'>
-                  <svg
-                    width='24'
-                    height='24'
-                    viewBox='0 0 24 24'
-                    fill='none'
-                    xmlns='http://www.w3.org/2000/svg'
-                  >
+                  <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
                     <path
                       d='M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19Z'
                       stroke='#0066FF'
@@ -287,9 +278,7 @@ export default function CompanyAdmin() {
           ) : (
             <div className='flex flex-col items-center justify-center'>
               <SvgOops />
-              <div className='font-medium text-[20px] leading-7'>
-                Oops! The company name does not exist.
-              </div>
+              <div className='font-medium text-[20px] leading-7'>Oops! The company name does not exist.</div>
             </div>
           )
         ) : companies && companies.length > 0 ? (
@@ -405,9 +394,7 @@ export default function CompanyAdmin() {
         ) : (
           <div className='flex flex-col items-center justify-center'>
             <SvgOops />
-            <div className='font-medium text-[20px] leading-7'>
-              Oops! There are no companies in the list.
-            </div>
+            <div className='font-medium text-[20px] leading-7'>Oops! There are no companies in the list.</div>
           </div>
         )}
       </div>

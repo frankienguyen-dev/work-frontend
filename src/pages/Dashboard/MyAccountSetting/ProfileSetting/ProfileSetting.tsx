@@ -10,13 +10,27 @@ import { isAxiosUnauthorizedError } from '../../../../utils/utils.ts';
 import { ErrorResponse } from '../../../../types/utils.type.ts';
 import { clearAccessTokenFromLocalStorage, clearRoleToLocalStorage } from '../../../../utils/auth.ts';
 import ModalExpiredToken from '../../../../components/ModalExpiredToken';
+import TextArea from '../../../../components/TextArea';
+import { toast } from 'react-toastify';
 
 type UnauthorizedError = {
   message: string;
 };
 
-type FormData = Pick<UserSchema, 'email' | 'address' | 'gender' | 'age' | 'phoneNumber' | 'company'>;
-const profileSchema = userSchema.pick(['email', 'address', 'gender', 'address', 'age', 'phoneNumber']);
+type FormData = Pick<
+  UserSchema,
+  'email' | 'address' | 'gender' | 'age' | 'phoneNumber' | 'company' | 'biography' | 'coverLetter'
+>;
+const profileSchema = userSchema.pick([
+  'email',
+  'address',
+  'gender',
+  'address',
+  'age',
+  'phoneNumber',
+  'biography',
+  'coverLetter'
+]);
 export default function ProfileSetting() {
   const [isOpenModalUnauthorized, setIsOpenModalUnauthorized] = useState<boolean>(false);
 
@@ -33,7 +47,9 @@ export default function ProfileSetting() {
       gender: '',
       age: '',
       phoneNumber: '',
-      company: ''
+      company: '',
+      biography: '',
+      coverLetter: ''
     }
   });
   const navigate = useNavigate();
@@ -78,7 +94,7 @@ export default function ProfileSetting() {
           })
           .then();
         console.log('check success: ', data);
-        navigate('/dashboard/my-account-setting');
+        toast.success('Update Profile Successfully!');
       },
       onError: (error) => {
         if (isAxiosUnauthorizedError<ErrorResponse<UnauthorizedError>>(error)) {
@@ -97,6 +113,8 @@ export default function ProfileSetting() {
       setValue('age', profileData.age.toString());
       setValue('phoneNumber', profileData.phoneNumber);
       setValue('company', profileData?.company?.name || '');
+      setValue('biography', profileData.biography);
+      setValue('coverLetter', profileData.coverLetter);
     }
   }, [setValue, profileData]);
   return (
@@ -202,7 +220,29 @@ export default function ProfileSetting() {
             </div>
           </div>
         </div>
-        <div className='grid grid-cols-1 mt-[34px]'>
+        <div className='grid grid-cols-1 mt-1'>
+          <div className='text-[14px] leading-5 text-[#18191c] mb-2'>Biography</div>
+          <TextArea
+            placeholder='Biography'
+            register={register}
+            name='biography'
+            setValue={setValue}
+            errorMessage={errors.biography?.message}
+            valueFromServer={profileData?.biography}
+          />
+        </div>
+        <div className='grid grid-cols-1 mt-1'>
+          <div className='text-[14px] leading-5 text-[#18191c] mb-2'>Cover Letter</div>
+          <TextArea
+            placeholder='Cover letter'
+            register={register}
+            name='coverLetter'
+            setValue={setValue}
+            errorMessage={errors.coverLetter?.message}
+            valueFromServer={profileData?.coverLetter}
+          />
+        </div>
+        <div className='grid grid-cols-1 mt-[34px] mb-[20px]'>
           <button
             className='w-[175px] h-[56px] bg-[#0b65cc] rounded-[4px] text-white text-[16px]
                     leading-6 font-semibold'
